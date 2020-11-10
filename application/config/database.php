@@ -97,10 +97,10 @@ $db['dbsqlsrv'] = array(
 
 $db['dbmysql'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'simpelma',
+	'hostname' => '10.0.1.66',
+	'username' => 'UserLPasca',
+	'password' => '2944ebaf277b7a566953736820eea3fe',
+	'database' => 'DBLayananpasca',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
