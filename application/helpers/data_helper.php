@@ -837,11 +837,14 @@ function cek_sudah_buat_surat($id_mahasiswa, $id_kategori_surat, $min_semester)
 		$id_surat = $surat['id'];
 		// jika sdh mengajukan, cek status surat, jika statusnya blm selesai (>10) maka belum boleh membuat surat yg sama
 
-		$status = $CI->db->query("SELECT MAX(ss.id_status) as id_status, id_surat FROM surat_status ss
+		$status = $CI->db->query("SELECT DATE, id_status FROM surat_status
   	WHERE id_surat = $id_surat
-		GROUP BY id_status
+  	ORDER BY date
+  	DESC LIMIT 1	
 		")->row_array();
 
+		//status 10 = selesai
+		//status 6 = ditolak
 		if (($status['id_status'] == 10) || ($status['id_status']  == 6)) {
 			$diperbolehkan = 1;
 		} else {
