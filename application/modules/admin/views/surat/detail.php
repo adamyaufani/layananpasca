@@ -167,6 +167,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 											</li>
 										<?php } ?> </li>
 										</ul>
+										<p class="mt-4">Catatan dari Tata Usaha</p>
+										<textarea class="form-control" name="catatan"></textarea>
 
 
 										<p class="mt-3">

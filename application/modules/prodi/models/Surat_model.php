@@ -24,7 +24,6 @@ class Surat_model extends CI_Model
         k.kat_keterangan_surat, 
         k.klien, 
         ss.id_status, 
-        ss.catatan, 
         st.status, 
         st.icon,
         st.badge, 
@@ -73,17 +72,12 @@ class Surat_model extends CI_Model
     */
     public function get_kategori_surat()
     {
-        //$aktif = $_SESSION['aktif']; //cek mahasiswa ini aktif atau tidak
+        $aktif = $_SESSION['aktif'];
         $prodi = $_SESSION['id_prodi'];
 
-        // $query = $this->db->query("SELECT * FROM kategori_surat 
-        // WHERE (klien='m' AND aktif ='$aktif' AND prodi = '$prodi')
-        // OR (klien='m' AND aktif ='$aktif' AND prodi = '')
-        // ");
-
         $query = $this->db->query("SELECT * FROM kategori_surat 
-        WHERE (klien='m' AND prodi = '$prodi')
-        OR (klien='m' AND prodi = '')
+        WHERE (klien='m' AND aktif ='$aktif' AND prodi = '$prodi')
+        OR (klien='m' AND aktif ='$aktif' AND prodi = '')
         ");
 
 

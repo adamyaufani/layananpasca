@@ -1,7 +1,7 @@
 <div class="kertas">
-  <table>
+  <table style="width:100%;">
     <tr>
-      <td width="70%">
+      <td width="60%">
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
@@ -21,7 +21,7 @@
     <tr>
       <td colspan="2">
         <p>Kepada Yth:<br />
-          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong>
+          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong><br />
           di-<br />
           Tempat
         </p>
@@ -55,7 +55,7 @@
 
   <table>
     <tr>
-      <td colspan="2">
+      <td width="50%" class="ttd-dir">
         <p>Direktur </p>
         <br />
         <br />
@@ -63,6 +63,7 @@
         <br />
         <p><u>Ir.Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
       </td>
+      <td>&nbsp;</td>
 
     </tr>
   </table>

@@ -96,9 +96,6 @@
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-					<?php if ($surat['catatan']) { ?>
-						<p class="alert alert-danger ml-3"><?= $surat['catatan']; ?></p>
-					<?php } ?>
 					<ul class="timeline">
 						<?php foreach ($timeline as $tl) { ?>
 							<li>
@@ -108,9 +105,6 @@
 							</li>
 						<?php } ?>
 					</ul>
-
-
-
 				</div>
 			</div>
 		</div>
