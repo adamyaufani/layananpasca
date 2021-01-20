@@ -839,6 +839,7 @@ function cek_sudah_buat_surat($id_mahasiswa, $id_kategori_surat, $min_semester)
 
 		$status = $CI->db->query("SELECT MAX(ss.id_status) as id_status, id_surat FROM surat_status ss
   	WHERE id_surat = $id_surat
+		GROUP BY id_status
 		")->row_array();
 
 		if (($status['id_status'] == 10) || ($status['id_status']  == 6)) {
