@@ -1,10 +1,6 @@
 <div class="row">
 	<div class="col-12">
 
-		<?php if ($_SESSION['role'] == 3) { ?>
-			<a class="btn btn-md btn-ijomuda p-2 mb-4" style="border-radius:30px;" href="<?= base_url("mahasiswa/surat/ajukan"); ?>"><i class="fas fa-fw fa-plus"></i> Surat Baru</a>
-		<?php } ?>
-
 		<div class="card card-success card-outline">
 
 			<div class="card-body box-profile">

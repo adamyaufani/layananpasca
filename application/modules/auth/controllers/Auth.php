@@ -146,7 +146,7 @@ class Auth extends CI_Controller
 							} else {
 								$this->session->set_userdata('user_id', $result);
 							}
-							redirect(base_url('mahasiswa/surat'), 'refresh');
+							redirect(base_url('mahasiswa/dashboard'), 'refresh');
 						} else {
 							$data['ref'] = $referrer;
 							$data['msg'] = 'Anda tidak berhak mengakses!';

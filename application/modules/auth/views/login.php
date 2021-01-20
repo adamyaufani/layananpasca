@@ -9,7 +9,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Login SIMPELA PPS UMY</title>
+	<title>SIM Layanan Pascasarjana UMY</title>
 
 	<!-- Custom fonts for this template-->
 	<link href="<?= base_url() ?>/public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

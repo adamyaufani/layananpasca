@@ -1,32 +1,6 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-success card-outline">
-            <div class="card-header py-3">
-                <a href="<?= base_url('admin/pengguna/tambah') ?>" class="btn btn-sm btn-perak btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span class="text">Tambah Pengguna</span>
-                </a> &nbsp;
-                <a href="<?= base_url('admin/pengguna/upload') ?>" class="btn btn-sm btn-perak btn-icon-split">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="text">Upload Pengguna</span>
-                </a>
-
-                <span class="float-right">
-                    <select id="selectpengguna">
-                        <option value="">-- Pilih Pengguna --</option>
-                        <option value="Dosen">Dosen</option>
-                        <option value="Mahasiswa">Mahasiswa</option>
-                        <option value="Pascasarjana">Pascasarjana</option>
-                        <option value="Program Studi">Program Studi</option>
-                    </select>
-                </span>
-
-            </div>
-
             <div class="card-body box-profile">
                 <table id="kategorisurat" class="table table-striped table-bordered">
                     <thead>

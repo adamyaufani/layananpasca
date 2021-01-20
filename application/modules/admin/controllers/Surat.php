@@ -55,6 +55,7 @@ class Surat extends Admin_Controller
 				->set('pic', $this->session->userdata('user_id'))
 				->set('date', 'NOW()', FALSE)
 				->set('id_surat', $id_surat)
+				->set('catatan', $this->input->post('catatan'))
 				->insert('surat_status');
 
 			foreach ($verifikasi as $id => $value_verifikasi) {
