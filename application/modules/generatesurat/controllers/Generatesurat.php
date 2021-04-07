@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-class Generatesurat extends Admin_Controller
+class Generatesurat extends Public_Controller
 {
 	public function __construct()
 	{
@@ -12,6 +12,7 @@ class Generatesurat extends Admin_Controller
 
 	public function index($id_surat = 0)
 	{
+		$id_surat = decrypt_url($id_surat);
 		$data['title'] = 'Tampil Surat';
 		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 		$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
