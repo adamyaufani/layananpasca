@@ -56,19 +56,24 @@ class Surat extends Mahasiswa_Controller
 		// ambil keterangan surat berdasar kategori surat
 		$kat_surat = $this->db->select('kat_keterangan_surat')->from('kategori_surat')->where('id=', $id)->get()->row_array();
 
-		// explode kterangan surat
-		$kat_surat = explode(',', $kat_surat['kat_keterangan_surat']);
-
+		// echo '<pre>';
+		// print_r($kat_surat['kat_keterangan_surat']);
+		// echo '</pre>';
 		// foreach keterangan surat, lalu masukkan nilai awal (nilai kosong) berdasakan keterangan dari kategori surat
-		foreach ($kat_surat as $key => $id_kat) {
-			$this->db->insert(
-				'keterangan_surat',
-				array(
-					'value' => '',
-					'id_surat' =>  $insert_id2['id_surat'],
-					'id_kat_keterangan_surat' => $id_kat,
-				)
-			);
+		if ($kat_surat) {
+			$unserial = unserialize($kat_surat['kat_keterangan_surat']);
+
+			foreach ($unserial as $row) {
+
+				$this->db->insert(
+					'keterangan_surat',
+					array(
+						'value' => '',
+						'id_surat' =>  $insert_id2['id_surat'],
+						'id_kat_keterangan_surat' => $row['id'],
+					)
+				);
+			}
 		}
 
 		$data_notif = array(
@@ -203,49 +208,100 @@ class Surat extends Mahasiswa_Controller
 		}
 	}
 
+	public function hapus_file()
+	{
+		$id = $_POST['id'];
+		$media = $this->db->get_where('media', array('id' => $id))->row_array();
+		$exist = is_file($media['thumb']);
+
+		if ($media['thumb']) {
+			if (is_file($media['thumb'])) {
+				unlink($media['thumb']);
+				$thumb = 'deleted';
+			}
+		}
+		if ($media['file']) {
+			if (is_file($media['file'])) {
+				unlink($media['file']);
+				$file = 'deleted';
+			}
+		}
+
+		$hapus = $this->db->delete('media', array('id' => $id));
+		// if ($hapus) {
+		echo json_encode(array(
+			"statusCode" => 200,
+			"id" => $file,
+			'thumb' => ($media['thumb']) ? $thumb : 'gada',
+			'file' => ($media['file']) ? $file : 'gada',
+			// 'hapus' => $hapus
+		));
+		//}
+	}
 	public function doupload()
 	{
 		header('Content-type:application/json;charset=utf-8');
-		$upload_path = 'uploads/dokumen';
+		$upload_path = 'uploads/dokumen'; // folder tempat menyimpan file yang diupload
 
+		// cek, jika upload path belum ada, maka buat folder
 		if (!is_dir($upload_path)) {
 			mkdir($upload_path, 0777, TRUE);
 		}
 
+		// konfigurasi upload
 		$config = array(
 			'upload_path' => $upload_path,
-			'allowed_types' => "jpg|png",
+			'allowed_types' => "jpg|png|jpeg|pdf",
 			'overwrite' => FALSE,
 		);
-
+		//panggil library upload
 		$this->load->library('upload', $config);
 
+		//cek jika file gagal diupload
 		if (!$this->upload->do_upload('file')) {
+			//tampilkan pesan error
 			$error = array('error' => $this->upload->display_errors());
 
+			//kirim pesan error dalam format json
 			echo json_encode([
 				'status' => 'error',
 				'message' => $error
 			]);
+
+			// jika file berhasil diupload
 		} else {
+			//masukkan hasil upload ke variabel $data
 			$data = $this->upload->data();
 
-			$this->_create_thumbs($data['file_name']);
+			//cek file type apakah image atau bukan image
+			//format file_type, contoh 'image/jpeg', 'application/pdf'
+			$ext = explode('/', $data['file_type']);
+			if ($ext[0] == 'image') {
+				//jika image, maka file akan dibuatkan thumbnailnya
+				$thumb = $this->_create_thumbs($data['file_name']);
+				$thumb = $upload_path . '/' . $data['raw_name'] . '_thumb' . $data['file_ext'];
+			} else {
+				//jika bukan gambar, maka $thumb = '' (kosong)
+				$thumb = '';
+			}
 
+			// insert file ke table 'media'
 			$result = $this->db->insert(
 				'media',
 				array(
 					'id_user' => $this->session->userdata('user_id'),
 					'file' =>  $upload_path . '/' . $data['file_name'],
-					'thumb' =>  $upload_path . '/' . $data['raw_name'] . '_thumb' . $data['file_ext']
+					'thumb' =>  $thumb,
+					'extension' =>  $data['file_ext']
 				)
 			);
 
+			//output dalam bentuk json
 			echo json_encode([
 				'status' => 'Ok',
 				'id' => $this->db->insert_id(),
-				// 'path' => $upload_path . '/' . $data['file_name']
-				'thumb' => $upload_path . '/' . $data['raw_name'] . '_thumb' . $data['file_ext'],
+				'extension' =>  $data['file_ext'],
+				'thumb' =>  $thumb,
 				'orig' => $upload_path . '/' . $data['file_name']
 			]);
 		}
@@ -300,9 +356,9 @@ class Surat extends Mahasiswa_Controller
 		$image_config['maintain_ratio'] = TRUE;
 		$image_config['thumb_marker'] = "_thumb";
 		$image_config['new_image'] = $upload_data["file_path"];
-		$image_config['quality'] = "100%";
-		$image_config['width'] = 320;
-		$image_config['height'] = 240;
+		$image_config['quality'] = "90%";
+		$image_config['width'] = 100;
+		$image_config['height'] = 100;
 		$dim = (intval($upload_data["image_width"]) / intval($upload_data["image_height"])) - ($image_config['width'] / $image_config['height']);
 		$image_config['master_dim'] = ($dim > 0) ? "height" : "width";
 
@@ -311,6 +367,22 @@ class Surat extends Mahasiswa_Controller
 
 		if (!$this->image_lib->resize()) { //Resize image
 			redirect("errorhandler"); //If error, redirect to an error page
+		}
+	}
+
+
+	public function getPembimbing()
+	{
+		$search = $this->input->post('search');
+		$result_anggota = $this->surat_model->getPembimbing($search);
+
+		foreach ($result_anggota as $anggota) {
+			$selectajax[] = [
+				'value' => $anggota['id'],
+				'id' => $anggota['id'],
+				'text' => $anggota['fullname']
+			];
+			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
 		}
 	}
 }

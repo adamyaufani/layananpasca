@@ -28,7 +28,7 @@
 									<td>
 										<a class="judul" href="<?= base_url('admin/surat/detail/' . $surat['id_surat']); ?>"><?= $surat['kategori_surat']; ?></a>
 									</td>
-									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['id_status']; ?> - <?php echo $surat['status']; ?></td>
+									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
 									<td>
 										<p class="m-0"><?= $surat['fullname']; ?></p>
 										<p class="badge m-0 badge-ijomuda"><?= $surat['prodi']; ?></p>

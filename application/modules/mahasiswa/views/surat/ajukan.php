@@ -4,9 +4,24 @@
 
 		<div class="accordion" id="accordionExample">
 
-			<?php foreach ($kategori_surat as $kategori) : ?>
+			<?php
 
-				<div class="card <?= ($kategori['prodi'] > 0) ? (($kategori['prodi'] == $this->session->userdata('id_prodi')) ? '' : 'd-none') : ''; ?>">
+
+			foreach ($kategori_surat as $kategori) :
+
+				//cek apakah karegori surat ini berhak diakses oleh user ini
+				if ($kategori['prodi'] > 0) {
+					$prodi_explode = explode(',', $kategori['prodi']);
+					$prodinya = in_array($this->session->userdata('id_prodi'), $prodi_explode);
+					if ($prodinya) {
+						$hide = '';
+					} else {
+						$hide = 'd-none';
+					}
+				} else {
+					$hide = '';
+				} ?>
+				<div class="card <?= $hide; ?>">
 					<div class="card-header" id="heading-<?= $kategori['id']; ?>">
 						<h2 class="h6 mb-0">
 							<a href="#" data-toggle="collapse" data-target="#collapse-<?= $kategori['id']; ?>" aria-expanded="true" aria-controls="collapse-<?= $kategori['id']; ?>">

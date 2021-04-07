@@ -9,57 +9,33 @@
 			<div class="collapse<?= ($surat['id_status'] == 10) ? "" : " show" ?>" id="collKeterangan">
 				<div class="card-body">
 
-					<?php
-
-					/* if ($surat['id_status'] == '9') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-signature"></i> Permohonan disetujui oleh Direktur Pascasarjana UMY <i class="fas fa-long-arrow-alt-right"></i> Proses penerbitan surat.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '8') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-signature"></i> Permohonan disetujui oleh Ketua Program Studi <i class="fas fa-long-arrow-alt-right"></i> Menunggu persetujuan Direktur Program Pascasarjana.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '7') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-check-square"></i> Permohonan sudah diverifikasi <i class="fas fa-long-arrow-alt-right"></i> Menunggu persetujuan Ketua Program Studi.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '6') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-ban"></i> Permohonan ditolak. Silakan mengajukan surat baru.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '5') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-hourglass-half"></i> Menunggu verifikasi hasil revisi oleh Tata Usaha.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '4') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-exclamation-triangle"></i> Perbaiki data yang belum sesuai <strong>yang diberi tanda merah.</strong></p>
-
-					<?php } elseif ($surat['id_status'] == '3') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="fas fa-hourglass-half"></i> Menunggu Persetujuan Kepala Prodi</p>
-
-					<?php } elseif ($surat['id_status'] == '2') { ?>
-						<p class="alert alert-<?= $surat['badge']; ?> mb-4"><i class="<?= $surat['icon']; ?>"></i> <?= $surat['alert']; ?></p>
-
-					<?php } elseif ($surat['id_status'] == '1') { ?>
-						<p class="alert alert-warning mb-4"><?php tampil_alert(); ?></p>
-					<?php } */ ?>
-
 					<?php echo form_open(base_url('mahasiswa/surat/tambah/' . $surat['id']), '') ?>
 
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
-					<?php $ket_surat = explode(',', $surat['kat_keterangan_surat']);
+					<?php
 
-					foreach ($ket_surat as $ket_surat => $value) {
-						$type = kat_keterangan_surat($value)['type'];
-						$kat_keterangan_surat = kat_keterangan_surat($value)['kat_keterangan_surat']; ?>
 
-						<div class="form-group row">
-							<label class="col-md-5" for="dokumen[<?= $value; ?>]"><?= kat_keterangan_surat($value)['kat_keterangan_surat']; ?>
-								<small id="emailHelp" class="form-text text-muted"><?= kat_keterangan_surat($value)['deskripsi']; ?></small>
+					if ($surat['kat_keterangan_surat']) {
+						$unserial = unserialize($surat['kat_keterangan_surat']);
 
-							</label>
-							<div class="col-md-7">
-								<?php generate_form_field($value, $surat['id'], $surat['id_status']); ?>
+						foreach ($unserial as $row) {
+
+							$type = kat_keterangan_surat($row['id'])['type'];
+							$kat_keterangan_surat = kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
+
+							<div class="form-group row">
+								<label class="col-md-5" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
+									<small id="emailHelp" class="form-text text-muted"><?= kat_keterangan_surat($row['id'])['deskripsi']; ?></small>
+
+								</label>
+								<div class="col-md-7">
+									<?php generate_form_field($row['id'], $surat['id'], $surat['id_status']); ?>
+								</div>
 							</div>
-						</div>
 
-					<?php } ?>
+					<?php }
+					} ?>
 
 					<?php if ($surat['id_status'] == 4) { ?>
 						<input type="hidden" name="revisi" value="1">
@@ -99,15 +75,22 @@
 					<?php if ($surat['catatan']) { ?>
 						<p class="alert alert-danger ml-3"><?= $surat['catatan']; ?></p>
 					<?php } ?>
-					<ul class="timeline">
+
+
+					<div class="timeline timeline-xs">
 						<?php foreach ($timeline as $tl) { ?>
-							<li>
-								<span class="badge badge-<?= $tl['badge']; ?>"><?= $tl['status']; ?></span>
-								<span class="badge badge-secondary"><?= $tl['date']; ?></span>
-								<span class="badge badge-perak"><?= $tl['time']; ?></span>
-							</li>
+							<div class="timeline-item <?= ($tl['id_status'] === 7 || $tl['id_status'] === 9) ? 'd-none' : '' ?>">
+								<div class="timeline-item-marker">
+									<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
+									<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>
+								</div>
+								<div class="timeline-item-content">
+									<?= $tl['status']; ?>
+									<span class="badge badge-perak"><?= $tl['time']; ?></span>
+								</div>
+							</div>
 						<?php } ?>
-					</ul>
+					</div>
 
 
 
@@ -117,5 +100,3 @@
 	</div>
 	<!-- /.col -->
 </div>
-
-<?php fileUploaderModal(); ?>
