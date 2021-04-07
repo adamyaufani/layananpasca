@@ -127,10 +127,10 @@ class Auth extends CI_Controller
 								'fullname' => $result['FULLNAME'],
 								'email' => $result['EMAIL'],
 								'telp' => $result['TELP'],
-								'fakultas' => $result['name_of_faculty'],
+							//	'fakultas' => $result['name_of_faculty'],
 								'id_prodi' => $result['department_id'],
 								'role' => 3,
-								'aktif' => ($cek_aktif->num_rows() > 0) ? 1 : 0,
+							//	'aktif' => ($cek_aktif->num_rows() > 0) ? 1 : 0,
 								'created_at' => date('Y-m-d : h:m:s'),
 							);
 
