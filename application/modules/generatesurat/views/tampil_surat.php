@@ -1,3 +1,4 @@
+
 <html>
 
 <head>
@@ -42,7 +43,7 @@
 <body>
     <div style="margin:4cm 2.5cm 4cm 2.5cm;">
         <?php
-        $file = FCPATH . 'application/modules/admin/views/surat/template/' . $surat['template'];
+        $file = FCPATH . 'application/modules/generatesurat/views/template/' . $surat['template'];
         if ($surat['template']) {
             if (file_exists($file)) {
                 include $file;
