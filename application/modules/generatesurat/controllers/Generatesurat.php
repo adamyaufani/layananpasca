@@ -24,9 +24,9 @@ class Generatesurat extends Public_Controller
 		$this->load->library('ciqrcode');
 
 		$params['data'] = base_url('generatesurat/validasi/'. $id_surat);
-		$params['level'] = 'H';
+		$params['level'] = 'L';
 		$params['size'] = 2;
-		$params['savename'] = FCPATH.'tes.png';
+		$params['savename'] = FCPATH. $decrypt.'-qr.png';
 		$this->ciqrcode->generate($params);
 
 
@@ -52,7 +52,7 @@ class Generatesurat extends Public_Controller
 		$mpdf->SetHTMLFooter('
 
 		<div class="futer">
-		<img src="'.base_url().'tes.png" />
+		<img src="'.base_url(). $decrypt.'-qr.png" />
 		</div>');
 
 		$mpdf->WriteHTML($view);

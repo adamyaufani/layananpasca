@@ -28,7 +28,7 @@
             background: transparent url('<?= base_url('public/dist/img/footerkop-pasca.jpg'); ?>') center bottom no-repeat;
             background-size:100%;
             text-align:right;
-            padding:30px;
+            padding:40px;
         }
         .futer img {
             width:50px;
