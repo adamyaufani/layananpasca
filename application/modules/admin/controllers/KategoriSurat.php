@@ -26,7 +26,7 @@ class Kategorisurat extends MY_Controller
 
 	public function edit($id)
 	{
-		$directory = APPPATH . '/modules/admin/views/surat/template/';
+		$directory = APPPATH . '/modules/generatesurat/views/template/';
 		$scanned_directory = array_diff(scandir($directory), array('..', '.'));
 
 		if ($this->input->post('submit')) {

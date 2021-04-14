@@ -233,8 +233,6 @@
 
 						<span class="text-danger" style="line-height:1.5rem;font-size: 80%;"><?php echo form_error('kat_keterangan_surat[]'); ?></span>
 
-
-						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('template'); ?></span>
 					</div>
 				</div>
 
