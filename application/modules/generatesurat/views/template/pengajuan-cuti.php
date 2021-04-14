@@ -33,7 +33,7 @@
     </tr>
   </table>
 
-  <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Assalamualaikum warahmatullaahi wabarakatuh</em></p>
   <p>Dengan hormat,</p>
   <p>Saya yang bertandatangan di bawah ini:</p>
 
@@ -97,6 +97,8 @@ $mpdf->AddPage(); ?>
 
 foreach ($dokumen as $dokumen) { ?>
   <div class="kertas">
-    <p><?= $dokumen['kat_keterangan_surat']; ?></p><img src="<?= base_url($dokumen['file']); ?>" />
+   
+        <p><?= $dokumen['kat_keterangan_surat']; ?></p><img width="" src="<?= base_url($dokumen['file']); ?>" />
+  
   </div>
 <?php } ?>

@@ -32,7 +32,7 @@
     </tr>
   </table>
 
-  <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Assalamualaikum warahmatullaahi wabarakatuh</em></p>
   <p>Dengan hormat,</p>
   <p>Kami sampaikan bahwa Mahasiswa dari Program Studi <?= $surat['prodi']; ?> Program Pascasarjana Universitas Muhammadiyah Yogyakarta </p>
 
@@ -51,7 +51,7 @@
   <!-- date formatnya dibenerin lagi -->
 
   <p>Demikian surat ini kami sampaikan. Atas perhatiannya kami ucapkan terima kasih.</p>
-  <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Wassalamualaikum warahmatullaahi wabarakatuh</em></p>
 
   <table>
     <tr>

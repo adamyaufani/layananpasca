@@ -12,14 +12,23 @@ class Generatesurat extends Public_Controller
 
 	public function index($id_surat = 0)
 	{
-		$id_surat = decrypt_url($id_surat);
+		$decrypt = decrypt_url($id_surat);
 		$data['title'] = 'Tampil Surat';
-		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-		$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
+		$data['surat'] = $this->surat_model->get_detail_surat($decrypt);
+		$data['no_surat'] = $this->surat_model->get_no_surat($decrypt);
 		$kategori = $data['surat']['kategori_surat'];
 		$nim = $data['surat']['username'];
 
 		//$this->load->view('admin/surat/tampil_surat', $data);
+
+		$this->load->library('ciqrcode');
+
+		$params['data'] = base_url('generatesurat/validasi/'. $id_surat);
+		$params['level'] = 'H';
+		$params['size'] = 2;
+		$params['savename'] = FCPATH.'tes.png';
+		$this->ciqrcode->generate($params);
+
 
 		$mpdf = new \Mpdf\Mpdf([
 			'tempDir' => __DIR__ . '/pdfdata',
@@ -28,9 +37,10 @@ class Generatesurat extends Public_Controller
 			'format' => 'A4',
 			'margin_left' => 0,
 			'margin_right' => 0,
-			'margin_bottom' => 20,
-			'margin_top' => 30,
-			'float' => 'left'
+			'margin_footer' => 0,
+			'margin_top' => 0,
+			'float' => 'left',
+			'setAutoTopMargin' => 'stretch'
 		]);
 
 		$view = $this->load->view('generatesurat/tampil_surat', $data, TRUE);
@@ -41,13 +51,24 @@ class Generatesurat extends Public_Controller
 		</div>');
 		$mpdf->SetHTMLFooter('
 
-		<div style="text-align:center; background:red;">
-			<img width="" height="" src="' . base_url() . '/public/dist/img/footerkop-pasca.jpg" />
+		<div class="futer">
+		<img src="'.base_url().'tes.png" />
 		</div>');
 
 		$mpdf->WriteHTML($view);
 
 		$mpdf->Output('Surat-' . $kategori . '-' . $nim . '.pdf', 'D');
 	}
+	
+	public function validasi($id_surat = 0)
+	{
+		$id_surat = decrypt_url($id_surat);
+		$data['title'] = 'Tampil Surat';
+		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+		$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
+		$kategori = $data['surat']['kategori_surat'];
+		$nim = $data['surat']['username'];
 
+		$this->load->view('generatesurat/validasi', $data);
+	}
 }

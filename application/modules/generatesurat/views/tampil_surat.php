@@ -4,6 +4,7 @@
 <head>
     <title><?= $surat['kategori_surat'] ?></title>
     <style>
+    
         div.kertas {
             width: 100%;
             height: 100%;
@@ -15,13 +16,25 @@
         }
 
         td.ttd-dir {
-            height: 200px;
+            height: 2cm;
             text-align: center;
             width: 70%;
             background: url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center center no-repeat;
             vertical-align: middle;
         }
-
+        .futer {
+            height: 1.5cm;
+            width: 100%;
+            background: transparent url('<?= base_url('public/dist/img/footerkop-pasca.jpg'); ?>') center bottom no-repeat;
+            background-size:100%;
+            text-align:right;
+            padding:30px;
+        }
+        .futer img {
+            width:50px;
+            height:50px;
+        }
+       
         table.nama {
             margin-bottom: 20px;
         }
