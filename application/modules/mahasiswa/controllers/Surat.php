@@ -85,8 +85,6 @@ class Surat extends Mahasiswa_Controller
 
 		$results = $this->notif_model->send_notif($data_notif);
 
-
-
 		if ($results) {
 			$this->session->set_flashdata('msg', 'Berhasil!');
 			redirect(base_url('mahasiswa/surat/tambah/' . $insert_id));
@@ -150,19 +148,17 @@ class Surat extends Mahasiswa_Controller
 						'id_surat' => $id_surat,
 						'id_status' => 2,
 						'kepada' => $_SESSION['user_id'],
-						'role' => array(2, 3)
+						'role' => array(2) // harus dalam bentuk array
 					);
 
-					$this->notif_model->send_notif($data_notif);
+					//sendmail & notif
+					$this->mailer->send_mail($data_notif);
 
 					// hapus notifikasi "Lengkapi dokumen"
 					$set_status = $this->db->set('status', 1)
 						->set('dibaca', 'NOW()', FALSE)
 						->where(array('id' => $id_notif, 'status' => 0))
 						->update('notif');
-
-					//mailer di sini
-
 
 					if ($set_status) {
 						redirect(base_url('mahasiswa/surat/tambah/' . $id_surat));

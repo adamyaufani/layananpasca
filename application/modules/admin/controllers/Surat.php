@@ -7,6 +7,7 @@ class Surat extends Admin_Controller
 		parent::__construct();
 		$this->load->model('surat_model', 'surat_model');
 		$this->load->model('notif/Notif_model', 'notif_model');
+		$this->load->library('mailer');
 	}
 
 	public function index($role = 0)
@@ -93,15 +94,16 @@ class Surat extends Admin_Controller
 				'role' => $role
 			);
 
-			// hapus notifikasi "menunggu verifikasi"
+			//sendmail & notif
+			$this->mailer->send_mail($data_notif);
+
+			// set notif, sudah dibaca"
 			$set_notif = $this->db->set('status', 1)
 				->set('dibaca', 'NOW()', FALSE)
 				->where(array('id' => $id_notif, 'status' => 0))
 				->update('notif');
 
-			$result = $this->notif_model->send_notif($data_notif);
-
-			if ($result) {
+			if ($set_notif) {
 				$this->session->set_flashdata('msg', 'Surat sudah diperiksa oleh TU!');
 				redirect(base_url('admin/surat/detail/' . $id_surat));
 			}
@@ -131,9 +133,10 @@ class Surat extends Admin_Controller
 						'id_status' => 9,
 						'kepada' => $this->input->post('user_id'),
 						'role' => array(3, 1)
-					);
+					);				
 
-					$result = $this->notif_model->send_notif($data_notif);
+					//sendmail & notif
+					$this->mailer->send_mail($data_notif);
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Direktur Pascasarjana!');
 					redirect(base_url('admin/surat/detail/' . $id_surat));
@@ -155,8 +158,9 @@ class Surat extends Admin_Controller
 						'role' => array(3, 5)
 					);
 
+					//sendmail & notif
+					$this->mailer->send_mail($data_notif);
 
-					$result = $this->notif_model->send_notif($data_notif);
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Kaprodi!');
 					redirect(base_url('admin/surat/detail/' . $id_surat));
 				}
@@ -219,7 +223,8 @@ class Surat extends Admin_Controller
 					'instansi' => $this->input->post('instansi'),
 					'tanggal_terbit' => date('Y-m-d'),
 				);
-
+	
+				echo $user_id = $this->input->post('user_ids');
 				$insert = $this->db->insert('no_surat', $data);
 				if ($insert) {
 					$this->db->set('id_status', 10)
@@ -232,24 +237,28 @@ class Surat extends Admin_Controller
 						'id_surat' => $id_surat,
 						'id_status' => 10,
 						'kepada' => $this->input->post('user_id'),
-						'role' => array(3, 1, 2, 5, 6)
+						'role' => array(3)
 					);
 
-					$result = $this->notif_model->send_notif($data_notif);
+					echo '<pre>'; print_r($data_notif); echo '</pre>';
 
-					$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
-					redirect(base_url('admin/surat/detail/' . $id_surat));
+					// //sendmail & notif
+					 $this->mailer->send_mail($data_notif);
+
+					// $this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
+					// redirect(base_url('admin/surat/detail/' . $id_surat));
 				}
 			}
-		} else {
-			$data['status'] = $this->surat_model->get_surat_status($id_surat);
-			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+		} 
+		// else {
+		// 	$data['status'] = $this->surat_model->get_surat_status($id_surat);
+		// 	$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+		// 	$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
-			$data['title'] = 'Detail Surat';
-			$data['view'] = 'surat/detail';
-			$this->load->view('layout/layout', $data);
-		}
+		// 	$data['title'] = 'Detail Surat';
+		// 	$data['view'] = 'surat/detail';
+		// 	$this->load->view('layout/layout', $data);
+		// }
 	}
 
 	public function get_tujuan_surat()

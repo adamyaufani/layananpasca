@@ -1,15 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-
-// print_r tool
-
-function printrs($var)
-{
-	echo "<pre>";
-	print_r($var);
-	echo "</pre>";
-}
-
 function profPic($id, $w)
 {
 	if ($id) {
@@ -49,6 +39,21 @@ function getUserbyId($id)
 {
 	$CI = &get_instance();
 	return  $CI->db->select('*')->from('users')->where(array('id' => $id))->get()->row_array();
+}
+// -----------------------------------------------------------------------------
+function getUsersbyRole($role, $prodi)
+{
+	
+	$CI = &get_instance();
+
+	echo $prodi;
+
+	if ($prodi) {
+		return  $CI->db->select('*')->from('users')->where(array('role' => $role, 'id_prodi'=> $prodi))->get()->result_array();
+	} else {
+		return  $CI->db->select('*')->from('users')->where(array('role' => $role))->get()->result_array();
+	}
+	
 }
 // -----------------------------------------------------------------------------
 function getProdibyId($id)
