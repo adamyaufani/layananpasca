@@ -5,35 +5,13 @@ class Dashboard extends Admin_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('dashboard_model', 'dashboard_model');
 	}
 
 	public function index()
 	{
-		//cek apakah ada kategori surat yg blm selesai
-		$CI = &get_instance();
-		if ($_SESSION['role'] == 1) {
-			$where = "n.role = 1";
-		} else if ($_SESSION['role'] == 2) {
-			$where = "n.role = 2 AND n.id_prodi = " . $_SESSION['id_prodi'];
-		} else if ($_SESSION['role'] == 3) {
-			$where = "n.role = 3 AND n.kepada = " . $_SESSION['user_id'];
-		} else if ($_SESSION['role'] == 4) {
-			$where = "n.role = 4 AND n.kepada = " . $_SESSION['user_id'];
-		} else if ($_SESSION['role'] == 5) {
-			$where = "n.role = 5";
-		} else if ($_SESSION['role'] == 6) {
-			$where = "n.role = 6 AND n.id_prodi = " . $_SESSION['id_prodi'];
-		}
-		$notif = $CI->db->query("SELECT n.*, n.id as notif_id, sp.judul_notif, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M') as date_full, sp.badge, sp.icon, s.id_kategori_surat, ks.kategori_surat, u.fullname
-		FROM notif n 	
-		LEFT JOIN status_pesan sp ON sp.id = n.id_status_pesan
-		LEFT JOIN surat s ON s.id = n.id_surat
-		LEFT JOIN kategori_surat ks ON s.id_kategori_surat = ks.id
-		LEFT JOIN users u ON n.kepada = u.id
-		WHERE  $where AND n.status = 0 	
-		ORDER BY id DESC");
-
-		$data['notif'] = $notif;
+		$data['notif'] = $this->dashboard_model->notif();
+		$data['juml_surat'] = $this->dashboard_model->for_graph(10);
 		$data['title'] = 'Dashboard';
 		$data['view'] = 'dashboard/index';
 		$this->load->view('layout/layout', $data);
