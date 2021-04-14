@@ -245,8 +245,8 @@ class Surat extends Admin_Controller
 					// //sendmail & notif
 					 $this->mailer->send_mail($data_notif);
 
-					// $this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
-					// redirect(base_url('admin/surat/detail/' . $id_surat));
+					$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
+					redirect(base_url('admin/surat/detail/' . $id_surat));
 				}
 			}
 		} 

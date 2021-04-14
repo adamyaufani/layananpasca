@@ -17,34 +17,24 @@ class Mailer
   public function send_mail($data)
   {
 
+    //kirim notifikasi
+    $this->_CI->notif_model->send_notif($data);
 
-  //  $this->_CI->notif_model->send_notif($data);
+    $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
 
-    // $sp = $this->_CI->notif_model->get_status_pesan($data['id_status'], $data['role'][0]);
+    $mail->From = $this->get_settings('email');
+    $mail->FromName = $this->get_settings('from_email');
+    //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+    $mail->isSMTP();                                            // Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = $this->get_settings('email');                     // SMTP username
+    $mail->Password   = decrypt_url($this->get_settings('password_email'));
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+    $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
-    // echo '<pre>';
-    // print_r($sp);
-    // echo '</pre>';
-
-    $role = $data['role'];
-
-    // $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
-
-    // $mail->From = $this->get_settings('email');
-    // $mail->FromName = $this->get_settings('from_email');
-
-    // // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-    // $mail->isSMTP();                                            // Send using SMTP
-    // $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
-    // $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    // $mail->Username   = $this->get_settings('email');                     // SMTP username
-    // $mail->Password   = decrypt_url($this->get_settings('password_email'));
-    // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-    // $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
-
-    // $mail->setFrom($this->get_settings('email'), $this->get_settings('from_email'));
-
-    // $mail->isHTML(true);
+    $mail->setFrom($this->get_settings('email'), $this->get_settings('from_email'));
+    $mail->isHTML(true);
 
 
     // if ($attachment) {
@@ -52,59 +42,58 @@ class Mailer
     // $mail->addAttachment($attachment['presentasi']);
     // }
 
+    $role = $data['role'];
 
     foreach ($role as $role) {
 
-      
+
       if ($role != 3) {
 
         if ($role === 5) { //dir pasca
           $users = getUsersbyRole($role, '');
         } else {
           $users = getUsersbyRole($role, $_SESSION['id_prodi']);
-        }   
-        
-        foreach ($users as $user) {
-        //  $mail->addAddress($user['email']);
-          echo "admin" . $user['email'];
         }
-        echo "<hr>";
-        echo $subject = 'Subjek utk admin';
-        echo $body    = 'body admin';
 
-        // $mail->Subject = $subject;
-        // $mail->Body = $body;
+        foreach ($users as $user) {
+          $mail->addAddress($user['email']);
+        }
 
-        // $mail->send();
+        $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
 
-        // $mail->ClearAddresses();
-        
+        echo '<pre>';
+        print_r($sp);
+        echo '</pre>';
 
+        echo $subject = $sp['judul_notif'];
+        echo $body    = $sp['isi_notif'];
+
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+
+        $mail->send();
+
+        $mail->ClearAddresses();
       } else {
-      //  $mail->addAddress(getUserbyId($data['kepada'])['email']);
+        $mail->addAddress(getUserbyId($data['kepada'])['email']);
 
-        echo "mhs" . getUserbyId($data['kepada'])['email'];
+        $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
 
-        echo $subject = 'Subjek utk mhs';
-        echo $body    = 'body mhs';
+        echo '<pre>';
+        print_r($sp);
+        echo '</pre>';
 
-        // $mail->Subject = $subject;
-        // $mail->Body = $body;
+        echo $subject = $sp['judul_notif'];
+        echo $body    = $sp['isi_notif'];
 
-        // $mail->send();
+        $mail->Subject = $subject;
+        $mail->Body = $body;
 
-        // $mail->ClearAddresses();
-      
+        $mail->send();
+
+        $mail->ClearAddresses();
       }
     }
-
-    // if (!$mail->send()) {
-    //   $status = 0;
-    // } else {
-    //   $status = 1;
-    // }
-
-    // return $status;
   }
 
 

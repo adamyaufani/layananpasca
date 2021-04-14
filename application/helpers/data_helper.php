@@ -46,8 +46,6 @@ function getUsersbyRole($role, $prodi)
 	
 	$CI = &get_instance();
 
-	echo $prodi;
-
 	if ($prodi) {
 		return  $CI->db->select('*')->from('users')->where(array('role' => $role, 'id_prodi'=> $prodi))->get()->result_array();
 	} else {
