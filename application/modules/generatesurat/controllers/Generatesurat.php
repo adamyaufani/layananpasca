@@ -63,12 +63,19 @@ class Generatesurat extends Public_Controller
 	public function validasi($id_surat = 0)
 	{
 		$id_surat = decrypt_url($id_surat);
-		$data['title'] = 'Tampil Surat';
-		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-		$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
-		$kategori = $data['surat']['kategori_surat'];
-		$nim = $data['surat']['username'];
 
-		$this->load->view('generatesurat/validasi', $data);
+		
+		$data['title'] = 'Tampil Surat';
+		if($id_surat) { 
+			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+			$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
+			$kategori = $data['surat']['kategori_surat'];
+			$nim = $data['surat']['username'];
+			$this->load->view('generatesurat/validasi', $data);
+		} else {
+			$this->load->view('generatesurat/invalid', $data);
+		}
+
+		
 	}
 }
