@@ -93,7 +93,7 @@ class Notif extends MY_Controller
 				// $data['view'] = 'notif/detail';
 
 				$link = ($_SESSION['role'] == 3) ? 'mahasiswa/surat/tambah' : 'admin/surat/detail'; 
-				$redir = base_url($link . '/' . $query['id_surat']);
+				$redir = base_url($link . '/' . encrypt_url($query['id_surat']));
 				// echo '<pre>'; print_r($query); echo '</pre>';
 				header('Location: '. $redir);
 				exit;

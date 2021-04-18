@@ -27,18 +27,33 @@ class Surat extends Admin_Controller
 	}
 	public function detail($id_surat = 0)
 	{
-		$data['status'] = $this->surat_model->get_surat_status($id_surat);
-		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-		$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
-		//cek apakah admin atau pengguna prodi ( admin prodi, tu, kaprodi, kecuali mhs)
-		if (($data['surat']['id_prodi'] == $this->session->userdata('id_prodi') && $this->session->userdata('role') !== 1) || $this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+		$id_surat = decrypt_url($id_surat);
 
-			$data['title'] = 'Detail Surat';
-			$data['view'] = 'surat/detail';
+		if ($id_surat) {
+
+			$data['status'] = $this->surat_model->get_surat_status($id_surat);
+			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+
+			if ($data['surat']['id_status'] == 10) {
+				$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
+			}
+
+			//cek apakah admin atau pengguna prodi ( admin prodi, tu, kaprodi, kecuali mhs)
+			if (($data['surat']['id_prodi'] == $this->session->userdata('id_prodi') && $this->session->userdata('role') !== 1) ||
+				$this->session->userdata('role') == 1 || $this->session->userdata('role') == 5
+			) {
+
+				$data['title'] = 'Detail Surat';
+				$data['view'] = 'surat/detail';
+			} else {
+				$data['title'] = 'Forbidden';
+				$data['view'] = 'restricted';
+			}
 		} else {
-			$data['title'] = 'Forbidden';
-			$data['view'] = 'restricted';
+			$data['title'] = 'Halaman tidak ditemukan';
+			$data['view'] = 'error404';
 		}
 
 		$this->load->view('layout/layout', $data);
@@ -105,7 +120,7 @@ class Surat extends Admin_Controller
 
 			if ($set_notif) {
 				$this->session->set_flashdata('msg', 'Surat sudah diperiksa oleh TU!');
-				redirect(base_url('admin/surat/detail/' . $id_surat));
+				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 			}
 		} else {
 			$data['title'] = 'Forbidden';
@@ -133,13 +148,13 @@ class Surat extends Admin_Controller
 						'id_status' => 9,
 						'kepada' => $this->input->post('user_id'),
 						'role' => array(3, 1)
-					);				
+					);
 
 					//sendmail & notif
 					$this->mailer->send_mail($data_notif);
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Direktur Pascasarjana!');
-					redirect(base_url('admin/surat/detail/' . $id_surat));
+					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 				}
 			} elseif ($this->session->userdata('role') == 6 && $this->session->userdata('id_prodi') == $this->input->post('prodi')) { // kaprodi
 
@@ -162,7 +177,7 @@ class Surat extends Admin_Controller
 					$this->mailer->send_mail($data_notif);
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Kaprodi!');
-					redirect(base_url('admin/surat/detail/' . $id_surat));
+					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 				}
 			}
 		}
@@ -213,7 +228,7 @@ class Surat extends Admin_Controller
 				$data['view'] = 'surat/detail';
 				$this->load->view('layout/layout', $data);
 			} else {
-				$data = array(
+				$no_surat_data = array(
 					'id_surat' => $id_surat,
 					'id_kategori_surat' => $this->input->post('id_kategori_surat'),
 					'no_surat' => $this->input->post('no_surat'),
@@ -222,11 +237,70 @@ class Surat extends Admin_Controller
 					'urusan_surat' => $this->input->post('urusan_surat'),
 					'instansi' => $this->input->post('instansi'),
 					'tanggal_terbit' => date('Y-m-d'),
+					'no_lengkap' => '',
 				);
-	
-				echo $user_id = $this->input->post('user_ids');
-				$insert = $this->db->insert('no_surat', $data);
+
+
+				$insert = $this->db->insert('no_surat', $no_surat_data);
+				$last_id = $this->db->insert_id();
+				$no_surat =	 $this->surat_model->get_no_surat($id_surat);
+				$no_surat_lengkap = $no_surat['no_surat'] . "/" . $no_surat['kode'] . "." . $no_surat['kode_tujuan'] . "-" . $no_surat['kode_us'] . "/" . bulan_romawi($no_surat['bulan']) . "/" . $no_surat['tahun'];
+
 				if ($insert) {
+
+					$this->load->library('ciqrcode');
+
+					$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+					$params['level'] = 'L';
+					$params['size'] = 2;
+					$params['savename'] = FCPATH . "/public/documents/tmp/" . $id_surat . '-qr.png';
+					$this->ciqrcode->generate($params);
+
+					$mpdf = new \Mpdf\Mpdf([
+						'tempDir' => __DIR__ . '/pdfdata',
+						'mode' => 'utf-8',
+						// 'format' => [24, 24],
+						'format' => 'A4',
+						'margin_left' => 0,
+						'margin_right' => 0,
+						'margin_footer' => 0,
+						'margin_top' => 0,
+						'float' => 'left',
+						'setAutoTopMargin' => 'stretch'
+					]);
+
+					$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+					$data['no_surat'] = $this->surat_model->get_no_surat($id_surat);
+					$data['no_surat_lengkap'] = $no_surat_lengkap;
+					$kategori = $data['surat']['kategori_surat'];
+					$nim = $data['surat']['username'];
+
+					$filename = str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '.pdf';
+
+					$edit_nosurat = array(
+						'no_lengkap' => $no_surat_lengkap,
+						'file' => $filename,
+					);
+					$this->db->update('no_surat', $edit_nosurat, array('id' => $last_id));
+
+					$view = $this->load->view('surat/tampil_surat', $data, TRUE);
+					$data['view'] = 'surat/tampil_surat';
+
+					$mpdf->SetHTMLHeader('
+					<div style="text-align: left; margin-left:2cm">
+							<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
+					</div>');
+					$mpdf->SetHTMLFooter('
+			
+					<div class="futer">
+					<img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" />
+					</div>');
+
+					$mpdf->WriteHTML($view);
+
+					$mpdf->Output(FILE_PATH . $filename, 'F');
+
+
 					$this->db->set('id_status', 10)
 						->set('date', 'NOW()', FALSE)
 						->set('id_surat', $id_surat)
@@ -240,25 +314,14 @@ class Surat extends Admin_Controller
 						'role' => array(3)
 					);
 
-					echo '<pre>'; print_r($data_notif); echo '</pre>';
-
-					// //sendmail & notif
-					 $this->mailer->send_mail($data_notif);
+					//sendmail & notif
+					$this->mailer->send_mail($data_notif);
 
 					$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
-					redirect(base_url('admin/surat/detail/' . $id_surat));
+					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 				}
 			}
-		} 
-		// else {
-		// 	$data['status'] = $this->surat_model->get_surat_status($id_surat);
-		// 	$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-		// 	$data['timeline'] = $this->surat_model->get_timeline($id_surat);
-
-		// 	$data['title'] = 'Detail Surat';
-		// 	$data['view'] = 'surat/detail';
-		// 	$this->load->view('layout/layout', $data);
-		// }
+		}
 	}
 
 	public function get_tujuan_surat()
@@ -397,7 +460,6 @@ class Surat extends Admin_Controller
 							)
 						);
 					}
-
 
 					// kirim notifikasi
 					$data_notif = array(

@@ -388,7 +388,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<select name="urusan_surat" id="" class="form-control <?= (form_error('urusan_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">Urusan Surat</option>
 									<?php foreach ($urusan_surat as $urusan) { ?>
-										<option value="<?= $urusan['kode']; ?>"><?= $urusan['urusan']; ?></option>
+										<option value="<?= $urusan['id']; ?>"><?= $urusan['urusan']; ?></option>
 									<?php } ?>
 								</select>
 								<span class="text-danger"><?php echo form_error('urusan_surat'); ?></span>
@@ -423,7 +423,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collterbit">
 					<div class="card-body pb-3">
 						Download Surat
-						<a href="<?= base_url("generatesurat/index/" . encrypt_url($surat['id'])); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+
+						<a href="<?= base_url("public/documents/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 					</div>
 				</div>
 			</div>
@@ -460,7 +461,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-				<div class="timeline timeline-xs">
+					<div class="timeline timeline-xs">
 						<?php foreach ($timeline as $tl) { ?>
 							<div class="timeline-item <?= ($tl['id_status'] === 7 || $tl['id_status'] === 9) ? 'd-none' : '' ?>">
 								<div class="timeline-item-marker">

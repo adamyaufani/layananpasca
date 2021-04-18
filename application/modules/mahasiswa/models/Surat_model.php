@@ -105,7 +105,7 @@ class Surat_model extends CI_Model
 
     public function get_no_surat($id_surat)
     {
-        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
+        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, tanggal_terbit, file, no_lengkap, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
 			LEFT JOIN kat_tujuan_surat kts ON kts.id=ns.kat_tujuan_surat
 			LEFT JOIN tujuan_surat ts ON ts.id=ns.tujuan_surat
 			LEFT JOIN urusan_surat us ON us.id=ns.urusan_surat

@@ -1,11 +1,11 @@
 <div class="kertas">
-  <table style="width:100%">
+  <table>
     <tr>
-      <td width="60%">
+      <td width="70%">
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
-            <td>: <?= $no_surat['no_surat'] . "/" . $no_surat['kode'] . "." . $no_surat['kode_tujuan'] . "-" . $no_surat['kode_us'] . "/" . bulan_romawi($no_surat['bulan']) . "/" . $no_surat['tahun']; ?></td>
+            <td>: <?= $no_surat_lengkap; ?></td>
           </tr>
           <tr>
             <td>Hal</td>
@@ -21,7 +21,7 @@
     <tr>
       <td colspan="2">
         <p>Kepada Yth:<br />
-          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong><br />
+          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong>
           di-<br />
           Tempat
         </p>
@@ -32,7 +32,7 @@
     </tr>
   </table>
 
-  <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Assalamualaikum warahmatullaahi wabarakatuh</em></p>
   <p>Dengan hormat,</p>
   <p>Kami sampaikan bahwa Mahasiswa dari Program Studi <?= $surat['prodi']; ?> Program Pascasarjana Universitas Muhammadiyah Yogyakarta </p>
 
@@ -48,11 +48,9 @@
 
   </table>
 
-
-
-  <p>Merupakan mahasiswa aktif pada semester <?= get_meta_value('semester', $surat['id'], false); ?> tahun <?= get_meta_value('thn_akademik', $surat['id'], false); ?>. </p>
+  <p>Bermaksud untuk mengajukan kembali aktif perkuliahan. Bersama ini kami lampirkan dokumen persyaratan yang dibutuhkan. </p>
   <p>Demikian surat ini kami sampaikan. Atas perhatiannya kami ucapkan terima kasih.</p>
-  <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Wassalamualaikum warahmatullaahi wabarakatuh</em></p>
 
 
   <table>
@@ -74,12 +72,13 @@
 <?php $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
 $mpdf->AddPage(); ?>
 
+<h3>Lampiran-lampiran&nbsp;</h3>
+
 
 <?php $dokumen = get_dokumen_syarat($surat['id']);
 
 foreach ($dokumen as $dokumen) { ?>
-  <div class="kertas">
-    <p><?= $dokumen['kat_keterangan_surat']; ?></p>
-    <img src="<?= base_url($dokumen['file']); ?>" />
-  </div>
+
+  <p><?= $dokumen['kat_keterangan_surat']; ?></p><img src="<?= base_url($dokumen['file']); ?>" />
+
 <?php } ?>

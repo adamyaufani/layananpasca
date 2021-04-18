@@ -1,7 +1,7 @@
 <div class="kertas">
-  <table>
+  <table style="width:100%">
     <tr>
-      <td width="70%">
+      <td width="60%">
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
@@ -21,7 +21,7 @@
     <tr>
       <td colspan="2">
         <p>Kepada Yth:<br />
-          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong>
+          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong><br />
           di-<br />
           Tempat
         </p>
@@ -32,7 +32,7 @@
     </tr>
   </table>
 
-  <p><em>Assalamualaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
   <p>Dengan hormat,</p>
   <p>Kami sampaikan bahwa Mahasiswa dari Program Studi <?= $surat['prodi']; ?> Program Pascasarjana Universitas Muhammadiyah Yogyakarta </p>
 
@@ -48,10 +48,9 @@
 
   </table>
 
-  <p>Bermaksud untuk mengajukan kembali aktif perkuliahan. Bersama ini kami lampirkan dokumen persyaratan yang dibutuhkan. </p>
+  <p>Merupakan mahasiswa aktif pada semester <?= get_meta_value('semester', $surat['id'], false); ?> tahun <?= get_meta_value('thn_akademik', $surat['id'], false); ?>. </p>
   <p>Demikian surat ini kami sampaikan. Atas perhatiannya kami ucapkan terima kasih.</p>
-  <p><em>Wassalamualaikum warahmatullaahi wabarakatuh</em></p>
-
+  <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
 
   <table>
     <tr>
@@ -72,13 +71,12 @@
 <?php $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
 $mpdf->AddPage(); ?>
 
-<h3>Lampiran-lampiran&nbsp;</h3>
-
 
 <?php $dokumen = get_dokumen_syarat($surat['id']);
 
 foreach ($dokumen as $dokumen) { ?>
-
-  <p><?= $dokumen['kat_keterangan_surat']; ?></p><img src="<?= base_url($dokumen['file']); ?>" />
-
+  <div class="kertas">
+    <p><?= $dokumen['kat_keterangan_surat']; ?></p>
+    <img src="<?= base_url($dokumen['file']); ?>" />
+  </div>
 <?php } ?>

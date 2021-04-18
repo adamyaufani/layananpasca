@@ -87,15 +87,18 @@ class Surat extends Mahasiswa_Controller
 
 		if ($results) {
 			$this->session->set_flashdata('msg', 'Berhasil!');
-			redirect(base_url('mahasiswa/surat/tambah/' . $insert_id));
+			redirect(base_url('mahasiswa/surat/tambah/' . encrypt_url($insert_id)));
 		}
 	}
 
 	public function tambah($id_surat = 0)
 	{
+		$id_surat = decrypt_url($id_surat);
+
 		$id_notif = $this->input->post('id_notif');
 
 		if ($this->input->post('submit')) {
+
 			// validasi form, form ini digenerate secara otomatis
 			foreach ($this->input->post('dokumen') as $id => $dokumen) {
 				$this->form_validation->set_rules(
@@ -161,22 +164,32 @@ class Surat extends Mahasiswa_Controller
 						->update('notif');
 
 					if ($set_status) {
-						redirect(base_url('mahasiswa/surat/tambah/' . $id_surat));
+						redirect(base_url('mahasiswa/surat/tambah/' . encrypt_url($id_surat)));
 					}
 				}
 			}
 		} else {
-			$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-			$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
-			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
-			if ($data['surat']['id_mahasiswa'] == $this->session->userdata('user_id')) {
-				$data['title'] = 'Ajukan Surat';
-				$data['view'] = 'surat/tambah';
+			if ($id_surat) {
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
+				$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
+				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+
+				if ($data['surat']['id_status'] == 10) {
+					$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
+				}
+
+				if ($data['surat']['id_mahasiswa'] == $this->session->userdata('user_id')) {
+					$data['title'] = 'Ajukan Surat';
+					$data['view'] = 'surat/tambah';
+				} else {
+					$data['title'] = 'Forbidden';
+					$data['view'] = 'restricted';
+				}
 			} else {
-				$data['title'] = 'Forbidden';
-				$data['view'] = 'restricted';
+				$data['title'] = 'Halaman tidak ditemukan';
+				$data['view'] = 'error404';
 			}
 
 			$this->load->view('layout/layout', $data);

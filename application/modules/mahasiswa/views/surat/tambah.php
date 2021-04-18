@@ -9,7 +9,7 @@
 			<div class="collapse<?= ($surat['id_status'] == 10) ? "" : " show" ?>" id="collKeterangan">
 				<div class="card-body">
 
-					<?php echo form_open(base_url('mahasiswa/surat/tambah/' . $surat['id']), '') ?>
+					<?php echo form_open(base_url('mahasiswa/surat/tambah/' . encrypt_url($surat['id'])), '') ?>
 
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
@@ -58,7 +58,8 @@
 				<div class="collapse show" id="collterbit">
 					<div class="card-body pb-3">
 						Download Surat
-						<a href="<?= base_url("generatesurat/index/" . encrypt_url($surat['id'])); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+
+						<a href="<?= base_url("public/documents/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 					</div>
 				</div>
 			</div>
@@ -72,10 +73,10 @@
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-			
+
 					<?php if ($surat['catatan']) { ?>
 						<div class="alert alert-ijomuda ml-3 pb-0">
-							<p class="m-0"><i class ="fas fa-comment-dots"></i> <strong>Catatan dari Tata Usaha</strong></p>
+							<p class="m-0"><i class="fas fa-comment-dots"></i> <strong>Catatan dari Tata Usaha</strong></p>
 							<hr class="mt-2 mb-3" style="border:1px dashed #b2e4b2">
 							<p><?= $surat['catatan']; ?></p>
 						</div>
