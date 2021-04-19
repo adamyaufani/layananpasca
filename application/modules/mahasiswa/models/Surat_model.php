@@ -1,6 +1,41 @@
 <?php
 class Surat_model extends CI_Model
 {
+    public function get_surat($role)
+    {
+        if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+            $prodi = '';
+        } else {
+            $prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
+        }
+        if ($role == '') {
+            $id_status = '';
+        } else if ($role == 1) {
+            $id_status = "AND ss.id_status =  9";
+        } else if ($role == 2) {
+            $id_status = "AND (ss.id_status =  2 OR ss.id_status = 5)";
+        } else if ($role == 5) {
+            $id_status = "AND ss.id_status =  8";
+        } else if ($role == 6) {
+            $id_status = "AND (ss.id_status =  3 OR ss.id_status = 7)";
+        } else if ($role == 100) {
+            $id_status = "AND ss.id_status =  10";
+        }
+
+        $query = $this->db->query("SELECT s.id as id_surat, s.id_mahasiswa, u.fullname, ss.id_status, st.id as id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, u.id_prodi, pr.prodi
+        FROM surat s
+        LEFT JOIN users u ON u.id = s.id_mahasiswa
+        LEFT JOIN prodi pr ON pr.id = u.id_prodi
+        LEFT JOIN surat_status ss ON ss.id_surat = s.id
+        LEFT JOIN status st ON st.id = ss.id_status
+        LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
+        WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
+        AND ss.id_status != 1 $id_status
+        $prodi
+        ORDER BY s.id DESC      
+        ");
+        return $result = $query->result_array();
+    }
     public function get_surat_bymahasiswa($id_mhs)
     {
         $query = $this->db->query("SELECT s.id as id_surat, ss.id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full
@@ -71,37 +106,41 @@ class Surat_model extends CI_Model
     $prodi = nama prodi, ada bbrp surat yang hanya khusus untuk prodi tertentu
     $aktif = status aktif/tidak aktif mahasiswa pada semester dan tahun ini jika $klien = 'm'
     */
-    public function get_kategori_surat()
+
+    public function get_kategori_surat($klien)
     {
+
+        if ($klien == '') {
+            $where = '';
+        } else {
+            $where = "WHERE klien='$klien'";
+        }
+
         $query = $this->db->query("SELECT * FROM kategori_surat 
-        WHERE (klien='m')
+            $where;
         ");
+
 
         return $result = $query->result_array();
     }
-    public function get_keterangan_surat()
-    {
-    }
-    public function tambah($data)
-    {
-        return $this->db->insert('surat', $data);
-    }
+ 
     function simpan_upload($judul, $gambar)
     {
         $hasil = $this->db->query("INSERT INTO keterangan_surat(ket_value,gambar) VALUES ('$judul','$gambar')");
         return $hasil;
     }
 
-    public function get_timeline($id_surat)
+    public function getPembimbing($search)
     {
-        $query = $this->db->query("SELECT ss.id_status, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, s.status, s.badge          
-        FROM surat_status ss
-        LEFT JOIN status s ON s.id = ss.id_status  
-        where ss.id_surat='$id_surat'
-        ORDER BY ss.id DESC
-        ");
-        return $result = $query->result_array();
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->like('fullname', $search);
+        $this->db->limit(10);
+        return $this->db->get()->result_array();
     }
+
+    
+
 
     public function get_no_surat($id_surat)
     {
@@ -115,12 +154,47 @@ class Surat_model extends CI_Model
         return $no_surat;
     }
 
-    public function getPembimbing($search)
+
+    public function get_kategori_surat_byid($id)
     {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->like('fullname', $search);
-        $this->db->limit(10);
-        return $this->db->get()->result_array();
+        $query = $this->db->query("SELECT * FROM kategori_surat where id='$id'");
+        return $result = $query->row_array();
+    }
+    public function tambah_kategori_surat($data)
+    {
+        return $this->db->insert('kategori_surat', $data);
+    }
+    public function edit_kategori_surat($data, $id)
+    {
+        return $this->db->update('kategori_surat', $data, array('id' => $id));
+    }
+    public function tambah($data)
+    {
+        return $this->db->insert('surat', $data);
+    }
+
+    public function get_surat_status($id_surat)
+    {
+        return $this->db->select('ss.*, DATE_FORMAT(ss.date,"%d %M %Y") as date, st.status')
+            ->from('surat_status ss')
+            ->join('status st', 'ss.id_status=st.id', 'left')
+            ->where(array('ss.id_surat' => $id_surat, 'ss.id_status !=' => '0', 'ss.id_status !=' => '1'))->get()->result_array();
+    }
+
+    //class Kategori
+    public function get_kat_keterangan_surat()
+    {
+        return $this->db->get('kat_keterangan_surat')->result_array();
+    }
+
+    public function get_timeline($id_surat)
+    {
+        $query = $this->db->query("SELECT ss.id_status, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, s.status, s.badge          
+        FROM surat_status ss
+        LEFT JOIN status s ON s.id = ss.id_status  
+        where ss.id_surat='$id_surat'
+        ORDER BY ss.id DESC
+        ");
+        return $result = $query->result_array();
     }
 }

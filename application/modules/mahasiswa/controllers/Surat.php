@@ -27,7 +27,7 @@ class Surat extends Mahasiswa_Controller
 
 	public function ajukan($id_kategori = 0)
 	{
-		$data['kategori_surat'] = $this->surat_model->get_kategori_surat();
+		$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
 		$data['title'] = 'Ajukan Surat';
 		$data['view'] = 'surat/ajukan';
 		$this->load->view('layout/layout', $data);
@@ -111,7 +111,6 @@ class Surat extends Mahasiswa_Controller
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-				$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
@@ -172,7 +171,6 @@ class Surat extends Mahasiswa_Controller
 
 			if ($id_surat) {
 				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-				$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 

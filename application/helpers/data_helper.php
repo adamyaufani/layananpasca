@@ -12,6 +12,12 @@ function profPic($id, $w)
 	return $pic;
 }
 
+if (!function_exists('date_time')) {
+	function date_time($datetime) 
+	{
+		 return date('F j, Y',strtotime($datetime));
+	}
+}
 
 function bulan_romawi($bulan)
 {
