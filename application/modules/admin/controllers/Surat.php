@@ -20,7 +20,7 @@ class Surat extends Admin_Controller
 
 	public function arsip()
 	{
-		$data['query'] = $this->surat_model->get_surat(100);
+		$data['query'] = $this->surat_model->get_surat_arsip();
 		$data['title'] = 'Arsip Surat';
 		$data['view'] = 'surat/arsip';
 		$this->load->view('layout/layout', $data);
@@ -35,9 +35,6 @@ class Surat extends Admin_Controller
 			$data['status'] = $this->surat_model->get_surat_status($id_surat);
 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
-
-
-			echo '<pre>'; print_r($data['status']); echo '</pre>';
 
 			if ($data['surat']['id_status'] == 10) {
 				$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
@@ -233,6 +230,8 @@ class Surat extends Admin_Controller
 			} else {
 				$no_surat_data = array(
 					'id_surat' => $id_surat,
+					'id_user' => $this->input->post('user_id'),
+					'id_prodi' => $this->input->post('id_prodi'),
 					'id_kategori_surat' => $this->input->post('id_kategori_surat'),
 					'no_surat' => $this->input->post('no_surat'),
 					'kat_tujuan_surat' => $this->input->post('kat_tujuan_surat'),
@@ -423,8 +422,7 @@ class Surat extends Admin_Controller
 			}
 
 			if ($this->form_validation->run() == FALSE) {
-				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-				$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
@@ -437,7 +435,7 @@ class Surat extends Admin_Controller
 				if ($this->input->post('revisi')) {
 					$id_status = 5;
 				} else {
-					$id_status = 2;
+					$id_status = 8;
 				}
 
 				//tambah status ke tb surat_status
@@ -462,9 +460,9 @@ class Surat extends Admin_Controller
 					// kirim notifikasi
 					$data_notif = array(
 						'id_surat' => $id_surat,
-						'id_status' => 2,
+						'id_status' => 8,
 						'kepada' => $_SESSION['user_id'],
-						'role' => array(2) // harus dalam bentuk array
+						'role' => array(5) // harus dalam bentuk array
 					);
 
 					//sendmail & notif
@@ -477,15 +475,14 @@ class Surat extends Admin_Controller
 						->update('notif');
 
 					if ($set_status) {
-						redirect(base_url('mahasiswa/surat/tambah/' . encrypt_url($id_surat)));
+						redirect(base_url('admin/surat/tambah/' . encrypt_url($id_surat)));
 					}
 				}
 			}
 		} else {
 
 			if ($id_surat) {
-				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-				$data['keterangan_surat'] = $this->surat_model->get_keterangan_surat($id_surat);
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 

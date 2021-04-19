@@ -348,6 +348,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								}
 								?>
 								<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
+								<input type="hidden" name="id_prodi" value="<?= $surat['id_prodi']; ?>" />
 								<input type="hidden" name="id_surat" id="" value="<?= $surat['id']; ?>">
 								<input type="hidden" name="id_kategori_surat" id="" value="<?= $surat['id_kategori_surat'] ?>">
 								<input type="number" name="no_surat" id="" value="<?= $last_no ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">

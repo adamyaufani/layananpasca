@@ -6,27 +6,30 @@
 				Filter
 			</div>
 			<div class="card-body">
-				<?php
-				if ($query) {  ?>
+				
 					<table id="surat-desc" class="table table-bordered tb-surats">
 						<thead>
 							<tr>
-								<th style="width:30%">Perihal</th>
+								<th>No Surat</th>
+								<th style="width:20%">Perihal</th>
                 <th>Tujuan Surat</th>
-								<th>Mahasiswa</th>								
+								<th>Pembuat</th>								
 								<th>Program Studi</th>
-								<th>Tanggal</th>
+								<th>Diterbitkan</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
 							foreach ($query as $surat) {  ?>
-								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
+								<tr>
+									<td>
+										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['no_lengkap']; ?></a>
+									</td>							
 									<td>
 										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
 									</td>							
 									<td>
-										<p class="m-0"><?= $surat['fullname']; ?></p>
+										<p class="m-0"><?=  $surat['kat_tujuan_surat'];  ?></p>
 									</td>
 									<td>
 										<p class="m-0"><?= $surat['fullname']; ?></p>
@@ -35,8 +38,7 @@
 										<p class=""><?= $surat['prodi']; ?></p>
 									</td>
 									<td>
-										<p class="m-0"><?= $surat['date_full'];	?></p>
-										<p class="badge m-0 badge-warning"><?= $surat['time']; ?></p>
+										<p class="m-0"><?= $surat['tanggal_terbit'];	?></p>
 									</td>
 									</td>
 								</tr>
@@ -44,12 +46,7 @@
 						</tbody>
 						</tfoot>
 					</table>
-				<?php } else { ?>
-
-					<p class="lead">Saat ini belum ada surat yang perlu diproses</p>
-
-				<?php }
-				?>
+				
 			</div><!-- /.card-body -->
 		</div><!-- /.card -->
 	</div>

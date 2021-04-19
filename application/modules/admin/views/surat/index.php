@@ -17,7 +17,7 @@
 							<tr>
 								<th style="width:50%">Perihal</th>
 								<th style="width:20%">Status</th>
-								<th>Mahasiswa</th>
+								<th>Pembuat</th>
 								<th>Tanggal</th>
 							</tr>
 						</thead>

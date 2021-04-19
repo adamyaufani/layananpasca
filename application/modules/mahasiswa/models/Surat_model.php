@@ -36,6 +36,26 @@ class Surat_model extends CI_Model
         ");
         return $result = $query->result_array();
     }
+    public function get_surat_arsip()
+    {
+        if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+            $where = "WHERE 1 ";
+        } else {
+            $where = "WHERE ns.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
+        }       
+
+        $query = $this->db->query("SELECT ns.id, ns.id_surat, ns.no_lengkap,u.fullname,ks.kategori_surat, kts.kat_tujuan_surat, ts.tujuan_surat, us.urusan as urusan_surat, p.prodi, DATE_FORMAT(ns.tanggal_terbit,'%d %M %Y') as tanggal_terbit FROM no_surat ns         
+            LEFT JOIN users u ON u.id = ns.id_user
+            LEFT JOIN kategori_surat ks ON ns.id_kategori_surat = ks.id
+            LEFT JOIN kat_tujuan_surat kts ON ns.kat_tujuan_surat = kts.id
+            LEFT JOIN tujuan_surat ts ON ns.tujuan_surat = ts.id
+            LEFT JOIN urusan_surat us ON ns.urusan_surat = us.id
+            LEFT JOIN prodi p ON ns.id_prodi = p.id
+            $where
+            ORDER BY ns.id DESC      
+        ");
+        return $result = $query->result_array();
+    }
     public function get_surat_bymahasiswa($id_mhs)
     {
         $query = $this->db->query("SELECT s.id as id_surat, ss.id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full
@@ -58,6 +78,7 @@ class Surat_model extends CI_Model
         k.template, 
         k.kat_keterangan_surat, 
         k.klien, 
+        k.tujuan_surat, 
         ss.id_status, 
         ss.catatan, 
         st.status, 
@@ -65,6 +86,7 @@ class Surat_model extends CI_Model
         st.badge, 
         st.alert, 
         u.id_prodi, 
+        u.id as user_id, 
         pr.prodi, 
         u.fullname, 
         u.username,
