@@ -33,29 +33,13 @@
   </table>
 
   <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
-  <p>Dengan hormat,</p>
-  <p>Kami sampaikan bahwa Mahasiswa dari Program Studi <?= $surat['prodi']; ?> Program Pascasarjana Universitas Muhammadiyah Yogyakarta </p>
-
-  <table style="width:100%" class="nama">
-    <tr>
-      <td style="width:2.5cm;">Nama</td>
-      <td> : <?= $surat['fullname']; ?></td>
-    </tr>
-    <tr>
-      <td>NIM</td>
-      <td> : <?= $surat['username']; ?></td>
-    </tr>
-
-  </table>
-
-  <p>Bermaksud untuk mengajukan kembali aktif perkuliahan. Bersama ini kami lampirkan dokumen persyaratan yang dibutuhkan. </p>
-  <p>Demikian surat ini kami sampaikan. Atas perhatiannya kami ucapkan terima kasih.</p>
-  <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <?= get_meta_value('isi_surat', $surat['id'], false); ?>
+  <p style="margin-top:30px;"><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
 
 
   <table>
     <tr>
-      <td colspan="2">
+      <td colspan="2" class="ttd-dir">
         <p>Direktur </p>
         <br />
         <br />

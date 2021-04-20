@@ -18,6 +18,8 @@ class Surat_model extends CI_Model
             $id_status = "AND ss.id_status =  8";
         } else if ($role == 6) {
             $id_status = "AND (ss.id_status =  3 OR ss.id_status = 7)";
+        } else if ($role == 100) {
+            $id_status = "AND ss.id_status =  10";
         }
 
         $query = $this->db->query("SELECT s.id as id_surat, s.id_mahasiswa, u.fullname, ss.id_status, st.id as id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, u.id_prodi, pr.prodi
@@ -37,8 +39,6 @@ class Surat_model extends CI_Model
 
     public function get_detail_surat($id_surat)
     {
-        $role = $_SESSION['role'];
-
         $query = $this->db->query("SELECT 
         s.id, 
         s.id_kategori_surat, 
@@ -72,7 +72,7 @@ class Surat_model extends CI_Model
 
     public function get_no_surat($id_surat)
     {
-        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
+        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, tanggal_terbit, file, no_lengkap, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
 			LEFT JOIN kat_tujuan_surat kts ON kts.id=ns.kat_tujuan_surat
 			LEFT JOIN tujuan_surat ts ON ts.id=ns.tujuan_surat
 			LEFT JOIN urusan_surat us ON us.id=ns.urusan_surat

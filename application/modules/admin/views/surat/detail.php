@@ -124,25 +124,32 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
-					<?php $ket_surat = explode(',', $surat['kat_keterangan_surat']); ?>
 
-					<input type="hidden" name="sizeof_ket_surat" value="<?= sizeof($ket_surat); ?>">
-					<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
 
-					<?php foreach ($ket_surat as $ket_surat => $value) {
-						$type = kat_keterangan_surat($value)['type'];
-						$kat_keterangan_surat = kat_keterangan_surat($value)['kat_keterangan_surat']; ?>
+					<?php
+					if ($surat['kat_keterangan_surat']) {
+						$unserial = unserialize($surat['kat_keterangan_surat']);
+					?>
 
-						<div class="form-row">
-							<label class="col-md-5" for="dokumen[<?= $value; ?>]"><?= kat_keterangan_surat($value)['kat_keterangan_surat']; ?></label>
-							<div class="col-md-7">
-								<?php
-								// memanggil form (data_helper.php)
-								generate_keterangan_surat($value, $surat['id'], $surat['id_status']); ?>
+						<input type="hidden" name="sizeof_ket_surat" value="<?= count($unserial); ?>">
+						<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
+
+						<?php foreach ($unserial as $row) {
+
+							$type = kat_keterangan_surat($row['id'])['type'];
+							$kat_keterangan_surat = kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
+
+							<div class="form-row">
+								<label class="col-md-5" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?></label>
+								<div class="col-md-7">
+									<?php
+									// memanggil form (data_helper.php)
+									generate_keterangan_surat($row['id'], $surat['id'], $surat['id_status']); ?>
+								</div>
 							</div>
-						</div>
 
-					<?php } ?>
+					<?php }
+					} ?>
 
 					<?php if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) { ?>
 						<div class="form-row pt-3">
@@ -340,10 +347,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 									$last_no = 1;
 								}
 								?>
-
+								<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
+								<input type="hidden" name="id_prodi" value="<?= $surat['id_prodi']; ?>" />
 								<input type="hidden" name="id_surat" id="" value="<?= $surat['id']; ?>">
 								<input type="hidden" name="id_kategori_surat" id="" value="<?= $surat['id_kategori_surat'] ?>">
-								<input type="text" name="no_surat" id="" value="<?= $last_no ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
+								<input type="number" name="no_surat" id="" value="<?= $last_no ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
 								<span class="text-danger"><?php echo form_error('no_surat'); ?></span>
 							</div>
 						</div>
@@ -381,7 +389,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<select name="urusan_surat" id="" class="form-control <?= (form_error('urusan_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">Urusan Surat</option>
 									<?php foreach ($urusan_surat as $urusan) { ?>
-										<option value="<?= $urusan['kode']; ?>"><?= $urusan['urusan']; ?></option>
+										<option value="<?= $urusan['id']; ?>"><?= $urusan['urusan']; ?></option>
 									<?php } ?>
 								</select>
 								<span class="text-danger"><?php echo form_error('urusan_surat'); ?></span>
@@ -416,7 +424,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collterbit">
 					<div class="card-body pb-3">
 						Download Surat
-						<a href="<?= base_url("admin/surat/tampil_surat/" . $surat['id']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+
+						<a href="<?= base_url("public/documents/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 					</div>
 				</div>
 			</div>
@@ -453,15 +462,20 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-					<ul class="timeline">
+					<div class="timeline timeline-xs">
 						<?php foreach ($timeline as $tl) { ?>
-							<li>
-								<span class="badge badge-<?= $tl['badge']; ?>"><?= $tl['status']; ?></span>
-								<span class="badge badge-secondary"><?= $tl['date']; ?></span>
-								<span class="badge badge-perak"><?= $tl['time']; ?></span>
-							</li>
+							<div class="timeline-item <?= ($tl['id_status'] === 7 || $tl['id_status'] === 9) ? 'd-none' : '' ?>">
+								<div class="timeline-item-marker">
+									<div class="timeline-item-marker-text"><?= $tl['date']; ?></div>
+									<div class="timeline-item-marker-indicator bg-<?= $tl['badge']; ?>"></div>
+								</div>
+								<div class="timeline-item-content">
+									<?= $tl['status']; ?>
+									<span class="badge badge-perak"><?= $tl['time']; ?></span>
+								</div>
+							</div>
 						<?php } ?>
-					</ul>
+					</div>
 				</div>
 			</div>
 		</div>

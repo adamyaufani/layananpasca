@@ -1,6 +1,17 @@
 <?php
 class Notif_model extends CI_Model
 {
+	public function get_all_notif()
+	{
+		
+		$query = $this->db->select("n.*, sp.*, n.id as notif_id, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M %Y') as date_full")->from("notif n")
+			->join('status_pesan sp', 'n.id_status_pesan = sp.id', 'right')
+		
+			->order_by('n.id', 'desc')
+			->get();
+
+		return $query;
+	}
 	public function get_notif()
 	{
 		if ($_SESSION['role'] == 1) {
@@ -28,7 +39,7 @@ class Notif_model extends CI_Model
 
 	public function send_notif($data)
 	{
-		echo	$id_status = $data['id_status'];
+		$id_status = $data['id_status'];
 
 		$notif = array();
 		foreach ($data['role'] as $role) {
@@ -46,9 +57,15 @@ class Notif_model extends CI_Model
 		return $result;
 	}
 	//get status pesan by role dan status
-	private function get_status_pesan($role, $id_status)
+	public function get_status_pesan($role, $id_status)
 	{
 		$status = $this->db->get_where('status_pesan', array('role' => $role, 'id_status' => $id_status))->row_array();
 		return $status['id'];
+	}
+	//get status pesan by role dan status
+	public function get_messages( $id_status, $role)
+	{
+		return $this->db->get_where('status_pesan', array('role' => $role, 'id_status' => $id_status))->row_array();
+	
 	}
 }

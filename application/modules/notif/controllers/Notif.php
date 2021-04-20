@@ -88,9 +88,15 @@ class Notif extends MY_Controller
 					$this->db->update('notif');
 				}
 
-				$data['notif'] = $query;
-				$data['title'] = 'Detail Notifikasi';
-				$data['view'] = 'notif/detail';
+				// $data['notif'] = $query;
+				// $data['title'] = 'Detail Notifikasi';
+				// $data['view'] = 'notif/detail';
+
+				$link = ($_SESSION['role'] == 3) ? 'mahasiswa/surat/tambah' : 'admin/surat/detail'; 
+				$redir = base_url($link . '/' . encrypt_url($query['id_surat']));
+				// echo '<pre>'; print_r($query); echo '</pre>';
+				header('Location: '. $redir);
+				exit;
 			} else {
 				$data['title'] = 'Error';
 				$data['view'] = 'error';

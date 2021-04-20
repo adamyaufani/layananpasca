@@ -52,9 +52,9 @@ class Auth extends CI_Controller
 
 							$this->session->set_userdata($user_data);
 							if ($result['role'] != 3) {
-								redirect(base_url('admin/surat'), 'refresh');
+								redirect(base_url('admin/dashboard'), 'refresh');
 							} else {
-								redirect(base_url('mahasiswa/surat'), 'refresh');
+								redirect(base_url('mahasiswa/dashboard'), 'refresh');
 							}
 						} else {
 							$data['msg'] = 'Invalid Username or Password!';
@@ -127,10 +127,10 @@ class Auth extends CI_Controller
 								'fullname' => $result['FULLNAME'],
 								'email' => $result['EMAIL'],
 								'telp' => $result['TELP'],
-								'fakultas' => $result['name_of_faculty'],
+							//	'fakultas' => $result['name_of_faculty'],
 								'id_prodi' => $result['department_id'],
 								'role' => 3,
-								'aktif' => ($cek_aktif->num_rows() > 0) ? 1 : 0,
+							//	'aktif' => ($cek_aktif->num_rows() > 0) ? 1 : 0,
 								'created_at' => date('Y-m-d : h:m:s'),
 							);
 

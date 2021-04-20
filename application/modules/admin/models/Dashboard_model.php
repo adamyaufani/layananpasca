@@ -1,50 +1,37 @@
 <?php
-	class Dashboard_model extends CI_Model{
-
-		public function get_all_users(){
-			return $this->db->count_all('ci_users');
-		}
-		public function get_active_users(){
-			$this->db->where('is_active', 1);
-			return $this->db->count_all_results('ci_users');
-		}
-		public function get_deactive_users(){
-			$this->db->where('is_active', 0);
-			return $this->db->count_all_results('ci_users');
+	class Dashboard_model extends CI_Model{		
+		public function for_graph($status){
+      return $this->db->query("SELECT count(id) as jumlah_surat, DATE_FORMAT(date,'%b') as bulan, DATE_FORMAT(date,'%m') as angka_bulan FROM surat_status
+      WHERE id_status = '$status'
+      GROUP BY angka_bulan
+      ORDER BY angka_bulan ASC      
+      ");
 		}
 
-		public function get_all_fakultas(){
-			$this->db->where('kode =', 'f');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
+    public function notif() {
+      //cek apakah ada kategori surat yg blm selesai
+      if ($_SESSION['role'] == 1) {
+        $where = "n.role = 1";
+      } else if ($_SESSION['role'] == 2) {
+        $where = "n.role = 2 AND n.id_prodi = " . $_SESSION['id_prodi'];
+      } else if ($_SESSION['role'] == 3) {
+        $where = "n.role = 3 AND n.kepada = " . $_SESSION['user_id'];
+      } else if ($_SESSION['role'] == 4) {
+        $where = "n.role = 4 AND n.kepada = " . $_SESSION['user_id'];
+      } else if ($_SESSION['role'] == 5) {
+        $where = "n.role = 5";
+      } else if ($_SESSION['role'] == 6) {
+        $where = "n.role = 6 AND n.id_prodi = " . $_SESSION['id_prodi'];
+      }
 
-		public function get_all_prodi(){
-			$this->db->where('kode =', 'p');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
-
-		public function get_all_biro(){
-			$this->db->where('kode =', 'b');
-			return $this->db->count_all_results('ci_unit_kerja');
-		}
-		
-		
-		
-		
-		public function jumlah_penelitian(){
-			
-			if($this->session->userdata('id_prodi')==0)
-			{	
-			return $this->db->query("select * from penelitian");
-			}
-			elseif($this->session->userdata('is_admin')==4)
-			{	
-			return $this->db->query("select * from penelitian where id_dosen='".$this->session->userdata('user_id')."'");
-			}
-			else
-			{
-			return $this->db->query("select * from penelitian  where id_prodi='".$this->session->userdata('id_prodi')."'");
-			}
-		}
+      return $this->db->query("SELECT n.*, n.id as notif_id, sp.judul_notif, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M') as date_full, sp.badge, sp.icon, s.id_kategori_surat, ks.kategori_surat, u.fullname
+        FROM notif n 	
+        LEFT JOIN status_pesan sp ON sp.id = n.id_status_pesan
+        LEFT JOIN surat s ON s.id = n.id_surat
+        LEFT JOIN kategori_surat ks ON s.id_kategori_surat = ks.id
+        LEFT JOIN users u ON n.kepada = u.id
+        WHERE  $where AND n.status = 0 	
+        ORDER BY id DESC");
+      }
 	}
 ?>

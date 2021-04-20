@@ -7,6 +7,7 @@
                         <tr>
                             <th>Kategori Surat</th>
                             <th>Pengguna</th>
+                            <th>Prodi</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -22,9 +23,16 @@
                             } elseif ($kategori['klien'] == 'j') {
                                 $klien = 'Program Studi';
                             }
+
+                            if ($kategori['prodi'] == 0) {
+                                $prodi = 'Semua';
+                            } else {
+                                $prodi =  getProdibyId($kategori['prodi'])['prodi'];
+                            }
                             echo "<tr>";
                             echo "<td>" . $kategori['kategori_surat'] . "</td>";
                             echo "<td>" . $klien . "</td>";
+                            echo "<td>" . $prodi . "</td>";
                             echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/kategorisurat/edit/' . $kategori['id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
                             echo "</tr>";
                         endforeach;
@@ -33,6 +41,7 @@
                     </tbody>
 
                 </table>
+
             </div>
         </div>
     </div>

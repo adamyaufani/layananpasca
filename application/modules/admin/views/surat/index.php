@@ -17,7 +17,7 @@
 							<tr>
 								<th style="width:50%">Perihal</th>
 								<th style="width:20%">Status</th>
-								<th>Mahasiswa</th>
+								<th>Pembuat</th>
 								<th>Tanggal</th>
 							</tr>
 						</thead>
@@ -26,9 +26,9 @@
 							foreach ($query as $surat) {  ?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td>
-										<a class="judul" href="<?= base_url('admin/surat/detail/' . $surat['id_surat']); ?>"><?= $surat['kategori_surat']; ?></a>
+										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
 									</td>
-									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['id_status']; ?> - <?php echo $surat['status']; ?></td>
+									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
 									<td>
 										<p class="m-0"><?= $surat['fullname']; ?></p>
 										<p class="badge m-0 badge-ijomuda"><?= $surat['prodi']; ?></p>

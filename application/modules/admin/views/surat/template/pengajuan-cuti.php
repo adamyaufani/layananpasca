@@ -6,7 +6,7 @@
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
-            <td>: <?= $no_surat['no_surat'] . "/" . $no_surat['kode'] . "." . $no_surat['kode_tujuan'] . "-" . $no_surat['kode_us'] . "/" . bulan_romawi($no_surat['bulan']) . "/" . $no_surat['tahun']; ?></td>
+            <td>: <?= $no_surat_lengkap; ?></td>
           </tr>
           <tr>
             <td>Hal</td>
@@ -33,7 +33,7 @@
     </tr>
   </table>
 
-  <p><em>Assalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p><em>Assalamualaikum warahmatullaahi wabarakatuh</em></p>
   <p>Dengan hormat,</p>
   <p>Saya yang bertandatangan di bawah ini:</p>
 
@@ -97,6 +97,8 @@ $mpdf->AddPage(); ?>
 
 foreach ($dokumen as $dokumen) { ?>
   <div class="kertas">
-    <p><?= $dokumen['kat_keterangan_surat']; ?></p><img src="<?= base_url($dokumen['file']); ?>" />
+   
+        <p><?= $dokumen['kat_keterangan_surat']; ?></p><img width="" src="<?= base_url($dokumen['file']); ?>" />
+  
   </div>
 <?php } ?>

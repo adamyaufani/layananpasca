@@ -48,16 +48,13 @@
 
   </table>
 
-
-
   <p>Merupakan mahasiswa aktif pada semester <?= get_meta_value('semester', $surat['id'], false); ?> tahun <?= get_meta_value('thn_akademik', $surat['id'], false); ?>. </p>
   <p>Demikian surat ini kami sampaikan. Atas perhatiannya kami ucapkan terima kasih.</p>
   <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
 
-
   <table>
     <tr>
-      <td colspan="2">
+      <td colspan="2" class="ttd-dir">
         <p>Direktur </p>
         <br />
         <br />
