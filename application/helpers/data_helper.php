@@ -13,9 +13,9 @@ function profPic($id, $w)
 }
 
 if (!function_exists('date_time')) {
-	function date_time($datetime) 
+	function date_time($datetime)
 	{
-		 return date('F j, Y',strtotime($datetime));
+		return date('F j, Y', strtotime($datetime));
 	}
 }
 
@@ -49,15 +49,14 @@ function getUserbyId($id)
 // -----------------------------------------------------------------------------
 function getUsersbyRole($role, $prodi)
 {
-	
+
 	$CI = &get_instance();
 
 	if ($prodi) {
-		return  $CI->db->select('*')->from('users')->where(array('role' => $role, 'id_prodi'=> $prodi))->get()->result_array();
+		return  $CI->db->select('*')->from('users')->where(array('role' => $role, 'id_prodi' => $prodi))->get()->result_array();
 	} else {
 		return  $CI->db->select('*')->from('users')->where(array('role' => $role))->get()->result_array();
 	}
-	
 }
 // -----------------------------------------------------------------------------
 function getProdibyId($id)
@@ -111,6 +110,27 @@ function countSurat()
 
 	//return 1;
 }
+
+function call_styles()
+{
+?>
+	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<?php
+}
+
+function call_scripts()
+{
+?>
+	<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<?php
+}
+
 //menampilkan kategori keterangan surat
 function kat_keterangan_surat($id)
 {
@@ -121,13 +141,7 @@ function kat_keterangan_surat($id)
 //menampilkan kategori keterangan surat
 function generate_form_field($id, $id_surat, $id_status)
 {
-?>
 
-	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
-	<?php
 	$CI = &get_instance();
 	$fields = $CI->db->select('kks.*')->from('kat_keterangan_surat kks')
 		->where(array('kks.id' => $id))
@@ -366,6 +380,18 @@ function generate_form_field($id, $id_surat, $id_status)
 		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>><?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?></textarea>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
+	<?php } elseif ($fields['type'] == 'wysiwyg') {  ?>
+
+		<div class="<?= (form_error('tujuan_surat')) ? 'summernote-is-invalid' : ''; ?>">
+
+			<textarea class="form-control 
+<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
+<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?> textarea-summernote" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>><?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :   $field_value;  ?></textarea>
+			<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+		</div>
+
+
 	<?php } elseif ($fields['type'] == 'text') {  ?>
 
 		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 1 || $id_status == 4 && $verifikasi == 1) ? "" : "disabled"; ?> />
@@ -373,12 +399,7 @@ function generate_form_field($id, $id_surat, $id_status)
 
 
 	<?php } elseif ($fields['type'] == 'date_range') { ?>
-
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-
-		<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
-
+	
 		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 
 		<script type="text/javascript">
@@ -440,14 +461,12 @@ function generate_form_field($id, $id_surat, $id_status)
 	<?php } elseif ($fields['type'] == 'select_pembimbing') { //tahun akademik 
 	?>
 
-		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
+	
 		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
 			<option value="<?= $field_value; ?>"><?= getUserbyId($field_value)['fullname']; ?></option>
 		</select>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 		<script>
 			$(document).ready(function() {
 				$('.<?= $fields['key']; ?>').select2({
@@ -493,11 +512,6 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 	<?php } ?>
 
-	<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 	<?php
 }

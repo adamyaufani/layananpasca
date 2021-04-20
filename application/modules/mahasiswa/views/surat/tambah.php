@@ -1,3 +1,7 @@
+<!-- CSS & JS -->
+
+<?php call_styles(); ?>
+
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
@@ -105,3 +109,5 @@
 	</div>
 	<!-- /.col -->
 </div>
+
+<?php call_scripts(); ?>

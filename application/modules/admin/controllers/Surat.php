@@ -17,6 +17,14 @@ class Surat extends Admin_Controller
 		$data['view'] = 'surat/index';
 		$this->load->view('layout/layout', $data);
 	}
+	public function internal($role = 0)
+	{
+		$role = $_SESSION['role'];
+		$data['query'] = $this->surat_model->get_surat($role);
+		$data['title'] = 'Surat Internal';
+		$data['view'] = 'surat/internal';
+		$this->load->view('layout/layout', $data);
+	}
 
 	public function arsip()
 	{
