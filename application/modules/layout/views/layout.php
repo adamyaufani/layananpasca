@@ -165,6 +165,7 @@
 			$('.textarea-summernote').summernote({
 				tabsize: 2,
 				height: 320,
+				
 				toolbar: [
 					['style', ['style']],
 					['font', ['bold', 'underline', 'clear']],
