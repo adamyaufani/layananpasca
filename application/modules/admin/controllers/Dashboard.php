@@ -18,12 +18,4 @@ class Dashboard extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
-	public function sendmail() {
-
-		$penerima = ['yaufani@gmail.com','yaufaniadam@gmail.com','yaufaniadam@yahoo.com'];
-
-		echo $sendmail = $this->mailer->send_mail($penerima, 'tugas ppdsasd', 'ppds mengunggah tugas baru', '');
-		
-
-	}
 }
