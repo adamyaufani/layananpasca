@@ -21,85 +21,6 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<?= $this->session->flashdata('msg'); ?>
 			</div>
 		<?php endif; ?>
-		<!-- Surat diproses oleh Kaprodi -->
-		<?php if (($surat['id_status'] == 3 || $surat['id_status'] == 7) && $this->session->userdata('role') == 6) { ?>
-
-			<div class="card shadow mb-3">
-				<a href="#collPengantar" class="d-block card-header pt-3 pb-2 bg-tosca" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collPengantar">
-					<p class="h6 font-weight-bold text-white">Pengantar</p>
-				</a>
-				<div class="collapse show" id="collPengantar">
-					<div class="card-body">
-						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Kepala Program Studi <?= $surat['prodi']; ?>, mohon kesediaanya untuk memberikan persetujuan pada surat yang diajukan oleh:</p>
-
-						<table class="mb-3 ml-3 table-striped" style="width:95%">
-							<tr>
-								<td style="width:150px;">Nama</td>
-								<td> : <?= $surat['fullname']; ?></td>
-							</tr>
-							<tr>
-								<td>NIM</td>
-								<td> : <?= $surat['username']; ?></td>
-							</tr>
-							<tr>
-								<td>Jenis Surat</td>
-								<td> : <?= $surat['kategori_surat']; ?></td>
-							</tr>
-						</table>
-
-						<p> Adapun kelengkapan administratif yang dibutuhkan sudah diverifikasi kebenarannya oleh staf Tata Usaha <?= $surat['prodi']; ?>.</p>
-
-						<p>Demikian pengatar dari kami, atas perhatiannya kami ucapkan terima kasih.</p>
-						<p class="font-italic">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
-					</div>
-				</div>
-			</div>
-		<?php } ?>
-
-		<!-- Surat diproses oleh Direktur -->
-		<?php if (($surat['id_status'] == 8) && $this->session->userdata('role') == 5) { ?>
-
-			<div class="card shadow mb-3">
-				<a href="#collPengantar" class="d-block card-header pt-3 pb-2 bg-tosca" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collPengantar">
-					<p class="h6 font-weight-bold text-white">Pengantar</p>
-				</a>
-				<div class="collapse show" id="collPengantar">
-					<div class="card-body">
-						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Direktur Program Pascasarjana UMY, mohon kesediaanya untuk memberikan persetujuan pada Surat yang diajukan oleh: </p>
-
-						<table class="mb-3 ml-3 table-striped" style="width:95%">
-							<tr>
-								<td style="width:150px;">Nama</td>
-								<td> : <?= $surat['fullname']; ?></td>
-							</tr>
-							<tr>
-								<td>NIM</td>
-								<td> : <?= $surat['username']; ?></td>
-							</tr>
-							<tr>
-								<td>Program Studi</td>
-								<td> : <?= $surat['prodi']; ?></td>
-							</tr>
-							<tr>
-								<td>Jenis Surat</td>
-								<td> : <?= $surat['kategori_surat']; ?></td>
-							</tr>
-						</table>
-
-
-						<p> Adapun kelengkapan administratif yang dibutuhkan sudah diverifikasi kebenarannya oleh staf Tata Usaha dan telah disetujui oleh Ketua Program Studi <?= $surat['prodi']; ?>.</p>
-
-						<p>Demikian pengatar dari kami, atas perhatiannya kami ucapkan terima kasih.</p>
-						<p class="font-italic">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
-					</div>
-				</div>
-			</div>
-
-
-
-		<?php } ?>
 
 		<div class="card shadow">
 			<a href="#collKeterangan" class="d-block card-header pt-3 pb-2 bg-abumuda <?= (($surat['id_status'] == 9 || $surat['id_status'] == 10) && $this->session->userdata('role') == 1) ? "collapsed" : "" ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collKeterangan">
@@ -323,6 +244,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 		<!-- jika surat sudah diacc oleh Direktur pasca, maka atur surat-->
 		<?php if ($surat['id_status'] == 9 && $this->session->userdata('role') == 1) { 
 			
+			echo '<pre>'; print_r($surat); echo '</pre>';
 			?>
 			<div class="card shadow mt-3">
 				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
@@ -333,15 +255,14 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<p>Lakukan pengaturan di bawah ini sebelum surat diterbitkan</p>
 						<?php echo form_open('admin/surat/pratinjau'); ?>
-						<?php // echo form_open('admin/surat/terbitkan_surat'); 
-						?>
+						<?php // echo form_open('admin/surat/terbitkan_surat'); ?>
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Stempel Basah
 								<small id="emailHelp" class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
-								<input type="checkbox" name="stempel_basah" id="" <?= ($no_surat_data['stempel_basah'] == 'on') ? 'checked' :''; ?> > Centang untuk stempel basah.
+								<input type="checkbox" name="stempel_basah" id=""> Centang untuk stempel basah.
 								<span class="text-danger"><?php echo form_error('kat_tujuan_surat'); ?></span>
 							</div>
 						</div>
@@ -365,8 +286,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<input type="hidden" name="id_prodi" value="<?= $surat['id_prodi']; ?>" />
 								<input type="hidden" name="id_surat" id="" value="<?= $surat['id']; ?>">
 								<input type="hidden" name="id_kategori_surat" id="" value="<?= $surat['id_kategori_surat'] ?>">
-
-								<input type="number" name="no_surat" id="" value="<?= ($no_surat_data['no_surat']) ? $no_surat_data['no_surat'] : $last_no; ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
+								<input type="number" name="no_surat" id="" value="<?= $last_no ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
 								<span class="text-danger"><?php echo form_error('no_surat'); ?></span>
 							</div>
 						</div>
@@ -381,7 +301,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<select name="kat_tujuan_surat" id="kat_tujuan_surat" class="form-control <?= (form_error('kat_tujuan_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">Pilih Kategori Tujuan Surat</option>
 									<?php foreach ($tujuan_surat as $tujuan) { ?>
-										<option value="<?= $tujuan['id']; ?>" <?= ($no_surat_data['kat_tujuan_surat'] == $tujuan['id']) ? "selected" : ''; ?> ><?= $tujuan['kat_tujuan_surat']; ?></option>
+										<option value="<?= $tujuan['id']; ?>"><?= $tujuan['kat_tujuan_surat']; ?></option>
 									<?php } ?>
 								</select>
 								<span class="text-danger"><?php echo form_error('kat_tujuan_surat'); ?></span>
@@ -392,12 +312,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							<div class="col-md-8">
 
 								<select name="tujuan_surat" id="tujuan_surat" class="form-control <?= (form_error('tujuan_surat')) ? 'is-invalid' : ''; ?> ">
-								<?php if($no_surat_data['tujuan_surat']) { ?>
-										<option value="<?= $no_surat_data['tujuan_surat']; ?>" selected><?= $this->db->get_where('tujuan_surat',['id' => $no_surat_data['tujuan_surat']])->row_array()['tujuan_surat']; ?></option>
-									<?php } else { ?>
-										<option value="">Pilih Tujuan</option>
-									<?php } ?>
-
+									<option value="">Pilih Tujuan</option>
 								</select>
 								<span class="text-danger"><?php echo form_error('tujuan_surat'); ?></span>
 							</div>
@@ -411,7 +326,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<select name="urusan_surat" id="" class="form-control <?= (form_error('urusan_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">Urusan Surat</option>
 									<?php foreach ($urusan_surat as $urusan) { ?>
-										<option value="<?= $urusan['id']; ?>" <?= ($no_surat_data['urusan_surat'] == $urusan['id']) ? "selected" : ''; ?>><?= $urusan['urusan']; ?></option>
+										<option value="<?= $urusan['id']; ?>"><?= $urusan['urusan']; ?></option>
 									<?php } ?>
 								</select>
 								<span class="text-danger"><?php echo form_error('urusan_surat'); ?></span>
@@ -423,7 +338,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
 							<div class="col-md-8">
 
-								<input type="text" name="hal" id="hal" class="form-control" value="<?= ($no_surat_data['hal']) ? $no_surat_data['hal'] : (($surat['kategori_surat']) ? $surat['kategori_surat']: '');  ?>">
+								<input type="text" name="hal" id="hal" class="form-control" value="<?= ($surat['kategori_surat']) ? $surat['kategori_surat'] : '';  ?>">
 								<span class="text-danger"><?php echo form_error('hal'); ?></span>
 							</div>
 						</div>
@@ -433,7 +348,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
 							<div class="col-md-8">
-								<textarea name="instansi" id="" cols="30" rows="3" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> "><?= ($no_surat_data['instansi']) ? $no_surat_data['instansi'] : ( ($surat['instansi']) ? $surat['instansi'] : get_meta_value('instansi', $surat['id'], false)) ;  ?>
+								<textarea name="instansi" id="" cols="30" rows="3" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> ">
+								<?= ($surat['tujuan_surat']) ? $surat['tujuan_surat'] : get_meta_value('tujuan_surat', $surat['id'], false);  ?>
 							</textarea>
 								<span class="text-danger"><?php echo form_error('instansi'); ?></span>
 							</div>
@@ -443,7 +359,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan.</small>
 							</label>
 							<div class="col-md-8">
-								<textarea name="tembusan" id="tembusan" cols="30" rows="3" class="textarea-summernote <?= (form_error('tembusan')) ? 'is-invalid' : ''; ?> "><?= ($no_surat_data['tembusan']) ? $no_surat_data['tembusan'] : ( ($surat['tembusan']) ? $surat['tembusan'] : get_meta_value('tembusan', $surat['id'], false)) ;  ?>
+								<textarea name="tembusan" id="tembusan" cols="30" rows="3" class="textarea-summernote <?= (form_error('tembusan')) ? 'is-invalid' : ''; ?> ">
+								<?= ($surat['tembusan']) ? $surat['tembusan'] : '';  ?>
 							</textarea>
 								<span class="text-danger"><?php echo form_error('tembusan'); ?></span>
 							</div>

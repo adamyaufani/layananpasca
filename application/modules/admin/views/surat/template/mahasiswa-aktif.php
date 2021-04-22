@@ -5,7 +5,7 @@
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
-            <td>: <?= $no_surat['no_surat'] . "/" . $no_surat['kode'] . "." . $no_surat['kode_tujuan'] . "-" . $no_surat['kode_us'] . "/" . bulan_romawi($no_surat['bulan']) . "/" . $no_surat['tahun']; ?></td>
+            <td>: <?= $no_surat; ?></td>
           </tr>
           <tr>
             <td>Hal</td>

@@ -79,6 +79,7 @@ class Surat_model extends CI_Model
         k.kat_keterangan_surat, 
         k.klien, 
         k.tujuan_surat, 
+        k.tembusan, 
         ss.id_status, 
         ss.catatan, 
         st.status, 
@@ -161,15 +162,16 @@ class Surat_model extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    
+public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat ) {
 
-
+   $kat_tujuan_surat = $this->db->get_where('kat_tujuan_surat', ['id'=> $kat_tujuan_surat])->row_array()['kode'];
+   $tujuan_surat = $this->db->get_where('tujuan_surat', ['id'=> $tujuan_surat])->row_array()['kode_tujuan'];
+   $urusan_surat = $this->db->get_where('urusan_surat', ['id'=> $urusan_surat])->row_array()['kode'];
+   return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/" . bulan_romawi(date('n')) . "/" . date('Y'); 
+}
     public function get_no_surat($id_surat)
     {
-        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, tanggal_terbit, file, no_lengkap, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
-			LEFT JOIN kat_tujuan_surat kts ON kts.id=ns.kat_tujuan_surat
-			LEFT JOIN tujuan_surat ts ON ts.id=ns.tujuan_surat
-			LEFT JOIN urusan_surat us ON us.id=ns.urusan_surat
+        $no_surat = $this->db->query("select * FROM no_surat ns
 			where ns.id_surat= $id_surat
             ")->row_array();
 
