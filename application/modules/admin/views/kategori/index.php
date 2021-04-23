@@ -2,6 +2,7 @@
     <div class="col-md-12">
         <div class="card card-success card-outline">
             <div class="card-body box-profile">
+               
                 <table id="kategorisurat" class="table table-striped table-bordered">
                     <thead>
                         <tr>
@@ -23,17 +24,30 @@
                             } elseif ($kategori['klien'] == 'j') {
                                 $klien = 'Program Studi';
                             }
-
-                            if ($kategori['prodi'] == 0) {
-                                $prodi = 'Semua';
-                            } else {
-                                $prodi =  getProdibyId($kategori['prodi'])['prodi'];
-                            }
+                           
                             echo "<tr>";
                             echo "<td>" . $kategori['kategori_surat'] . "</td>";
-                            echo "<td>" . $klien . "</td>";
-                            echo "<td>" . $prodi . "</td>";
-                            echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/kategorisurat/edit/' . $kategori['id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
+                            echo "<td>" . $klien . "</td>"; ?>
+                            <td>
+                                <?php 
+                                
+                                if ($kategori['prodi'] == 0) {
+                                    echo 'Semua';
+                                } else { 
+                                    $prodi = explode(',', $kategori['prodi']);    
+                                                                  
+                                    foreach($prodi as $prodi) {
+                                        echo '- ' . getProdibyId($prodi)['prodi'] . '<br />';
+                                    }
+                                   
+                                }
+                                
+                                
+                            
+                           ?>
+                        
+                            </td>
+                            <?php echo "<td class='text-center'><a class='btn btn-info btn-sm' href='" . base_url('admin/kategorisurat/edit/' . $kategori['id']) . "'><i class='fas fa-pencil-alt'></i> Edit</a></td>";
                             echo "</tr>";
                         endforeach;
                         ?>

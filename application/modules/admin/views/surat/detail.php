@@ -37,26 +37,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collPengantar">
 					<div class="card-body">
 						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Kepala Program Studi <?= $surat['prodi']; ?>, mohon kesediaanya untuk memberikan persetujuan pada surat yang diajukan oleh:</p>
-
-						<table class="mb-3 ml-3 table-striped" style="width:95%">
-							<tr>
-								<td style="width:150px;">Nama</td>
-								<td> : <?= $surat['fullname']; ?></td>
-							</tr>
-							<tr>
-								<td>NIM</td>
-								<td> : <?= $surat['username']; ?></td>
-							</tr>
-							<tr>
-								<td>Jenis Surat</td>
-								<td> : <?= $surat['kategori_surat']; ?></td>
-							</tr>
-						</table>
+						<p> Kepada Yth. Kepala Program Studi <?= $surat['prodi']; ?>, mohon kesediaanya untuk memberikan persetujuan pada surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong>.</p>						
 
 						<p> Adapun kelengkapan administratif yang dibutuhkan sudah diverifikasi kebenarannya oleh staf Tata Usaha <?= $surat['prodi']; ?>.</p>
 
-						<p>Demikian pengatar dari kami, atas perhatiannya kami ucapkan terima kasih.</p>
+						<p>Atas perhatiannya kami ucapkan terima kasih.</p>
 						<p class="font-italic">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
 					</div>
 				</div>
@@ -73,31 +58,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collPengantar">
 					<div class="card-body">
 						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Direktur Program Pascasarjana UMY, mohon kesediaanya untuk memberikan persetujuan pada Surat yang diajukan oleh: </p>
-
-						<table class="mb-3 ml-3 table-striped" style="width:95%">
-							<tr>
-								<td style="width:150px;">Nama</td>
-								<td> : <?= $surat['fullname']; ?></td>
-							</tr>
-							<tr>
-								<td>NIM</td>
-								<td> : <?= $surat['username']; ?></td>
-							</tr>
-							<tr>
-								<td>Program Studi</td>
-								<td> : <?= $surat['prodi']; ?></td>
-							</tr>
-							<tr>
-								<td>Jenis Surat</td>
-								<td> : <?= $surat['kategori_surat']; ?></td>
-							</tr>
-						</table>
-
-
-						<p> Adapun kelengkapan administratif yang dibutuhkan sudah diverifikasi kebenarannya oleh staf Tata Usaha dan telah disetujui oleh Ketua Program Studi <?= $surat['prodi']; ?>.</p>
-
-						<p>Demikian pengatar dari kami, atas perhatiannya kami ucapkan terima kasih.</p>
+						<p> Kepada Yth. Direktur Program Pascasarjana UMY, mohon kesediaanya untuk memberikan persetujuan pada Surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?> (<?= $surat['prodi']; ?>)</strong> </p>
+						<p>Atas perhatiannya kami ucapkan terima kasih.</p>
 						<p class="font-italic">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
 					</div>
 				</div>
@@ -295,7 +257,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 									</div>
 									<div class="card-body">
 
-										<p> Saya selaku Direktur Program Pascasarjana UMY memberikan persetujuan pada <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong> dari prodi <?= $surat['prodi']; ?>.</p>
+										<p> Saya selaku Direktur Program Pascasarjana UMY memberikan persetujuan pada <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong>.</p>
 
 										<p>Dengan demikian surat ini dapat diterbitkan.</p>
 

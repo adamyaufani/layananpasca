@@ -2,6 +2,13 @@
       table.nama {
         margin-bottom:20px;
       }
+      div.kepada {
+        margin-top:20px;
+        margin-bottom:20px;
+      }
+      div.kepada p {
+        margin-bottom:5px;
+      }
       tr.ttd-dir td {           
                      
            vertical-align: middle;

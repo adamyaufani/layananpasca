@@ -48,7 +48,7 @@
   </table>
 
 
-  <p>Bermaksud mengajukan permohonan cuti kuliah atau berhenti kuliah sementara <strong><?= get_meta_value('semester', $surat['id'], false); ?></strong> Tahun Akademik <strong><?= get_meta_value('thn_akademik', $surat['id'], false); ?></strong> dengan alasan <strong><?= get_meta_value('alasan_cuti', $surat['id'], false); ?></strong>. Berkenaan dengan hal tersebut, kami mohon untuk dapat diberikan surat cuti kepada mahasiswa tersebut diatas.</p>
+  <p>Bermaksud mengajukan permohonan cuti kuliah atau berhenti kuliah sementara pada semester <strong><?= get_meta_value('semester', $surat['id'], false); ?></strong> Tahun Akademik <strong><?= get_meta_value('thn_akademik', $surat['id'], false); ?></strong> dengan alasan <strong><?= get_meta_value('alasan_cuti', $surat['id'], false); ?></strong>. Berkenaan dengan hal tersebut, kami mohon untuk dapat diberikan surat cuti kepada mahasiswa tersebut diatas.</p>
   <p>Adapun kelengkapan dokumen yg diperlukan akan diupayakan oleh mahasiswa yang bersangkutan.</p>
   <p>Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
 
