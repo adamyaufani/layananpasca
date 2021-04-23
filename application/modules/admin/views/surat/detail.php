@@ -1,6 +1,12 @@
 <!-- catatan:
 error message pada field jika invalidnya masih muncul, padahal field yg salah sudah diganti isinya,
 mestinya ketika user mengganti, error messagenya langsung ilang -->
+
+<style>
+	.textarea-summernote.is-invalid+.note-editor {
+		border: 1px solid #b0272b;
+	}
+</style>
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
@@ -321,9 +327,9 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 		</div>
 
 		<!-- jika surat sudah diacc oleh Direktur pasca, maka atur surat-->
-		<?php if ($surat['id_status'] == 9 && $this->session->userdata('role') == 1) { 
-			
-			?>
+		<?php if ($surat['id_status'] == 9 && $this->session->userdata('role') == 1) {
+
+		?>
 			<div class="card shadow mt-3">
 				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
 					<p class="h6 font-weight-bold text-white">Terbitkan Surat</p>
@@ -333,16 +339,14 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<p>Lakukan pengaturan di bawah ini sebelum surat diterbitkan</p>
 						<?php echo form_open('admin/surat/pratinjau'); ?>
-						<?php // echo form_open('admin/surat/terbitkan_surat'); 
-						?>
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Stempel Basah
 								<small id="emailHelp" class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
-								<input type="checkbox" name="stempel_basah" id="" <?= ($no_surat_data['stempel_basah'] == 'on') ? 'checked' :''; ?> > Centang untuk stempel basah.
-								<span class="text-danger"><?php echo form_error('kat_tujuan_surat'); ?></span>
+								<input type="checkbox" name="stempel_basah" id="" <?= (validation_errors()) ? set_checkbox('stempel_basah') : (($no_surat_data['stempel_basah'] == 'on') ? 'checked' : ''); ?>> Centang untuk stempel basah.
+								<span class="text-danger"><?php echo form_error('stempel_basah'); ?></span>
 							</div>
 						</div>
 
@@ -366,38 +370,42 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<input type="hidden" name="id_surat" id="" value="<?= $surat['id']; ?>">
 								<input type="hidden" name="id_kategori_surat" id="" value="<?= $surat['id_kategori_surat'] ?>">
 
-								<input type="number" name="no_surat" id="" value="<?= ($no_surat_data['no_surat']) ? $no_surat_data['no_surat'] : $last_no; ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
+								<input type="number" name="no_surat" id="" value="<?= (validation_errors()) ? set_value('no_surat') : (($no_surat_data['no_surat']) ? $no_surat_data['no_surat'] : $last_no); ?>" class="form-control <?= (form_error('no_surat')) ? 'is-invalid' : ''; ?> ">
 								<span class="text-danger"><?php echo form_error('no_surat'); ?></span>
 							</div>
 						</div>
-					
+
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Kategori Tujuan Surat</label>
 							<div class="col-md-8">
 
-								<?php $tujuan_surat = $this->db->query("select * from kat_tujuan_surat")->result_array(); ?>
+								<?php $kat_tujuan_surat = $this->db->query("select * from kat_tujuan_surat")->result_array(); ?>
 
 								<select name="kat_tujuan_surat" id="kat_tujuan_surat" class="form-control <?= (form_error('kat_tujuan_surat')) ? 'is-invalid' : ''; ?> ">
+
 									<option value="">Pilih Kategori Tujuan Surat</option>
-									<?php foreach ($tujuan_surat as $tujuan) { ?>
-										<option value="<?= $tujuan['id']; ?>" <?= ($no_surat_data['kat_tujuan_surat'] == $tujuan['id']) ? "selected" : ''; ?> ><?= $tujuan['kat_tujuan_surat']; ?></option>
-									<?php } ?>
+									<?php foreach ($kat_tujuan_surat as $kat_tujuan_surat) { ?>
+										<option value="<?= $kat_tujuan_surat['id']; ?>" <?=
+																																		(validation_errors()) ? set_select('kat_tujuan_surat', $kat_tujuan_surat['id']) : (($no_surat_data['kat_tujuan_surat'] == $kat_tujuan_surat['id']) ? "selected" : '');
+																																		?>>
+											<?= $kat_tujuan_surat['kat_tujuan_surat']; ?></option>
+									<?php }
+
+
+									?>
+
 								</select>
+
 								<span class="text-danger"><?php echo form_error('kat_tujuan_surat'); ?></span>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-md-4" for="">Tujuan Surat</label>
 							<div class="col-md-8">
+								<input type="hidden" value="<?php echo $selected = (validation_errors()) ? set_value('tujuan_surat') : $no_surat_data['tujuan_surat']; ?>" name="selected" />
 
 								<select name="tujuan_surat" id="tujuan_surat" class="form-control <?= (form_error('tujuan_surat')) ? 'is-invalid' : ''; ?> ">
-								<?php if($no_surat_data['tujuan_surat']) { ?>
-										<option value="<?= $no_surat_data['tujuan_surat']; ?>" selected><?= $this->db->get_where('tujuan_surat',['id' => $no_surat_data['tujuan_surat']])->row_array()['tujuan_surat']; ?></option>
-									<?php } else { ?>
-										<option value="">Pilih Tujuan</option>
-									<?php } ?>
-
 								</select>
 								<span class="text-danger"><?php echo form_error('tujuan_surat'); ?></span>
 							</div>
@@ -411,7 +419,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<select name="urusan_surat" id="" class="form-control <?= (form_error('urusan_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">Urusan Surat</option>
 									<?php foreach ($urusan_surat as $urusan) { ?>
-										<option value="<?= $urusan['id']; ?>" <?= ($no_surat_data['urusan_surat'] == $urusan['id']) ? "selected" : ''; ?>><?= $urusan['urusan']; ?></option>
+										<option value="<?= $urusan['id']; ?>" <?=
+																													(validation_errors()) ? set_select('urusan_surat', $urusan['id']) : (($no_surat_data['urusan_surat'] == $urusan['id']) ? "selected" : '');
+																													?>>
+											<?= $urusan['urusan']; ?></option>
 									<?php } ?>
 								</select>
 								<span class="text-danger"><?php echo form_error('urusan_surat'); ?></span>
@@ -419,32 +430,41 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						</div>
 
 						<div class="form-group row">
-							<label class="col-md-4" for="">Hal
-							<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
+							<label class="col-md-4" for="">Lampiran
+								<small id="emailHelp" class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
 							<div class="col-md-8">
 
-								<input type="text" name="hal" id="hal" class="form-control" value="<?= ($no_surat_data['hal']) ? $no_surat_data['hal'] : (($surat['kategori_surat']) ? $surat['kategori_surat']: '');  ?>">
+								<input type="number" min="0" max="20" step="1" name="lamp" id="lamp" class="form-control" value="<?= (validation_errors()) ? set_value('lamp') : (($no_surat_data['lamp']) ? $no_surat_data['lamp'] : '');  ?>">
+								<span class="text-danger"><?php echo form_error('lamp'); ?></span>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-md-4" for="">Hal
+								<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
+							<div class="col-md-8">
+
+								<input type="text" name="hal" id="hal" class="form-control" value="<?= (validation_errors()) ? set_value('hal') : (($no_surat_data['hal']) ? $no_surat_data['hal'] : (($surat['kategori_surat']) ? $surat['kategori_surat'] : ''));  ?>">
 								<span class="text-danger"><?php echo form_error('hal'); ?></span>
 							</div>
 						</div>
 
 						<div class="form-group row">
-							<label class="col-md-4" for="">Instansi/Lembaga Tujuan
-								<small id="emailHelp" class="form-text text-muted">Tujuan surat bisa diganti jika diperlukan.</small>
+							<label class="col-md-4" for="">Kepada
+								<small id="emailHelp" class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
+
 							<div class="col-md-8">
-								<textarea name="instansi" id="" cols="30" rows="3" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> "><?= ($no_surat_data['instansi']) ? $no_surat_data['instansi'] : ( ($surat['instansi']) ? $surat['instansi'] : get_meta_value('instansi', $surat['id'], false)) ;  ?>
-							</textarea>
+								<textarea name="instansi" id="" cols="30" rows="2" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> "><?= (validation_errors()) ? set_value('instansi') : (($no_surat_data['instansi']) ? $no_surat_data['instansi'] : (($surat['tujuan_surat']) ? $surat['tujuan_surat'] : get_meta_value('tujuan_surat', $surat['id'], false)));  ?></textarea>
 								<span class="text-danger"><?php echo form_error('instansi'); ?></span>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-md-4" for="">Tembusan
-								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan.</small>
+								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
 							</label>
 							<div class="col-md-8">
-								<textarea name="tembusan" id="tembusan" cols="30" rows="3" class="textarea-summernote <?= (form_error('tembusan')) ? 'is-invalid' : ''; ?> "><?= ($no_surat_data['tembusan']) ? $no_surat_data['tembusan'] : ( ($surat['tembusan']) ? $surat['tembusan'] : get_meta_value('tembusan', $surat['id'], false)) ;  ?>
-							</textarea>
+								<input type="text" name="tembusan" class="form-control mb-2" value="<?= (validation_errors()) ? set_value('tembusan') : (($no_surat_data['tembusan']) ? $no_surat_data['tembusan'] : ''); ?>" placeholder="Contoh: Rektor, Ka Prodi" />
 								<span class="text-danger"><?php echo form_error('tembusan'); ?></span>
 							</div>
 						</div>
@@ -466,7 +486,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					<div class="card-body pb-3">
 						Download Surat
 
-						<a href="<?= base_url("public/documents/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+						<a href="<?= base_url("public/documents/" . $no_surat_data['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 					</div>
 				</div>
 			</div>
@@ -561,17 +581,26 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				success: function(data) {
 					console.log(data)
 					var html = '';
+					var sel = $('input[name=selected]').val();
+				
 					var i;
 					if (data.length == 0) {
 						html += '<option>Tujuan tidak ditemukan</option>'
 					} else {
-						for (i = 0; i < data.length; i++) {
-							html += '<option value = ' + data[i].id + '>' + data[i].tujuan_surat + '</option>'
+						for (i = 0; i < data.length; i++) {				
+						
+								html += '<option value="' + data[i].id + '"' + (data[i].id === sel ? 'selected="selected"' : '') + '>' + data[i].tujuan_surat + '</option>';
+							
 						}
 					}
+				
 					$('#tujuan_surat').html(html);
+					
 				}
 			});
 		});
+
+		$('#kat_tujuan_surat').trigger("change");
+
 	});
 </script>
