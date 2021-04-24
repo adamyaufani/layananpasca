@@ -50,7 +50,7 @@
   $dateakhir=date_create($tgl[1]);
   $akhir = date_format($dateakhir,"j F Y");
   //durasi hari
-  $hari=date_diff($awal,$akhir);
+  $hari=date_diff($dateawal,$dateakhir);
   
   ?>
 
