@@ -49,10 +49,12 @@
   $awal = date_format($dateawal,"j F Y");
   $dateakhir=date_create($tgl[1]);
   $akhir = date_format($dateakhir,"j F Y");
+  //durasi hari
+  $hari=date_diff($awal,$akhir);
   
   ?>
 
-  <p>Bermaksud untuk melakukan penelitian <strong><?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?></strong> dengan tema <strong><?= get_meta_value('tema_penelitian', $surat['id'], false); ?></strong>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin selama <?= $awal . ' - ' . $akhir; ?>. </p>
+  <p>Bermaksud untuk melakukan penelitian <?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?> dengan tema : <em> "<?= get_meta_value('tema_penelitian', $surat['id'], false); ?>"</em>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin selama <?= $hari; ?> hari.</p>
 
   <p>Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
 
