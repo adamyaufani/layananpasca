@@ -452,12 +452,16 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								$value_kepada = set_value('instansi');
 							} else {
 								if ($no_surat_data['instansi'] == NULL) {
+									echo 'null';
 									if (get_meta_value('hal', $surat['id'], false)) {
+										echo 'meta';
 										$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
 									} else {
+										echo 'tujuan';
 										$value_kepada = $surat['tujuan_surat'];
 									}
 								} else {
+									echo 'nosratdata';
 									$value_kepada = $no_surat_data['instansi'];
 								}
 							}
