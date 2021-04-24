@@ -14,11 +14,11 @@
            vertical-align: middle;
        }
       tr.ttd-dir td p {           
-        text-align: center; 
+        text-align: left; 
        }
        tr.ttd-dir td:nth-child(1) {
            width: 70%;
-           background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center center no-repeat;
+           background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') left center no-repeat;
        }
 
       .heder {
@@ -51,6 +51,18 @@
       p {
         text-align: justify;
       }
+      .isi_surat table {
+            width:100%;
+            margin-left:10px;
+            margin-bottom:10px;
+        }
+        .isi_surat table tr td:nth-child(1) {
+            width:20%;
+        }
+        .isi_surat table tr td {            
+            vertical-align: top;
+            padding:3px 0;
+        }
     </style>
     <div class="row">
       <div class="col-md-10 offset-md-1">
