@@ -37,8 +37,8 @@
         }
         tr.ttd-dir td:nth-child(1) {
             width: 70%;
-            background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center center no-repeat;
-            background-size: 90%;
+            background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center top no-repeat;
+            background-size: 100%;
         }
         .futer {
             height: 1.5cm;
@@ -60,11 +60,11 @@
         }
         .isi_surat table {
             width:100%;
-            margin-left:20px;
+            margin-left:10px;
             margin-bottom:10px;
         }
         .isi_surat table tr td:nth-child(1) {
-            width:30%;
+            width:20%;
         }
         .isi_surat table tr td {            
             vertical-align: top;
