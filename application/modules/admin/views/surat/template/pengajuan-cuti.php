@@ -40,11 +40,7 @@
     <tr>
       <td>NIM</td>
       <td> : <?= $surat['username']; ?></td>
-    </tr>
-    <tr>
-      <td>Program Studi</td>
-      <td> : <?= $surat['prodi']; ?></td>
-    </tr>
+    </tr> 
   </table>
 
 
