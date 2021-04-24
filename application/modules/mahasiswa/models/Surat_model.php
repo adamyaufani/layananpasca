@@ -36,6 +36,33 @@ class Surat_model extends CI_Model
         ");
         return $result = $query->result_array();
     }
+
+    public function get_surat_internal($role)
+    {
+        
+        if ($role == 1) {
+            $klien = "AND k.klien='p'";
+            $prodi = '';
+        } else if ($role == 2) {
+            $klien = "AND k.klien='j' ";
+            $prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
+        }
+
+        $query = $this->db->query("SELECT s.id as id_surat, s.id_mahasiswa, u.fullname, ss.id_status, st.id as id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, u.id_prodi, pr.prodi
+        FROM surat s
+        LEFT JOIN users u ON u.id = s.id_mahasiswa
+        LEFT JOIN prodi pr ON pr.id = u.id_prodi
+        LEFT JOIN surat_status ss ON ss.id_surat = s.id
+        LEFT JOIN status st ON st.id = ss.id_status
+        LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
+        WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
+        $klien       
+        $prodi
+        ORDER BY s.id DESC      
+        ");
+        return $result = $query->result_array();
+    }
+
     public function get_surat_arsip()
     {
         if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
@@ -79,6 +106,8 @@ class Surat_model extends CI_Model
         k.kat_keterangan_surat, 
         k.klien, 
         k.tujuan_surat, 
+        k.tembusan, 
+        k.kode, 
         ss.id_status, 
         ss.catatan, 
         st.status, 
@@ -161,15 +190,16 @@ class Surat_model extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    
+public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat ) {
 
-
+   $kat_tujuan_surat = $this->db->get_where('kat_tujuan_surat', ['id'=> $kat_tujuan_surat])->row_array()['kode'];
+   $tujuan_surat = $this->db->get_where('tujuan_surat', ['id'=> $tujuan_surat])->row_array()['kode_tujuan'];
+   $urusan_surat = $this->db->get_where('urusan_surat', ['id'=> $urusan_surat])->row_array()['kode'];
+   return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/" . bulan_romawi(date('n')) . "/" . date('Y'); 
+}
     public function get_no_surat($id_surat)
     {
-        $no_surat = $this->db->query("select ns.no_surat, ns.instansi, kts.kode, ts.kode_tujuan, us.kode as kode_us, tanggal_terbit, file, no_lengkap, DATE_FORMAT(tanggal_terbit, '%c') as bulan, DATE_FORMAT(tanggal_terbit, '%Y') as tahun, DATE_FORMAT(tanggal_terbit, '%c %M %Y') as tanggal_full from no_surat ns 
-			LEFT JOIN kat_tujuan_surat kts ON kts.id=ns.kat_tujuan_surat
-			LEFT JOIN tujuan_surat ts ON ts.id=ns.tujuan_surat
-			LEFT JOIN urusan_surat us ON us.id=ns.urusan_surat
+        $no_surat = $this->db->query("select * FROM no_surat ns
 			where ns.id_surat= $id_surat
             ")->row_array();
 

@@ -164,7 +164,7 @@
 		$(document).ready(function() {
 			$('.textarea-summernote').summernote({
 				tabsize: 2,
-				height: 320,
+				height: 200,
 				
 				toolbar: [
 					['style', ['style']],
@@ -172,10 +172,14 @@
 					['color', ['color']],
 					['para', ['ul', 'ol', 'paragraph']],
 					['table', ['table']],
-					['view', ['fullscreen', 'codeview', 'help']]
-				]
+					['view', ['fullscreen', 'codeview']]
+				],
+				
 			});
 
+			if($('.textarea-summernote').summernote('isEmpty')){
+				$('.textarea-summernote').summernote('code', ''); 
+    	}		
 
 		});
 

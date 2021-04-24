@@ -14,13 +14,31 @@
             line-height: 1.2;
             font-size: 10pt;
         }
+        div.kepada  {
+            margin:20px 0 20px 0;
+        }
+        div.kepada p  {
+            line-height: 1.2rem ; 
+            font-size: 10pt; 
+            font-weight:normal;    
+        }
 
-        td.ttd-dir {
-            height: 2cm;
-            text-align: center;
-            width: 70%;
-            background: url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center center no-repeat;
+        div.kepada ol  {
+            padding:0;
+            margin:0;  
+            margin-left:30px;
+            font-size:10pt; 
+        }
+
+        tr.ttd-dir td {
+           
+            text-align: center;           
             vertical-align: middle;
+        }
+        tr.ttd-dir td:nth-child(1) {
+            width: 70%;
+            background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') center center no-repeat;
+            background-size: 90%;
         }
         .futer {
             height: 1.5cm;
@@ -28,7 +46,7 @@
             background: transparent url('<?= base_url('public/dist/img/footerkop-pasca.jpg'); ?>') center bottom no-repeat;
             background-size:100%;
             text-align:right;
-            padding:40px;
+            padding:40px 57px 0 55px;
         }
         .futer img {
             width:50px;
@@ -36,19 +54,42 @@
         }
        
         table.nama {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            width:90%; 
+            margin-left:5%
+        }
+        .isi_surat table {
+            width:100%;
+            margin-left:20px;
+            margin-bottom:10px;
+        }
+        .isi_surat table tr td:nth-child(1) {
+            width:30%;
+        }
+        .isi_surat table tr td {            
+            vertical-align: top;
+            padding:3px 0;
         }
 
         p {
-            line-height: 1.5;
+            line-height: 1.7;
             font-size: 10pt;
             margin: 0;
             padding: 0;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
+            text-align: justify;
+        }
+        p strong span {
+            font-size: 10pt !important;  
+        }
+        ol {
+            margin: 0;
+            padding:0 0 20px 30px;
         }
 
         ol li {
-            font-size: 10pt;
+            font-size: 10pt !important;
+            margin-bottom: 5px;
         }
     </style>
 </head>

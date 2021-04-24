@@ -128,7 +128,7 @@ function call_scripts()
 	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<?php
+	<?php
 }
 
 //menampilkan kategori keterangan surat
@@ -253,7 +253,7 @@ function generate_form_field($id, $id_surat, $id_status)
 
 							<strong><?= ($file) ? $filename['1'] : ''; ?></strong> <span class="text-muted"></span>
 						</p>
-						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $form; ?>' data-id='<?= $file['id']; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
+						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $form; ?>' data-id='<?= ($file) ? $file['id'] : ''; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
 					</div>
 				</li>
 			</ul>
@@ -394,12 +394,12 @@ function generate_form_field($id, $id_surat, $id_status)
 
 	<?php } elseif ($fields['type'] == 'text') {  ?>
 
-		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 1 || $id_status == 4 && $verifikasi == 1) ? "" : "disabled"; ?> />
+		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
 	<?php } elseif ($fields['type'] == 'date_range') { ?>
-	
+
 		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 
 		<script type="text/javascript">
@@ -461,11 +461,10 @@ function generate_form_field($id, $id_surat, $id_status)
 	<?php } elseif ($fields['type'] == 'select_pembimbing') { //tahun akademik 
 	?>
 
-	
+
 		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
-			<option value="<?= $field_value; ?>"><?= getUserbyId($field_value)['fullname']; ?></option>
+			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserbyId($field_value)['fullname'] : ''; ?></option>
 		</select>
-		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<script>
 			$(document).ready(function() {
@@ -548,6 +547,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		} else {
 			$image = '';
 			$file_name = '';
+			$thumb = '';
 		}
 
 
@@ -580,6 +580,25 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 	} elseif ($fields['type'] == 'textarea') { ?>
 
 		<textarea class="form-control mb-2" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php }
+	} elseif ($fields['type'] == 'wysiwyg') { ?>
+
+		<textarea class="form-control mb-2 textarea-summernote" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2
@@ -728,22 +747,21 @@ function cek_verifikasi($id_surat)
 function get_meta_value($key, $id_surat, $image)
 {
 	$CI = &get_instance();
-	// $id = $CI->db->select("id")->from('kat_keterangan_surat')->where(array('key' => $key))->get()->row_array()['id'];
-
-	// $value = $CI->db->select("value")->from('keterangan_surat')->where(array('id_kat_keterangan_surat' => $id))->get()->row_array()['value'];
-
 	$value = $CI->db->select("kat_keterangan_surat.id, keterangan_surat.value ")
 		->from('kat_keterangan_surat')
 		->join('keterangan_surat', 'kat_keterangan_surat.id=keterangan_surat.id_kat_keterangan_surat', 'left')
-		->where(array("key" => $key))
+		->where(array("key" => $key, 'id_surat' => $id_surat))
 		->get()
 		->row_array();
-
-	if ($image == true) {
-		$media = $CI->db->select("file")->from('media')->where(array('id' => $value['value']))->get()->row_array()['file'];
-		return $media;
+	if ($value) {
+		if ($image == true) {
+			$media = $CI->db->select("file")->from('media')->where(array('id' => $value['value']))->get()->row_array()['file'];
+			return $media;
+		} else {
+			return $value['value'];
+		}
 	} else {
-		return $value['value'];
+		return 0;
 	}
 }
 

@@ -6,7 +6,7 @@ class Kategorisurat extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('surat_model', 'surat_model');
+		$this->load->model('mahasiswa/surat_model', 'surat_model');
 		$this->load->model('prodi_model', 'prodi_model');
 	}
 
@@ -50,30 +50,31 @@ class Kategorisurat extends MY_Controller
 	
 	public function simpan_kategori_surat()
 	{
-		$field_surat = $this->input->post('field_surat');
+		// $field_surat = $this->input->post('field_surat');
 
-		$newarray = explode("&", $field_surat);
+		// $newarray = explode("&", $field_surat);
 
-		$urutan = array();
-		foreach ($newarray as $key => $value) {
-			$exp = explode("=", $value);
+		// $urutan = array();
+		// foreach ($newarray as $key => $value) {
+		// 	$exp = explode("=", $value);
 
-			$urutan[] = array("id" => $exp[1]);
-		}
+		// 	$urutan[] = array("id" => $exp[1]);
+		// }
 
-		$serialize = serialize($urutan);
+		// $serialize = serialize($urutan);
 
-		$pilih_prodi = (!$this->input->post('pilih_prodi') == '') ? implode(',', $this->input->post('pilih_prodi')) : '';
+		// $pilih_prodi = (!$this->input->post('pilih_prodi') == '') ? implode(',', $this->input->post('pilih_prodi')) : '';
 
 		$data = array(
-			'kategori_surat' => $this->input->post('kategori_surat'),
-			'kat_keterangan_surat' => $serialize,
-			'kode' => $this->input->post('kode'),
-			'klien' => $this->input->post('klien'),
-			'prodi' => $pilih_prodi,
-			'deskripsi' => $this->input->post('deskripsinya'),
-			'tujuan_surat' => $this->input->post('tujuan_surat'),
-			'template' => $this->input->post('template')
+			'kategori_surat' => $this->input->post('kategori_surat')
+			// 'kat_keterangan_surat' => $serialize,
+			// 'kode' => $this->input->post('kode'),
+			// 'klien' => $this->input->post('klien'),
+			// 'prodi' => $pilih_prodi,
+			// 'deskripsi' => $this->input->post('deskripsinya'),
+			// 'tujuan_surat' => $this->input->post('tujuan_surat'),
+			// 'tembusan' => $this->input->post('tembusan'),
+			// 'template' => $this->input->post('template')
 		);
 
 		$query = $this->surat_model->tambah_kategori_surat($data);
@@ -110,6 +111,7 @@ class Kategorisurat extends MY_Controller
 			'prodi' => $pilih_prodi,
 			'deskripsi' => $this->input->post('deskripsinya'),
 			'tujuan_surat' => $this->input->post('tujuan_surat'),
+			'tembusan' => $this->input->post('tembusan'),
 			'template' => $this->input->post('template')
 		);
 

@@ -1,19 +1,23 @@
 <div class="kertas">
-  <table>
+  <table style="width: 100%;">
     <tr>
       <td width="70%">
         <table style="width: 100%;">
           <tr>
             <td width="15%">Nomor</td>
-            <td>: <?= $no_surat_lengkap; ?></td>
+            <td>: <?= $no_surat; ?></td>
+          </tr>
+          <tr>
+            <td width="15%">Lamp</td>
+            <td>: 1 Berkas</td>
           </tr>
           <tr>
             <td>Hal</td>
-            <td>: <?= $surat['kategori_surat']; ?></td>
+            <td>: <?= $pratinjau['hal']; ?></td>
           </tr>
         </table>
       </td>
-      <td style="text-align:right;vertical-align:top;">Yogyakarta, <?= $no_surat['tanggal_full']; ?> </td>
+      <td style="text-align:right;vertical-align:top;">Yogyakarta, <?= $tanggal_surat; ?> </td>
     </tr>
     <tr>
       <td colspan="2">&nbsp;</td>
@@ -21,9 +25,9 @@
     <tr>
       <td colspan="2">
         <p>Kepada Yth:<br />
-          <strong><?= ($no_surat['instansi']) ? $no_surat['instansi'] : $surat['tujuan_surat']; ?></strong>
-          di-<br />
-          Tempat
+          <strong><?= $pratinjau['instansi']; ?></strong>
+          di<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tempat
         </p>
       </td>
     </tr>
@@ -36,9 +40,9 @@
   <p>Dengan hormat,</p>
   <p>Kami sampaikan bahwa Mahasiswa dari Program Studi <?= $surat['prodi']; ?> Program Pascasarjana Universitas Muhammadiyah Yogyakarta </p>
 
-  <table style="width:100%" class="nama">
+  <table style="width:90%; margin-left:5%" class="nama">
     <tr>
-      <td style="width:2.5cm;">Nama</td>
+      <td style="width:25%;">Nama</td>
       <td> : <?= $surat['fullname']; ?></td>
     </tr>
     <tr>
@@ -53,32 +57,21 @@
   <p><em>Wassalamualaikum warahmatullaahi wabarakatuh</em></p>
 
 
-  <table>
-    <tr>
-      <td colspan="2" class="ttd-dir">
-        <p>Direktur </p>
+  <table style="width: 100%;">
+    <tr class="ttd-dir">
+      <td>
+        <p>Direktur, </p>
         <br />
         <br />
         <br />
         <br />
-        <p><u>Ir.Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
+        <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
       </td>
-
+      <td style="text-align: center; height:200px; vertical-align:middle">
+        &nbsp;
+      </td>
     </tr>
+    <tr>
   </table>
 
 </div>
-
-<?php $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-P']);
-$mpdf->AddPage(); ?>
-
-<h3>Lampiran-lampiran&nbsp;</h3>
-
-
-<?php $dokumen = get_dokumen_syarat($surat['id']);
-
-foreach ($dokumen as $dokumen) { ?>
-
-  <p><?= $dokumen['kat_keterangan_surat']; ?></p><img src="<?= base_url($dokumen['file']); ?>" />
-
-<?php } ?>

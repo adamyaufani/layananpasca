@@ -143,6 +143,16 @@
 						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('tujuan_surat'); ?></span>
 					</div>
 				</div>
+				<div class="form-group row">
+					<label for="tembusan" class="col-md-3 control-label">Tembusan</label>
+					<div class="col-md-9">
+
+						<div class="<?= (form_error('tembusan')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="tembusan" class="textarea-summernote"><?= (validation_errors()) ? set_value('tembusan') : $kat['tembusan'];  ?></textarea>
+						</div>
+
+						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('tembusan'); ?></span>
+					</div>
+				</div>
 
 				<div class="form-group row">
 					<label for="template" class="col-md-3 control-label">Template surat</label>
@@ -302,7 +312,7 @@
 			kode: {
 				required: "Kode surat wajib diisi",
 			},
-			tujuan: {
+			tujuan_surat: {
 				required: "Tujuan surat wajib diisi",
 			},
 			klien: {
