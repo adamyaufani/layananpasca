@@ -453,7 +453,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							} else {
 								if ($no_surat_data['instansi'] == NULL) {
 									echo 'null';
-									if (get_meta_value('hal', $surat['id'], false)) {
+									if (get_meta_value('tujuan_surat', $surat['id'], false)) {
 										echo 'meta';
 										$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
 									} else {
