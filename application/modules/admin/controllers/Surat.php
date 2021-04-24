@@ -375,7 +375,7 @@ class Surat extends Admin_Controller
 
 					$mpdf->WriteHTML($view);
 
-					$mpdf->Output(FILE_PATH . $filename, 'F');				
+					$mpdf->Output(FCPATH . $filename, 'F');				
 
 					$this->db->set('id_status', 10)
 						->set('date', 'NOW()', FALSE)
