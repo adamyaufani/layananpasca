@@ -61,7 +61,7 @@
 					<div class="card-body pb-3">
 						Download Surat
 
-						<a href="<?= base_url("public/documents/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+						<a href="<?= base_url("public/documents/pdfdata/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 					</div>
 				</div>
 			</div>
