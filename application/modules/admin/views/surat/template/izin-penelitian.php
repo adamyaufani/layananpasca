@@ -54,7 +54,7 @@
   
   ?>
 
-  <p>Bermaksud untuk melakukan penelitian <?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?> dengan tema : <em> "<?= get_meta_value('tema_penelitian', $surat['id'], false); ?>"</em>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin selama <?= $hari; ?> hari.</p>
+  <p>Bermaksud untuk melakukan penelitian <?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?> dengan tema : <em> "<?= get_meta_value('tema_penelitian', $surat['id'], false); ?>"</em>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin selama <?= $hari->format("%a"); ?> hari.</p>
 
   <p>Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
 
