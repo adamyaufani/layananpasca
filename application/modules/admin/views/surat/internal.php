@@ -24,7 +24,8 @@
             foreach ($query as $surat) {  ?>
               <tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
                 <td>
-                  <a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
+                  <a class="judul" href="<?= base_url('admin/surat/tambah/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a><br>
+                  <?= ($surat['id_status'] == '1') ? "<span class='badge badge-" . $surat['badge'] . "'><i class='fas fa-exclamation-triangle'></i> Selesaikan surat ini.</span>" : ""; ?>
                 </td>
                 <td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
                 <td>

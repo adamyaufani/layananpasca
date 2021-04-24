@@ -128,7 +128,7 @@ function call_scripts()
 	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-<?php
+	<?php
 }
 
 //menampilkan kategori keterangan surat
@@ -394,12 +394,12 @@ function generate_form_field($id, $id_surat, $id_status)
 
 	<?php } elseif ($fields['type'] == 'text') {  ?>
 
-		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 1 || $id_status == 4 && $verifikasi == 1) ? "" : "disabled"; ?> />
+		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
 	<?php } elseif ($fields['type'] == 'date_range') { ?>
-	
+
 		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 
 		<script type="text/javascript">
@@ -461,11 +461,10 @@ function generate_form_field($id, $id_surat, $id_status)
 	<?php } elseif ($fields['type'] == 'select_pembimbing') { //tahun akademik 
 	?>
 
-	
+
 		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
-		<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserbyId($field_value)['fullname'] : ''; ?></option>
+			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserbyId($field_value)['fullname'] : ''; ?></option>
 		</select>
-		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<script>
 			$(document).ready(function() {
@@ -548,8 +547,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		} else {
 			$image = '';
 			$file_name = '';
-			$thumb ='';
-
+			$thumb = '';
 		}
 
 
@@ -749,22 +747,21 @@ function cek_verifikasi($id_surat)
 function get_meta_value($key, $id_surat, $image)
 {
 	$CI = &get_instance();
-	// $id = $CI->db->select("id")->from('kat_keterangan_surat')->where(array('key' => $key))->get()->row_array()['id'];
-
-	// $value = $CI->db->select("value")->from('keterangan_surat')->where(array('id_kat_keterangan_surat' => $id))->get()->row_array()['value'];
-
 	$value = $CI->db->select("kat_keterangan_surat.id, keterangan_surat.value ")
 		->from('kat_keterangan_surat')
 		->join('keterangan_surat', 'kat_keterangan_surat.id=keterangan_surat.id_kat_keterangan_surat', 'left')
-		->where(array("key" => $key))
+		->where(array("key" => $key, 'id_surat' => $id_surat))
 		->get()
 		->row_array();
-
-	if ($image == true) {
-		$media = $CI->db->select("file")->from('media')->where(array('id' => $value['value']))->get()->row_array()['file'];
-		return $media;
+	if ($value) {
+		if ($image == true) {
+			$media = $CI->db->select("file")->from('media')->where(array('id' => $value['value']))->get()->row_array()['file'];
+			return $media;
+		} else {
+			return $value['value'];
+		}
 	} else {
-		return $value['value'];
+		return 0;
 	}
 }
 

@@ -36,6 +36,42 @@ class Surat_model extends CI_Model
         ");
         return $result = $query->result_array();
     }
+    public function get_surat_internal($role)
+    {
+        if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+            $prodi = '';
+        } else {
+            $prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
+        }
+        if ($role == '') {
+            $id_status = '';
+        } else if ($role == 1) {
+            $id_status = "AND ss.id_status =  9";
+        } else if ($role == 2) {
+            $id_status = "AND (ss.id_status =  2 OR ss.id_status = 5)";
+        } else if ($role == 5) {
+            $id_status = "AND ss.id_status =  8";
+        } else if ($role == 6) {
+            $id_status = "AND (ss.id_status =  3 OR ss.id_status = 7)";
+        } else if ($role == 100) {
+            $id_status = "AND ss.id_status =  10";
+        }
+
+        $query = $this->db->query("SELECT s.id as id_surat, s.id_mahasiswa, u.fullname, ss.id_status, st.id as id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, u.id_prodi, pr.prodi
+        FROM surat s
+        LEFT JOIN users u ON u.id = s.id_mahasiswa
+        LEFT JOIN prodi pr ON pr.id = u.id_prodi
+        LEFT JOIN surat_status ss ON ss.id_surat = s.id
+        LEFT JOIN status st ON st.id = ss.id_status
+        LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
+        -- WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
+        WHERE k.klien='p'
+       -- AND ss.id_status != 1 $id_status
+       -- $prodi
+        ORDER BY s.id DESC      
+        ");
+        return $result = $query->result_array();
+    }
 
     public function get_detail_surat($id_surat)
     {

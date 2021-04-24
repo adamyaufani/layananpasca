@@ -37,7 +37,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collPengantar">
 					<div class="card-body">
 						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Kepala Program Studi <?= $surat['prodi']; ?>, mohon kesediaanya untuk memberikan persetujuan pada surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong>.</p>						
+						<p> Kepada Yth. Kepala Program Studi <?= $surat['prodi']; ?>, mohon kesediaanya untuk memberikan persetujuan pada surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong>.</p>
 
 						<p> Adapun kelengkapan administratif yang dibutuhkan sudah diverifikasi kebenarannya oleh staf Tata Usaha <?= $surat['prodi']; ?>.</p>
 
@@ -64,8 +64,6 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					</div>
 				</div>
 			</div>
-
-
 
 		<?php } ?>
 
@@ -307,6 +305,21 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
+								<?php
+
+								// if ((validation_errors())) {
+								// 	$set_stempel = set_checkbox('stempel_basah');
+								// } else {
+								// 	if ($no_surat_data['stempel_basah'] == NULL) {
+								// 		if (get_meta_value('hal', $surat['id'], false)) {
+								// 			$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
+								// 		} else {
+								// 			$value_kepada = $surat['kategori_surat'];
+								// 		}
+								// 	}
+								// }
+								?>
+
 								<input type="checkbox" name="stempel_basah" id="" <?= (validation_errors()) ? set_checkbox('stempel_basah') : (($no_surat_data['stempel_basah'] == 'on') ? 'checked' : ''); ?>> Centang untuk stempel basah.
 								<span class="text-danger"><?php echo form_error('stempel_basah'); ?></span>
 							</div>
@@ -406,7 +419,24 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
 							<div class="col-md-8">
 
-								<input type="text" name="hal" id="hal" class="form-control" value="<?= (validation_errors()) ? set_value('hal') : (($no_surat_data['hal']) ? $no_surat_data['hal'] : (($surat['kategori_surat']) ? $surat['kategori_surat'] : ''));  ?>">
+								<?php
+
+								if ((validation_errors())) {
+									$value_hal = set_value('hal');
+								} else {
+									if ($no_surat_data['hal'] == NULL) {
+										if (get_meta_value('hal', $surat['id'], false)) {
+											$value_hal = get_meta_value('hal', $surat['id'], false);
+										} else {
+											$value_hal = $surat['kategori_surat'];
+										}
+									} else {
+										$value_hal = $no_surat_data['hal'];
+									}
+								}
+								?>
+
+								<input type="text" name="hal" id="hal" class="form-control" value="<?= $value_hal; ?>">
 								<span class="text-danger"><?php echo form_error('hal'); ?></span>
 							</div>
 						</div>
@@ -416,8 +446,25 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
 
+							<?php
+
+							if ((validation_errors())) {
+								$value_kepada = set_value('instansi');
+							} else {
+								if ($no_surat_data['instansi'] == NULL) {
+									if (get_meta_value('hal', $surat['id'], false)) {
+										$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
+									} else {
+										$value_kepada = $surat['kategori_surat'];
+									}
+								} else {
+									$value_kepada = $no_surat_data['instansi'];
+								}
+							}
+							?>
+
 							<div class="col-md-8">
-								<textarea name="instansi" id="" cols="30" rows="2" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> "><?= (validation_errors()) ? set_value('instansi') : (($no_surat_data['instansi']) ? $no_surat_data['instansi'] : (($surat['tujuan_surat']) ? $surat['tujuan_surat'] : get_meta_value('tujuan_surat', $surat['id'], false)));  ?></textarea>
+								<textarea name="instansi" id="" cols="30" rows="2" class="textarea-summernote <?= (form_error('instansi')) ? 'is-invalid' : ''; ?> "><?= $value_kepada; ?></textarea>
 								<span class="text-danger"><?php echo form_error('instansi'); ?></span>
 							</div>
 						</div>
@@ -426,7 +473,25 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
 							</label>
 							<div class="col-md-8">
-								<input type="text" name="tembusan" class="form-control mb-2" value="<?= (validation_errors()) ? set_value('tembusan') : (($no_surat_data['tembusan']) ? $no_surat_data['tembusan'] : ''); ?>" placeholder="Contoh: Rektor, Ka Prodi" />
+
+							<?php
+				
+								if ((validation_errors())) {
+									$value_tembusan = set_value('tembusan');
+								} else {
+									if ($no_surat_data['tembusan'] == NULL) {
+										if (get_meta_value('tembusan', $surat['id'], false) !== '-') {								
+											$value_tembusan = get_meta_value('tembusan', $surat['id'], false);
+										} else {
+											$value_tembusan = $surat['tembusan'];
+										}
+									} else {
+										$value_tembusan = $no_surat_data['tembusan'];
+									}
+								}
+								?>
+
+								<input type="text" name="tembusan" class="form-control mb-2" value="<?= $value_tembusan; ?>" placeholder="Contoh: Rektor, Ka Prodi" />
 								<span class="text-danger"><?php echo form_error('tembusan'); ?></span>
 							</div>
 						</div>
@@ -544,20 +609,20 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					console.log(data)
 					var html = '';
 					var sel = $('input[name=selected]').val();
-				
+
 					var i;
 					if (data.length == 0) {
 						html += '<option>Tujuan tidak ditemukan</option>'
 					} else {
-						for (i = 0; i < data.length; i++) {				
-						
-								html += '<option value="' + data[i].id + '"' + (data[i].id === sel ? 'selected="selected"' : '') + '>' + data[i].tujuan_surat + '</option>';
-							
+						for (i = 0; i < data.length; i++) {
+
+							html += '<option value="' + data[i].id + '"' + (data[i].id === sel ? 'selected="selected"' : '') + '>' + data[i].tujuan_surat + '</option>';
+
 						}
 					}
-				
+
 					$('#tujuan_surat').html(html);
-					
+
 				}
 			});
 		});

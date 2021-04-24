@@ -20,7 +20,7 @@ class Surat extends Admin_Controller
 	public function internal($role = 0)
 	{
 		$role = $_SESSION['role'];
-		$data['query'] = $this->surat_model->get_surat($role);
+		$data['query'] = $this->surat_model->get_surat_internal($role);
 		$data['title'] = 'Surat Internal';
 		$data['view'] = 'surat/internal';
 		$this->load->view('layout/layout', $data);
@@ -325,7 +325,8 @@ class Surat extends Admin_Controller
 						'margin_left' => 0,
 						'margin_right' => 0,
 						'margin_footer' => 0,
-						'margin_top' => 0,
+						'margin_bottom' => 40,
+						'margin_top' => 20,
 						'float' => 'left',
 						'setAutoTopMargin' => 'stretch'
 					]);
@@ -333,12 +334,17 @@ class Surat extends Admin_Controller
 					$data['pratinjau'] = $no_surat;
 					$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 					$data['no_surat'] = $no_surat['no_lengkap'];
-					$data['tanggal_surat'] = date("d F Y", strtotime($no_surat['tanggal_terbit']));;
+					$data['tanggal_surat'] = date("d F Y", strtotime($no_surat['tanggal_terbit']));
 
+				if($data['surat']['kode'] == 'SU') {
+					$kategori = $no_surat['hal'];
+				} else {
 					$kategori = $data['surat']['kategori_surat'];
+				}
+
 					$nim = $data['surat']['username'];
 
-					$filename = str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '.pdf';
+					$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat . '.pdf');
 
 					$edit_nosurat = array(
 						'file' => $filename,
@@ -353,7 +359,7 @@ class Surat extends Admin_Controller
 				
 
 					$mpdf->SetHTMLHeader('
-					<div style="text-align: left; margin-left:85px">
+					<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
 							<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
 					</div>');
 					$mpdf->SetHTMLFooter('

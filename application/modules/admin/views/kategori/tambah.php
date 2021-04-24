@@ -163,7 +163,7 @@
 							<div class="card-header">Field terpakai</div>
 							<div class="card-body box-profile ">
 								
-								<input type="text" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="">
+								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="">
 								<ul id="sortable2" class="connectedSortable errorTxt">
 									
 									<span id="errNm2"></span>
@@ -240,41 +240,41 @@
 			kategori_surat: {
 				required: true,
 			},
-			kode: {
-				required: true,
-			},
+			// kode: {
+			// 	required: true,
+			// },
 
-			klien: {
-				required: true,
-			},
-			template: {
-				required: true,
-			},
-			field_surat: {
-				required: true,
-				minlength: 6,
-			},
+			// klien: {
+			// 	required: true,
+			// },
+			// template: {
+			// 	required: true,
+			// },
+			// field_surat: {
+			// 	required: true,
+			// 	minlength: 6,
+			// },
 		},
 		messages: {
 			kategori_surat: {
 				required: "Kategori surat wajib diisi",
 			},
-			kode: {
-				required: "Kode surat wajib diisi",
-			},
-			tujuan: {
-				required: "Tujuan surat wajib diisi",
-			},
-			klien: {
-				required: "Pengguna surat wajib diisi",
-			},
-			template: {
-				required: "Template surat wajib diisi",
-			},
-			field_surat: {
-				required: "Field wajib diisi",
-				minlength: "Field wajib diisi",
-			},
+			// kode: {
+			// 	required: "Kode surat wajib diisi",
+			// },
+			// tujuan: {
+			// 	required: "Tujuan surat wajib diisi",
+			// },
+			// klien: {
+			// 	required: "Pengguna surat wajib diisi",
+			// },
+			// template: {
+			// 	required: "Template surat wajib diisi",
+			// },
+			// field_surat: {
+			// 	required: "Field wajib diisi",
+			// 	minlength: "Field wajib diisi",
+			// },
 
 		},
 		errorPlacement: function(error, element) {

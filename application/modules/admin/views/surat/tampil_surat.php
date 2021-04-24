@@ -23,6 +23,13 @@
             font-weight:normal;    
         }
 
+        div.kepada ol  {
+            padding:0;
+            margin:0;  
+            margin-left:30px;
+            font-size:10pt; 
+        }
+
         tr.ttd-dir td {
            
             text-align: center;           
@@ -51,13 +58,25 @@
             width:90%; 
             margin-left:5%
         }
+        .isi_surat table {
+            width:100%;
+            margin-left:20px;
+            margin-bottom:10px;
+        }
+        .isi_surat table tr td:nth-child(1) {
+            width:30%;
+        }
+        .isi_surat table tr td {            
+            vertical-align: top;
+            padding:3px 0;
+        }
 
         p {
             line-height: 1.7;
             font-size: 10pt;
             margin: 0;
             padding: 0;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
             text-align: justify;
         }
         p strong span {
@@ -69,7 +88,8 @@
         }
 
         ol li {
-            font-size: 10pt;
+            font-size: 10pt !important;
+            margin-bottom: 5px;
         }
     </style>
 </head>

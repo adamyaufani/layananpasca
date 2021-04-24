@@ -1,5 +1,7 @@
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
+<?php call_styles(); ?>
+
 <div class="row">
 	<div class="col-md-8 mb-4">
 		<div class="card shadow">
@@ -67,6 +69,9 @@
 	</div>
 	<div class="col-md-4">
 
+<?php if( $surat['id_status'] == 9 ) { ?>
+	<a href="<?= base_url('admin/surat/detail/'. encrypt_url($surat['id'])); ?>" class="btn btn-warning btn-lg btn-block mb-4">Klik untuk memproses surat</a>
+<?php } ?>
 		<div class="card shadow">
 			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-<?= $surat['badge']; ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
 				<p class="h5 text-center font-weight-bold text-white"> <?= $surat['status']; ?> </p>
@@ -97,11 +102,11 @@
 						<?php } ?>
 					</div>
 
-
-
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- /.col -->
 </div>
+
+<?php call_scripts(); ?>

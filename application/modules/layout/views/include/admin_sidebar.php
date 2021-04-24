@@ -45,7 +45,7 @@
 
 
 		<li class="nav-item" id="semua_surat">
-			<a class="nav-link" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
+			<a class="nav-link" href="<?= base_url("admin/surat/internal/"); ?>">
 				<i class="fas fa-fw fa-envelope"></i>
 				<span>Surat Internal</span></a>
 		</li>
