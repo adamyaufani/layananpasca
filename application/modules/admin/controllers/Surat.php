@@ -314,11 +314,11 @@ class Surat extends Admin_Controller
 					$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
 					$params['level'] = 'L';
 					$params['size'] = 2;
-					$params['savename'] = FCPATH . "/public/documents/tmp/" . $id_surat . '-qr.png';
+					$params['savename'] = FCPATH . "public/" . $id_surat . '-qr.png';
 					$this->ciqrcode->generate($params);
 
 					$mpdf = new \Mpdf\Mpdf([
-						'tempDir' => '/public/documents/pdfdata',
+						'tempDir' => 'public/pdfdata',
 						'mode' => 'utf-8',
 						// 'format' => [24, 24],
 						'format' => 'A4',
