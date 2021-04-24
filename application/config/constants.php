@@ -85,4 +85,4 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 //definisi file path utk generate pdf
-define('FILE_PATH' , $_SERVER['DOCUMENT_ROOT']."/layananppsjan/public/documents/");
+define('FILE_PATH' , $_SERVER['DOCUMENT_ROOT']."/public/documents/");
