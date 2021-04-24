@@ -318,7 +318,7 @@ class Surat extends Admin_Controller
 					$this->ciqrcode->generate($params);
 
 					$mpdf = new \Mpdf\Mpdf([
-						'tempDir' => __DIR__ . '/pdfdata',
+						'tempDir' => '/public/documents/pdfdata',
 						'mode' => 'utf-8',
 						// 'format' => [24, 24],
 						'format' => 'A4',
