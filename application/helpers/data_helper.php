@@ -486,7 +486,7 @@ function generate_form_field($id, $id_surat, $id_status)
 						},
 						cache: true
 					},
-					placeholder: 'Pilih Dosen Pembimbing',
+					placeholder: '<?= $fields['placeholder']; ?>',
 					minimumInputLength: 3,
 					// templateResult: formatRepo,
 					// templateSelection: formatRepoSelection

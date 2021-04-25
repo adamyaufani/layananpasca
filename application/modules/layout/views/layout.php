@@ -65,7 +65,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; 2020 <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
+						<span>Copyright &copy; 2021 <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
 							All rights reserved.</span>
 					</div>
 				</div>
@@ -132,6 +132,7 @@
 				]
 			});
 		});
+
 		$(document).ready(function() {
 			$('#surat-desc').DataTable({
 				"order": [
@@ -139,6 +140,35 @@
 				]
 			});
 		});
+
+		//---------------------------------------------------
+		var table = $('#arsip').DataTable( {
+    "processing": true,
+    "serverSide": false,
+    "ajax": "<?=base_url('admin/surat/arsip_json')?>",
+    "order": [[2,'desc']],
+    "columnDefs": [
+    { "targets": 0, "name": "id", 'searchable':true, 'orderable':true},
+    { "targets": 1, "name": "no_surat", 'searchable':true, 'orderable':true},
+    { "targets": 2, "name": "tanggal_terbit", 'searchable':true, 'orderable':true},
+    ]
+  });
+
+  //---------------------------------------------------
+  function user_filter()
+  {
+    var _form = $("#user_search").serialize();
+    $.ajax({  
+      data: _form,
+      type: 'post',
+      url: '<?php echo base_url();?>admin/example/search',
+      async: true,
+      success: function(output){
+        table.ajax.reload( null, false );
+      }
+    });
+  }
+	
 	</script>
 
 	<!-- page script -->
@@ -159,38 +189,54 @@
 		}, 1000);
 	</script>
 
-	<script src="<?= base_url() ?>/public/vendor/summernote/summernote-bs4.min.js"></script>
-	<script>
-		$(document).ready(function() {
-			$('.textarea-summernote').summernote({
-				tabsize: 2,
-				height: 200,
-				
-				toolbar: [
-					['style', ['style']],
-					['font', ['bold', 'underline', 'clear']],
-					['color', ['color']],
-					['para', ['ul', 'ol', 'paragraph']],
-					['table', ['table']],
-					['view', ['fullscreen', 'codeview']]
-				],
-				
-			});
+<script src="<?= base_url() ?>/public/vendor/ckeditor5/build/ckeditor.js"></script>
 
-			if($('.textarea-summernote').summernote('isEmpty')){
-				$('.textarea-summernote').summernote('code', ''); 
-    	}		
+<script>
+		document.querySelectorAll('.textarea-summernote').forEach(function (val) {
+    ClassicEditor
+        .create(val, {
+					toolbar: {
+					items: [
+						'bold',
+						'italic',
+						'underline',
+						'|',
+						'heading',
+						'|',
+						'indent',
+						'outdent',
+						'alignment',
+						'|',
+						'numberedList',
+						'bulletedList',
+						'|',
+						'insertTable',
+						'|',
+						'undo',
+						'redo',
+						'|',
+						'code'
+					]
+				},
+				language: 'id',
+				table: {
+					contentToolbar: [
+						'tableColumn',
+						'tableRow',
+						'mergeTableCells'
+					]
+				},
+				licenseKey: '',
+        })
+        .catch(error => {
+            console.log(error);
+        });
+	});
+</script>
 
-		});
-
-		$(function() {
-			$('[data-toggle="tooltip"]').tooltip()
-		})
-	</script>
-
+<script src="<?= base_url() ?>public/dist/js/sb-admin-2.js"></script>
 </body>
 
 </html>
 
 
-<script src="<?= base_url() ?>public/dist/js/sb-admin-2.js"></script>

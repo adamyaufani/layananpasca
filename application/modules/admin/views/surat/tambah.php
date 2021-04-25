@@ -3,7 +3,7 @@
 <?php call_styles(); ?>
 
 <div class="row">
-	<div class="col-md-8 mb-4">
+	<div class="col-md-12 mb-4">
 		<div class="card shadow">
 			<a href="#collKeterangan" class="d-block card-header pt-3 pb-2 bg-abumuda <?= ($surat['id_status'] == 10) ? "collapsed" : "" ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collKeterangan">
 				<p class="h6 font-weight-bold text-white">Keterangan</p>
@@ -27,11 +27,11 @@
 							$kat_keterangan_surat = kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
 
 							<div class="form-group row">
-								<label class="col-md-5" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
+								<label class="col-md-2" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
 									<small id="emailHelp" class="form-text text-muted"><?= kat_keterangan_surat($row['id'])['deskripsi']; ?></small>
 
 								</label>
-								<div class="col-md-7">
+								<div class="col-md-10">
 									<?php generate_form_field($row['id'], $surat['id'], $surat['id_status']); ?>
 								</div>
 							</div>

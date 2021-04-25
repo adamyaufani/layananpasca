@@ -22,18 +22,18 @@
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 	<div class="sidebar-heading">
-		Surat
+		Pengajuan Surat
 	</div>
 
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
-			<span>Surat</span></a>
+			<span>Inbox Pengajuan</span></a>
 	</li>
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
-			<span>Arsip Surat</span></a>
+			<span>Arsip Surat Keluar</span></a>
 	</li>
 	<!-- <li class="nav-item" id="menu_surat">
 		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">

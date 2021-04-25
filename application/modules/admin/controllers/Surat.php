@@ -17,22 +17,7 @@ class Surat extends Admin_Controller
 		$data['view'] = 'surat/index';
 		$this->load->view('layout/layout', $data);
 	}
-	public function internal($role = 0)
-	{
-		$role = $_SESSION['role'];
-		$data['query'] = $this->surat_model->get_surat_internal($role);
-		$data['title'] = 'Surat Internal';
-		$data['view'] = 'surat/internal';
-		$this->load->view('layout/layout', $data);
-	}
 
-	public function arsip()
-	{
-		$data['query'] = $this->surat_model->get_surat_arsip();
-		$data['title'] = 'Arsip Surat';
-		$data['view'] = 'surat/arsip';
-		$this->load->view('layout/layout', $data);
-	}
 	public function detail($id_surat = 0)
 	{
 
@@ -409,7 +394,17 @@ class Surat extends Admin_Controller
 
 
 	/* 
-	Pengajuan Susrat oleh Admin Pasca */
+	Pengajuan Susrat oleh Admin Pasca (surat internal) */
+
+	public function internal($role = 0)
+	{
+		$role = $_SESSION['role'];
+		$data['query'] = $this->surat_model->get_surat_internal($role);
+		$data['title'] = 'Surat Internal';
+		$data['view'] = 'surat/internal';
+		$this->load->view('layout/layout', $data);
+	}
+
 
 	public function ajukan($id_kategori = 0)
 	{
@@ -578,5 +573,57 @@ class Surat extends Admin_Controller
 
 			$this->load->view('layout/layout', $data);
 		}
+	}
+
+	/* arsip surat */
+	// public function arsip()
+	// {
+	// 	$data['query'] = $this->surat_model->get_surat_arsip();
+	// 	$data['title'] = 'Arsip Surat';
+	// 	$data['view'] = 'surat/arsip';
+	// 	$this->load->view('layout/layout', $data);
+	// }
+
+	//---------------------------------------------------
+	// Advanced Search Example
+	public function arsip(){
+
+		// $this->session->unset_userdata('user_search_type');
+		$this->session->unset_userdata('arsip_search_from');
+		$this->session->unset_userdata('arsip_search_to');
+
+		$data['title'] = 'Arsip Surat';
+		$data['view'] = 'surat/arsip2';
+		$this->load->view('layout/layout', $data);
+	}
+
+	//-------------------------------------------------------
+	function search(){
+
+		// $this->session->set_userdata('user_search_type',$this->input->post('user_search_type'));
+		$this->session->set_userdata('arsip_search_from',$this->input->post('arsip_search_from'));
+		$this->session->set_userdata('arsip_search_to',$this->input->post('arsip_search_to'));
+	}
+
+	//---------------------------------------------------
+	// Server-side processing Datatable Example with Advance Search
+	public function arsip_json(){	
+
+		$records['data'] = $this->surat_model->get_arsip_surat();
+		$data = array();
+		$i=0;
+		foreach ($records['data']  as $row) 
+		{  
+			
+			$data[]= array(
+				++$i,
+				$row['id'],
+				$row['no_surat'],
+				$row['tanggal_terbit'],
+				
+			);
+		}
+		$records['data'] = $data;
+		echo json_encode($records);						   
 	}
 }

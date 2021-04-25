@@ -39,7 +39,7 @@ class Surat_model extends CI_Model
 
     public function get_surat_internal($role)
     {
-        
+
         if ($role == 1) {
             $klien = "AND k.klien='p'";
             $prodi = '';
@@ -69,7 +69,7 @@ class Surat_model extends CI_Model
             $where = "WHERE 1 ";
         } else {
             $where = "WHERE ns.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
-        }       
+        }
 
         $query = $this->db->query("SELECT ns.id, ns.id_surat, ns.no_lengkap,u.fullname,ks.kategori_surat, kts.kat_tujuan_surat, ts.tujuan_surat, us.urusan as urusan_surat, p.prodi, DATE_FORMAT(ns.tanggal_terbit,'%d %M %Y') as tanggal_terbit FROM no_surat ns         
             LEFT JOIN users u ON u.id = ns.id_user
@@ -174,7 +174,7 @@ class Surat_model extends CI_Model
 
         return $result = $query->result_array();
     }
- 
+
     function simpan_upload($judul, $gambar)
     {
         $hasil = $this->db->query("INSERT INTO keterangan_surat(ket_value,gambar) VALUES ('$judul','$gambar')");
@@ -190,13 +190,14 @@ class Surat_model extends CI_Model
         return $this->db->get()->result_array();
     }
 
-public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat ) {
+    public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat)
+    {
 
-   $kat_tujuan_surat = $this->db->get_where('kat_tujuan_surat', ['id'=> $kat_tujuan_surat])->row_array()['kode'];
-   $tujuan_surat = $this->db->get_where('tujuan_surat', ['id'=> $tujuan_surat])->row_array()['kode_tujuan'];
-   $urusan_surat = $this->db->get_where('urusan_surat', ['id'=> $urusan_surat])->row_array()['kode'];
-   return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/" . bulan_romawi(date('n')) . "/" . date('Y'); 
-}
+        $kat_tujuan_surat = $this->db->get_where('kat_tujuan_surat', ['id' => $kat_tujuan_surat])->row_array()['kode'];
+        $tujuan_surat = $this->db->get_where('tujuan_surat', ['id' => $tujuan_surat])->row_array()['kode_tujuan'];
+        $urusan_surat = $this->db->get_where('urusan_surat', ['id' => $urusan_surat])->row_array()['kode'];
+        return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/" . bulan_romawi(date('n')) . "/" . date('Y');
+    }
     public function get_no_surat($id_surat)
     {
         $no_surat = $this->db->query("select * FROM no_surat ns
@@ -248,5 +249,24 @@ public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $
         ORDER BY ss.id DESC
         ");
         return $result = $query->result_array();
+    }
+
+    //---------------------------------------------------
+    // get all users for server-side datatable with advanced search
+    public function get_arsip_surat()
+    {
+
+        $this->db->select('*');
+
+        // if($this->session->userdata('user_search_type')!='')
+        // $this->db->where('is_active',$this->session->userdata('user_search_type'));
+
+        if ($this->session->userdata('arsip_search_from') != '')
+            $this->db->where('tanggal_terbit >= ', date('Y-m-d', strtotime($this->session->userdata('user_search_from'))));
+
+        if ($this->session->userdata('user_search_to') != '')
+            $this->db->where('tanggal_terbit <= ', date('Y-m-d', strtotime($this->session->userdata('user_search_to'))));
+
+        return $this->db->get('no_surat')->result_array();
     }
 }
