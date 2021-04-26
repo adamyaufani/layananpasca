@@ -26,9 +26,10 @@
 	</div>
 
 	<li class="nav-item" id="semua_surat">
-		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
+		<?php echo $link = (tampil_notif()->num_rows() > 0) ?$this->session->userdata('role') : ''; ?>
+		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $link); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
-			<span>Inbox Pengajuan</span></a>
+			<span>Inbox Pengajuan <?= (tampil_notif()->num_rows() > 0) ? '<span class="float-right badge badge-warning">' . tampil_notif()->num_rows() . '</span>' : ''; ?></span></a>
 	</li>
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">

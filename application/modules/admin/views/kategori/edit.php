@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="<?= base_url('public/vendor/jquery-ui-1.12.1/jquery-ui.min.css'); ?>">
 		<!-- fash message yang muncul ketika proses penghapusan data berhasil dilakukan -->
 
 
@@ -34,8 +34,7 @@
 
 			#sortable1,
 			#sortable2 {
-				border: 1px solid #eee;
-
+			
 				min-height: 20px;
 				list-style-type: none;
 				margin: 0;
@@ -63,8 +62,8 @@
 
 				<?php echo form_open('', array('id' => 'edit_kategori_surat', 'class' => 'form-horizontal'));  ?>
 				<div class="form-group row">
-					<label for="kategori_surat" class="col-md-3 control-label">Kategori Surat *</label>
-					<div class="col-md-9">
+					<label for="kategori_surat" class="col-md-2 control-label">Kategori Surat *</label>
+					<div class="col-md-10">
 						<input type="text" value="<?= (validation_errors()) ? set_value('kategori_surat') : $kat['kategori_surat'];  ?>" name="kategori_surat" class="form-control <?= (form_error('kategori_surat')) ? 'is-invalid' : ''; ?>" id="kategori_surat">
 						<input type="hidden" name="id" value="<?= $kat['id']; ?>">
 						<span class="invalid-feedback"><?php echo form_error('kategori_surat'); ?></span>
@@ -73,8 +72,8 @@
 
 
 				<div class="form-group row">
-					<label for="kode" class="col-md-3 control-label">Kode</label>
-					<div class="col-md-9">
+					<label for="kode" class="col-md-2 control-label">Kode</label>
+					<div class="col-md-10">
 						<input type="text" value="<?= (validation_errors()) ? set_value('kode') : $kat['kode'];  ?>" name="kode" class="form-control <?= (form_error('kode')) ? 'is-invalid' : ''; ?>" id="kode">
 
 						<span class="invalid-feedback"><?php echo form_error('kode'); ?></span>
@@ -82,8 +81,8 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="kode" class="col-md-3 control-label">Pengguna</label>
-					<div class="col-md-9">
+					<label for="kode" class="col-md-2 control-label">Pengguna</label>
+					<div class="col-md-10">
 						<select name="klien" class="form-control">
 							<option value="" <?php echo  set_select('klien', '', TRUE); ?>>Pilih Pengguna</option>
 							<option value="m" <?= (validation_errors()) ? set_select('klien', 'm') : "";
@@ -104,8 +103,8 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="pilih_prodi" class="col-md-3 control-label">Pilih Prodi</label>
-					<div class="col-md-9">
+					<label for="pilih_prodi" class="col-md-2 control-label">Pilih Prodi</label>
+					<div class="col-md-10">
 
 						<select name="pilih_prodi[]" class="form-control pilih_prodi">
 							<?php
@@ -123,8 +122,8 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="deskripsi" class="col-md-3 control-label">Deskripsi</label>
-					<div class="col-md-9">
+					<label for="deskripsi" class="col-md-2 control-label">Deskripsi</label>
+					<div class="col-md-10">
 
 						<div class="<?= (form_error('deskripsinya')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="deskripsinya" class="textarea-summernote"><?= (validation_errors()) ? set_value('deskripsinya') : $kat['deskripsi'];  ?></textarea>
 						</div>
@@ -134,8 +133,8 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="tujuan_surat" class="col-md-3 control-label">Tujuan Surat</label>
-					<div class="col-md-9">
+					<label for="tujuan_surat" class="col-md-2 control-label">Tujuan Surat</label>
+					<div class="col-md-10">
 
 						<div class="<?= (form_error('tujuan_surat')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="tujuan_surat" class="textarea-summernote"><?= (validation_errors()) ? set_value('tujuan_surat') : $kat['tujuan_surat'];  ?></textarea>
 						</div>
@@ -143,20 +142,20 @@
 						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('tujuan_surat'); ?></span>
 					</div>
 				</div>
-				<div class="form-group row">
-					<label for="tembusan" class="col-md-3 control-label">Tembusan</label>
-					<div class="col-md-9">
+				<!-- <div class="form-group row">
+					<label for="tembusan" class="col-md-2 control-label">Tembusan</label>
+					<div class="col-md-10">
 
 						<div class="<?= (form_error('tembusan')) ? 'summernote-is-invalid' : ''; ?>"><textarea name="tembusan" class="textarea-summernote"><?= (validation_errors()) ? set_value('tembusan') : $kat['tembusan'];  ?></textarea>
 						</div>
 
 						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('tembusan'); ?></span>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="form-group row">
-					<label for="template" class="col-md-3 control-label">Template surat</label>
-					<div class="col-md-9">
+					<label for="template" class="col-md-2 control-label">Template surat</label>
+					<div class="col-md-10">
 						<select name="template" class="form-control">
 							<option value="" <?php echo  set_select('template', '', TRUE); ?>>Pilih Template</option>
 
@@ -171,44 +170,87 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="template" class="col-md-3 control-label">Form Field
+					<label for="template" class="col-md-2 control-label">Form Field
 						<small id="" class="form-text text-muted">Seret lalu lepaskan form field yang tidak aktif ke kolom form field aktif.</small>
 					</label>
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<div class="card card-success card-outline">
-							<div class="card-header">Field terpakai</div>
-							<div class="card-body box-profile ">
-								<?php
-								$kat_keterangan_surat = $kat['kat_keterangan_surat'];
-
-								if ($kat_keterangan_surat) {
-									$unserial = unserialize($kat_keterangan_surat);
-									$userial_array = array();
-									foreach ($unserial as $row) {
-										$unserial_array[] = "sort=" . $row['id'];
-									}
-
-									$impl = implode('&', $unserial_array);
-								}
-								?>
-								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($kat_keterangan_surat) ? $impl : ''; ?>">
-								<ul id="sortable2" class="connectedSortable errorTxt">
+							<div class="card-header">Field terpakai </div>
+							<div class="card-body box-profile ">						
+								
+								<div id="sortable2" class="connectedSortable errorTxt">
 									<?php
-									if ($kat_keterangan_surat) {
-										foreach ($unserial as $row) {
-											$field  = $this->db->get_where('kat_keterangan_surat', 'id=' . $row['id'])->row_array();
-									?>
-											<li class="ui-state-highlight" id="item-<?= $row['id']; ?>">
-												<?= $field['kat_keterangan_surat']; ?>
-											</li>
+										$this->db->select('*');
+										$this->db->from('kat_keterangan_surat');
+										$this->db->where(['id_kategori_surat' => $kat['id'], 'aktif' => 1]);
+										$this->db->order_by('urutan', 'ASC');
+									$field =	$this->db->get()->result_array();
+
+									$last = end($field);
+									$select = array();
+									if ($field) {
+										foreach ($field as $k=> $field) {												
+												$select[] =  'sort='.$field['id'];	
+											?>
+											
+											<div class="ui-state-highlights" id="item-<?= $field['id']; ?>">
+												
+												<p><?= $field['kat_keterangan_surat']; ?></p>
+												<div>
+													<div class="mb-3">														
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" />
+														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
+														<input  class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Placeholder</label>
+														<input  class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="Placeholder" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Key</label>
+														<input  class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
+														<input  class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+													</div>													
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
+														<select class="form-control" name="type">
+															<option>Pilih jenis field</option>
+															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?> >Teks singkat</option>
+															<option value='number' <?= ($field['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
+															<option value='textarea' <?= ($field['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
+															<option value='wysiwyg' <?= ($field['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
+															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Pilih Dosen</option>
+															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
+															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Tahun Ajaran</option>
+															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
+															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+														</select>
+													</div>
+													<div class="mb-3">
+														<input class="form-control btn btn-warning" type="submit" value="Simpan" name="simpan" />
+													</div>
+												</div>
+
+											</div>
 									<?php
 										} // endforeach 
+
+										$imp = implode("&", $select );
+
 									} else {
 										echo "<span class='ml-2 mb-1 belum-ada-field'>Belum ada field.</span>";
 									}
 									?>
 									<span id="errNm2"></span>
-								</ul>
+								</div>
+
+								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($field) ? $imp :''; ?>">
 
 							</div>
 						</div>
@@ -216,28 +258,69 @@
 
 					<div class="col-md-5">
 						<div class="card card-success card-outline">
-							<div class="card-header">Field tidak terpakai</div>
+							<div class="card-header">Field tidak terpakai 	<a class="float-right"><i class="fas fa-plus"></i> Tambah form field</a></div>
 							<div class="card-body box-profile">
-								<ul id="sortable1" style="list-style: none;" class="connectedSortable keterangan_surat list-group pl-0">
+
+							
+							
+								<div id="sortable1" style="list-style: none;" class="connectedSortable keterangan_surat list-group pl-0">
 									<?php
-									if ($kat_keterangan_surat) {
-										foreach ($keterangan_surat as $row) {
-											if (!in_array($row['id'], array_column($unserial, 'id'))) {
+									if ($keterangan_surat) {
+
+										foreach ($keterangan_surat as $field) {										
 									?>
-												<li class="ui-state-highlight" id="item-<?= $row['id']; ?>">
-													<?= $row['kat_keterangan_surat']; ?>
-												</li>
-											<?php }
+												
+												<div class="ui-state-highlights" id="item-<?= $field['id']; ?>">
+												
+												<p><?= $field['kat_keterangan_surat']; ?></p>
+												<div>
+													<div class="mb-3">														
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" />
+														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
+														<input  class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Placeholder</label>
+														<input  class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="Placeholder" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Key</label>
+														<input  class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+													</div>
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
+														<input  class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+													</div>													
+													<div class="mb-3">
+														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
+														<select class="form-control" name="type">
+															<option>Pilih jenis field</option>
+															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?> >Teks singkat</option>
+															<option value='number' <?= ($field['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
+															<option value='textarea' <?= ($field['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
+															<option value='wysiwyg' <?= ($field['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
+															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Pilih Dosen</option>
+															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
+															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Tahun Ajaran</option>
+															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
+															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+														</select>
+													</div>
+													<div class="mb-3">
+														<input class="form-control btn btn-warning" type="submit" value="Simpan" name="simpan" />
+													</div>
+												</div>
+												</div>
+
+
+											<?php 
 										} // endforeach 
-									} else {
-										foreach ($keterangan_surat as $row) { ?>
-											<li class="ui-state-highlight" id="item-<?= $row['id']; ?>">
-												<?= $row['kat_keterangan_surat']; ?>
-											</li>
-									<?php }
 									}
 									?>
-								</ul>
+								</div>
 							</div>
 						</div>
 
@@ -247,8 +330,8 @@
 				</div>
 
 				<div class="form-group row">
-					<label for="kode" class="col-md-3 control-label"></label>
-					<div class="col-md-9">
+					<label for="kode" class="col-md-2 control-label"></label>
+					<div class="col-md-10">
 						<input type="submit" name="submit" value="Edit Kategori Surat" class="btn btn-perak btn-block">
 					</div>
 				</div>
@@ -258,17 +341,26 @@
 	</div>
 </div>
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="<?= base_url('public/vendor/jquery-ui-1.12.1/jquery-ui.min.js'); ?>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 
 <script type="text/javascript">
 	$(function() {
-		$("#sortable1, #sortable2").sortable({
+		
+		$("#sortable1, #sortable2")
+		.accordion({
+      collapsible:true,
+        header: "> div > p",
+				active: false
+      })
+			.sortable({
 			connectWith: ".connectedSortable"
 		}).disableSelection();
 	});
 
-	$("#sortable2").sortable({
+	$("#sortable2")
+	
+	.sortable({
 		placeholder: "ui-state-active",
 		update: function(event, ui) {
 			var sorted = $("#sortable2").sortable("serialize", {

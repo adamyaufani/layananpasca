@@ -1,67 +1,26 @@
 <div class="row">
 	<div class="col-md-12">
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-		<!-- fash message yang muncul ketika proses penghapusan data berhasil dilakukan -->
 
 
 
 	</div>
 
 	<div class="col-md-12">
-		<div id="success-alert" class="alert alert-success simpan"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true"> × </button>
-			<h4> Sukses! </h4>Data berhasil diubah
-		</div>
+		<?php if(isset($msg) || validation_errors() !== ''): ?>
+			<div class="alert alert-danger alert-dismissible">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<h4><i class="fa fa-exclamation"></i> Terjadi Kesalahan</h4>
+				<?= validation_errors();?>
+				<?= isset($msg)? $msg: ''; ?>
+			</div>
+			<?php endif; ?>
 
-		<div id="error-alert" class="alert alert-danger simpan"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true"> × </button>
-			<h4> Ada Kesalahan! </h4>Periksa kembali formulir Anda!
-		</div>
-
-
-		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
-		<style>
-			.alert.simpan {
-				display: none;
-			}
-
-			#sortable1 {
-				width: 100%;
-			}
-
-			#sortable2 {
-				width: 100%;
-			}
-
-			#sortable1,
-			#sortable2 {
-				border: 1px solid #eee;
-
-				min-height: 20px;
-				list-style-type: none;
-				margin: 0;
-				padding: 5px 0 0 0;
-				float: left;
-				margin-right: 10px;
-			}
-
-			#sortable1 li,
-			#sortable2 li {
-				margin: 0 5px 5px 5px;
-				padding: 5px;
-				font-size: 14px;
-				cursor: move;
-			}
-
-			.error {
-				color: red;
-			}
-		</style>
 
 		<div class="card card-success card-outline">
 
 			<div class="card-body box-profile">
 
-				<?php echo form_open('', array('id' => 'tambah_kategori_surat', 'class' => 'form-horizontal'));  ?>
+				<?php echo form_open(base_url('admin/kategorisurat/simpan_kategori_surat'), array('id' => 'tambah_kategori_surat', 'class' => 'form-horizontal'));  ?>
 				<div class="form-group row">
 					<label for="kategori_surat" class="col-md-3 control-label">Kategori Surat *</label>
 					<div class="col-md-9">
@@ -71,7 +30,7 @@
 					</div>
 				</div>
 
-
+<!--
 				<div class="form-group row">
 					<label for="kode" class="col-md-3 control-label">Kode</label>
 					<div class="col-md-9">
@@ -194,7 +153,7 @@
 						<span class="text-danger" style="line-height:1.5rem;font-size: 80%;"><?php echo form_error('kat_keterangan_surat[]'); ?></span>
 
 					</div>
-				</div>
+				</div>-->
 
 				<div class="form-group row">
 					<label for="kode" class="col-md-3 control-label"></label>
@@ -208,7 +167,7 @@
 	</div>
 </div>
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 
 <script type="text/javascript">
@@ -361,4 +320,4 @@
 						?>]).trigger('change');
 
 	});
-</script>
+</script> -->

@@ -24,10 +24,11 @@ class Surat extends Admin_Controller
 		$id_surat = decrypt_url($id_surat);
 
 		if ($id_surat) {
-
+		
 			$data['status'] = $this->surat_model->get_surat_status($id_surat);
 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 
 			if ($data['surat']['id_status'] == 9 || $data['surat']['id_status'] == 10 ) {
 				$data['no_surat_data'] = $this->surat_model->get_no_surat($id_surat);		
@@ -105,11 +106,8 @@ class Surat extends Admin_Controller
 			//sendmail & notif
 			$this->mailer->send_mail($data_notif);
 
-			// set notif, sudah dibaca"
-			$set_notif = $this->db->set('status', 1)
-				->set('dibaca', 'NOW()', FALSE)
-				->where(array('id' => $id_notif, 'status' => 0))
-				->update('notif');
+			//remove notif yg berkaitan sama surat ini
+			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
 
 			if ($set_notif) {
 				$this->session->set_flashdata('msg', 'Surat sudah diperiksa oleh TU!');
@@ -149,6 +147,10 @@ class Surat extends Admin_Controller
 					//sendmail & notif
 					$this->mailer->send_mail($data_notif);
 
+					//remove notif yg berkaitan sama surat ini
+					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+
+
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Direktur Pascasarjana!');
 					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 				}
@@ -171,6 +173,9 @@ class Surat extends Admin_Controller
 
 					//sendmail & notif
 					$this->mailer->send_mail($data_notif);
+
+					//remove notif yg berkaitan sama surat ini
+					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Kaprodi!');
 					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
@@ -225,6 +230,7 @@ class Surat extends Admin_Controller
 				$data['status'] = $this->surat_model->get_surat_status($id_surat);
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 
 				$data['title'] = 'Detail Surat';
 				$data['view'] = 'surat/detail';
@@ -266,6 +272,7 @@ class Surat extends Admin_Controller
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['no_surat'] = $no_surat;
 				$data['tanggal_surat'] = $tanggal_surat;
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 	
 
 				if($update) {
@@ -309,7 +316,20 @@ class Surat extends Admin_Controller
 						'format' => 'A4',
 						'margin_left' => 0,
 						'margin_right' => 0,
-						'margin_footer' => 0,
+						'margin_footer' => 3,
+						'margin_bottom' => 40,
+						'margin_top' => 20,
+						'float' => 'left',
+						'setAutoTopMargin' => 'stretch'
+					]);
+					$mpdf2 = new \Mpdf\Mpdf([
+						'tempDir' => 'public/documents/pdfdata',
+						'mode' => 'utf-8',
+						// 'format' => [24, 24],
+						'format' => 'A4',
+						'margin_left' => 0,
+						'margin_right' => 0,
+						'margin_footer' => 3,
 						'margin_bottom' => 40,
 						'margin_top' => 20,
 						'float' => 'left',
@@ -329,10 +349,10 @@ class Surat extends Admin_Controller
 
 					$nim = $data['surat']['username'];
 
-					$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat . '.pdf');
+					$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
 
 					$edit_nosurat = array(
-						'file' => $filename,
+						'file' => $filename . '.pdf',
 					);
 					$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
 
@@ -360,7 +380,14 @@ class Surat extends Admin_Controller
 
 					$mpdf->WriteHTML($view);
 
-					$mpdf->Output(FCPATH . 'public/documents/pdfdata/' . $filename, 'F');				
+					$mpdf->Output(FCPATH . 'public/documents/pdfdata/' . $filename . '.pdf', 'F');			
+					
+					$mpdf2->SetHTMLHeader('');
+					$mpdf2->SetHTMLFooter('');
+
+					$mpdf2->WriteHTML($view);
+
+					$mpdf2->Output(FCPATH . 'public/documents/pdfdata/' . $filename . '-nh.pdf', 'F');		
 
 					$this->db->set('id_status', 10)
 						->set('date', 'NOW()', FALSE)
@@ -377,6 +404,10 @@ class Surat extends Admin_Controller
 
 					//sendmail & notif
 					$this->mailer->send_mail($data_notif);
+
+					//remove notif yg berkaitan sama surat ini
+					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+
 
 					$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
 					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));

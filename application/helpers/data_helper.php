@@ -458,7 +458,7 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Pembimbing -->
-	<?php } elseif ($fields['type'] == 'select_pembimbing') { //tahun akademik 
+	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik 
 	?>
 
 
@@ -693,7 +693,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			</div>
 
 		<?php }
-	} elseif ($fields['type'] == 'select_pembimbing') {
+	} elseif ($fields['type'] == 'select_dosen') {
 
 		$CI = &get_instance();
 		$dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
@@ -905,55 +905,7 @@ function tampil_notif()
 	WHERE  $where AND n.status = 0 	
 	ORDER BY id DESC");
 
-	// echo '<pre>';
-	// print_r($notif->result_array());
-	// echo '</pre>';
-
-?>
-	<!-- Nav Item - Alerts -->
-	<li class="nav-item dropdown no-arrow mx-1">
-		<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<i class="fas fa-bell fa-fw"></i>
-			<!-- Counter - Alerts -->
-			<?php
-			$notif_count = $notif->num_rows();
-			if ($notif_count > 0) { ?>
-				<span class="badge badge-danger badge-counter"><?php echo $notif->num_rows(); ?></span>
-			<?php } ?>
-		</a>
-		<!-- Dropdown - Alerts -->
-		<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-			<h6 class="dropdown-header">
-				Notifikasi
-			</h6>
-
-			<?php
-			if ($notif_count > 0) {
-				foreach ($notif->result_array() as $notif) {
-			?>
-					<a class="dropdown-item d-flex align-items-center" href="<?= base_url('notif/detail/' . $notif['notif_id']); ?>">
-						<div>
-
-							<div class="small text-gray-500"><?= $notif['date_full']; ?> <?= $notif['time']; ?></div>
-							<span class="font-weight-bold text-<?= $notif['badge']; ?>"> <i class="<?= $notif['icon']; ?>"></i> <?= $notif['judul_notif']; ?> </span> &raquo; <span class="font-weight-bold"><?= $notif['kategori_surat']; ?> </span>
-							<span class="font-weight-normal">(<?= $notif['fullname']; ?>)</span>
-
-						</div>
-					</a>
-
-				<?php } // end foreach
-			} else { ?>
-				<a class="dropdown-item d-flex align-items-center" href="#">
-					<div>
-						<span class="text-gray-500">Belum ada notifikasi</span>
-					</div>
-				</a>
-			<?php	}	?>
-
-			<a class="dropdown-item text-center medium text-gray-500" href="<?= base_url('notif'); ?>">Lihat semua Notifikasi</a>
-		</div>
-	</li>
-<?php
+	return $notif;
 }
 
 function tampil_alert($status, $role)

@@ -18,23 +18,20 @@
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
 					<?php
+					if ($fields) {
+					
+						foreach ($fields as $field) {
 
-
-					if ($surat['kat_keterangan_surat']) {
-						$unserial = unserialize($surat['kat_keterangan_surat']);
-
-						foreach ($unserial as $row) {
-
-							$type = kat_keterangan_surat($row['id'])['type'];
-							$kat_keterangan_surat = kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
+							$type = $field['type'];
+							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
 							<div class="form-group row">
-								<label class="col-md-5" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
-									<small id="emailHelp" class="form-text text-muted"><?= kat_keterangan_surat($row['id'])['deskripsi']; ?></small>
+								<label class="col-md-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?>
+									<small id="emailHelp" class="form-text text-muted"><?= $field['deskripsi']; ?></small>
 
 								</label>
 								<div class="col-md-7">
-									<?php generate_form_field($row['id'], $surat['id'], $surat['id_status']); ?>
+									<?php generate_form_field($field['id'], $surat['id'], $surat['id_status']); ?>
 								</div>
 							</div>
 

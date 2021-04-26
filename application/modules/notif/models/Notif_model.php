@@ -48,6 +48,7 @@ class Notif_model extends CI_Model
 				"id_surat" => $data['id_surat'],
 				"pengirim" => $_SESSION['user_id'],
 				"kepada" => $data['kepada'],
+				"tanggal" => date('Y-m-d H:i:s'),
 				"id_prodi" => $_SESSION['id_prodi'],
 				"id_status_pesan" => $this->get_status_pesan($role, $id_status),
 			);

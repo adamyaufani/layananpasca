@@ -1,67 +1,93 @@
-    <style>
-      table.nama {
-        margin-bottom:20px;
-      }
-      div.kepada {
-        margin-top:20px;
-        margin-bottom:20px;
-      }
-      div.kepada p {
-        margin-bottom:5px;
-      }
-      tr.ttd-dir td {           
-                     
-           vertical-align: middle;
-       }
-      tr.ttd-dir td p {           
-        text-align: left; 
-       }
-       tr.ttd-dir td:nth-child(1) {
-           width: 70%;
-           background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') left center no-repeat;
-       }
+   <style>     
 
-      .heder {
-        height: 80px;
-        width: 100%;
-        background: transparent url('<?= base_url('public/dist/img/logokop-pasca.jpg'); ?>') left center no-repeat;
-        background-size: 400px;
-        text-align: right;
-        margin-bottom: 30px;
-      }
+        div.kertas {
+            width: 100%;
+            height:100%;
+            line-height: 1.5;
+            font-size: 11pt !important;
+            font-family: Times, serif;
+            padding:100px;
+        }      
 
-      .futer {
-        height: 200px;
-        width: 100%;
-        background: transparent url('<?= base_url('public/dist/img/footerkop-pasca.jpg'); ?>') center bottom no-repeat;
-        background-size: 100%;
-        text-align: right;
-        padding: 40px;
-      }
+        div.kepada {
+            margin: 10px 0 5px 0;
+        }
 
-      .futer img {
-        width: 50px;
-        height: 50px;
-      }
-      .kertas {
-        margin-bottom: 20px;
-        padding:80px 150px;
-        box-shadow: 1px 1px 15px #bfbfbf ;
-      }
-      p {
-        text-align: justify;
-      }
-      .isi_surat table {
+        div.kepada p {
+            font-weight: normal;
+            padding-bottom: 0;
+        }
+
+        div.kepada ol {
+            padding: 0;
+            margin: 0;
+            margin-left: 30px;
+        }            
+
+        div.ttd-dir {  
+            margin-top:10px;          
+            background: transparent url('<?= base_url('public/dist/img/ttd-dir.png'); ?>') left top no-repeat;
+           
+        }
+
+        .futer {
+            height: 1.5cm;
+            width: 100%;
+            background: transparent url('<?= base_url('public/dist/img/footerkop-pasca.jpg'); ?>') center bottom no-repeat;
+            background-size: 100%;
+            text-align: right;
+            padding: 40px 57px 0px 55px;
+        }
+
+        .futer img {
+            width: 50px;
+            height: 50px;
+        }     
+        
+        .isi_surat  table {
             width:100%;
-            margin-left:10px;
-            margin-bottom:10px;
+        }  
+
+        .isi_surat table {
+            width: 100%;
+            margin-left: 30px;
+            margin-bottom: 5px;
         }
+
         .isi_surat table tr td:nth-child(1) {
-            width:20%;
+            width: 25%;
         }
-        .isi_surat table tr td {            
+        .isi_surat table tr td:nth-child(2) {
+            width: 10px;
+        }
+
+        .isi_surat table tr td {
             vertical-align: top;
-            padding:3px 0;
+            padding: 2px 0;
+        }
+        .isi_surat p {
+            margin-bottom:15px;
+        }
+
+        .isi_surat p {          
+            margin: 0;
+            padding: 0;
+            padding-bottom: 4px;
+            text-align: justify;
+        }
+        .isi_surat p.salam {
+            font-style: italic;
+        }
+      
+
+        .isi_surat ol {
+            margin: 0;
+            padding: 5px 0 5px 30px;
+            list-style:decimal;
+        }
+
+        .isi_surat ol li {
+            margin-bottom: 2px;
         }
     </style>
     <div class="row">

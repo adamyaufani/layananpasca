@@ -103,7 +103,6 @@ class Surat_model extends CI_Model
         s.id_mahasiswa, 
         k.kategori_surat, 
         k.template, 
-        k.kat_keterangan_surat, 
         k.klien, 
         k.tujuan_surat, 
         k.tembusan, 
@@ -226,6 +225,87 @@ class Surat_model extends CI_Model
         return $this->db->insert('surat', $data);
     }
 
+    public function get_fields_by_id_kat_surat($id)
+    {
+        $query = $this->db->query("SELECT * FROM kat_keterangan_surat where id_kategori_surat='$id' ORDER BY urutan ASC");
+        return $result = $query->result_array();
+    }
+
+    public function editFieldsSurat($dataFieldCheck, $id)
+	{
+		$not_exist_fields_data = $dataFieldCheck['not_exist_fields_data'];
+		$sent_fields_data = $dataFieldCheck['sent_fields_data'];
+
+		foreach ($sent_fields_data as $key => $field) {
+
+			$data = [
+				'id_kategori_surat' => $id,
+				'id' => $field,
+				'aktif' => 1,
+				'urutan' => $key
+			];		
+
+			// menambahkan field yang belum ada
+			$datafield_exist = $this->db->query(
+				"SELECT id FROM kat_keterangan_surat 
+									WHERE id_kategori_surat = $id AND id IN (
+										SELECT id FROM kat_keterangan_surat 
+										WHERE id_kategori_surat = $id AND id = " . $data['id'] . " )"
+			)->num_rows();
+
+			if ($datafield_exist == 0) {
+				$this->db->insert('kat_keterangan_surat', $data);
+			} else {
+				$field_property = [
+					'aktif' => 1,
+					'urutan' => $key
+				];
+
+				$this->db->update(
+					'kat_keterangan_surat',
+					$field_property,
+					[
+						'id_kategori_surat' => $id,
+						'id' => $data['id'],
+					]
+				);
+			}
+			//1,3,69,70,71,72,73
+
+			//mengecek field yang tidak digunakan
+			// $id_field = $data['field_id'];
+		}
+
+		$query_fields = $this->db->query(
+			"SELECT id FROM kat_keterangan_surat 
+			WHERE id_kategori_surat = $id 
+			-- AND field_id = $field
+			 AND id NOT IN ($not_exist_fields_data)"
+		);
+
+		$non_exist_fields = $query_fields->result_array();
+
+		$field_property = [
+			'aktif' => 0
+		];
+
+		if ($query_fields->num_rows() > 0) {
+			foreach ($non_exist_fields as $field_tidak_dipakai) {
+				$this->db->update(
+					'kat_keterangan_surat',
+					$field_property,
+					[
+						'id_kategori_surat' => $id,
+						'id' => $field_tidak_dipakai['id']
+					]
+				);
+			}
+		}
+
+		// return $non_exist_fields;
+		// return $datafield_exist;
+	}
+
     public function get_surat_status($id_surat)
     {
         return $this->db->select('ss.*, DATE_FORMAT(ss.date,"%d %M %Y") as date, st.status')
@@ -235,9 +315,9 @@ class Surat_model extends CI_Model
     }
 
     //class Kategori
-    public function get_kat_keterangan_surat()
+    public function get_kat_keterangan_surat($id_kategori_surat, $aktif)
     {
-        return $this->db->get('kat_keterangan_surat')->result_array();
+        return $this->db->get_where('kat_keterangan_surat',['id_kategori_surat'=> $id_kategori_surat, 'aktif' => $aktif])->result_array();
     }
 
     public function get_timeline($id_surat)
