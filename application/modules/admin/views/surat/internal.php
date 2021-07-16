@@ -6,7 +6,7 @@
     <div class="card card-success card-outline">
       <div class="card-header">
 
-        <a class="btn btn-sm btn-success p-2" style="border-radius:30px;" href="<?= base_url("admin/surat/ajukan"); ?>"><i class="fas fa-fw fa-plus"></i> Surat Baru</a>
+        <a class="btn btn-sm btn-success p-2" style="border-radius:30px;" href="<?= base_url("admin/surat/ajukan"); ?>"><i class="fas fa-fw fa-plus"></i> Buat Surat Baru</a>
       </div>
       <div class="card-body">
 

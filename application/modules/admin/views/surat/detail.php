@@ -91,31 +91,28 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
 
+					<input type="hidden" name="sizeof_ket_surat" value="<?= count($fields); ?>">
+					<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
 
-					<?php
-					if ($surat['kat_keterangan_surat']) {
-						$unserial = unserialize($surat['kat_keterangan_surat']);
-					?>
+					<?php 					
+					if ($fields) {					
+						foreach ($fields as $field) {
 
-						<input type="hidden" name="sizeof_ket_surat" value="<?= count($unserial); ?>">
-						<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
+							$type = $field['type'];
+							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
-						<?php foreach ($unserial as $row) {
-
-							$type = kat_keterangan_surat($row['id'])['type'];
-							$kat_keterangan_surat = kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?>
-
-							<div class="form-row">
-								<label class="col-md-5" for="dokumen[<?= $row['id']; ?>]"><?= kat_keterangan_surat($row['id'])['kat_keterangan_surat']; ?></label>
-								<div class="col-md-7">
-									<?php
-									// memanggil form (data_helper.php)
-									generate_keterangan_surat($row['id'], $surat['id'], $surat['id_status']); ?>
-								</div>
+						<div class="form-row">
+							<label class="col-md-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
+							<div class="col-md-7">
+								<?php
+								// memanggil form (data_helper.php)
+								generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status']); ?>
 							</div>
+						</div>
 
-					<?php }
-					} ?>
+					<?php } 
+					
+						}?>
 
 					<?php if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) { ?>
 						<div class="form-row pt-3">
@@ -302,22 +299,22 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Stempel Basah
-								<small id="emailHelp" class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
+								<small  class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
 								<?php
 
-								// if ((validation_errors())) {
-								// 	$set_stempel = set_checkbox('stempel_basah');
-								// } else {
-								// 	if ($no_surat_data['stempel_basah'] == NULL) {
-								// 		if (get_meta_value('hal', $surat['id'], false)) {
-								// 			$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
-								// 		} else {
-								// 			$value_kepada = $surat['kategori_surat'];
-								// 		}
-								// 	}
-								// }
+								if ((validation_errors())) {
+									$set_stempel = set_checkbox('stempel_basah');
+								} else {
+									if ($no_surat_data['stempel_basah'] == NULL) {
+										if (get_meta_value('hal', $surat['id'], false)) {
+											$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
+										} else {
+											$value_kepada = $surat['kategori_surat'];
+										}
+									}
+								}
 								?>
 
 								<input type="checkbox" name="stempel_basah" id="" <?= (validation_errors()) ? set_checkbox('stempel_basah') : (($no_surat_data['stempel_basah'] == 'on') ? 'checked' : ''); ?>> Centang untuk stempel basah.
@@ -327,7 +324,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Nomor Surat
-								<small id="emailHelp" class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
+								<small  class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
 							</label>
 							<div class="col-md-8">
 
@@ -406,7 +403,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Lampiran
-								<small id="emailHelp" class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
+								<small  class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
 							<div class="col-md-8">
 
 								<input type="number" min="0" max="20" step="1" name="lamp" id="lamp" class="form-control" value="<?= (validation_errors()) ? set_value('lamp') : (($no_surat_data['lamp']) ? $no_surat_data['lamp'] : '');  ?>">
@@ -416,7 +413,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Hal
-								<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
+								<small  class="form-text text-muted">Hal bisa disesuaikan.</small></label>
 							<div class="col-md-8">
 
 								<?php
@@ -443,7 +440,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Kepada
-								<small id="emailHelp" class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
+								<small  class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
 
 							<?php
@@ -452,16 +449,16 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								$value_kepada = set_value('instansi');
 							} else {
 								if ($no_surat_data['instansi'] == NULL) {
-								
+
 									if (get_meta_value('tujuan_surat', $surat['id'], false)) {
-										
+
 										$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
 									} else {
-									
+
 										$value_kepada = $surat['tujuan_surat'];
 									}
 								} else {
-								
+
 									$value_kepada = $no_surat_data['instansi'];
 								}
 							}
@@ -474,17 +471,17 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						</div>
 						<div class="form-group row">
 							<label class="col-md-4" for="">Tembusan
-								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
+								<small  class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
 							</label>
 							<div class="col-md-8">
 
-							<?php
-				
+								<?php
+
 								if ((validation_errors())) {
 									$value_tembusan = set_value('tembusan');
 								} else {
 									if ($no_surat_data['tembusan'] == NULL) {
-										if (get_meta_value('tembusan', $surat['id'], false) !== '-') {								
+										if (get_meta_value('tembusan', $surat['id'], false) !== '-') {
 											$value_tembusan = get_meta_value('tembusan', $surat['id'], false);
 										} else {
 											$value_tembusan = $surat['tembusan'];
@@ -518,6 +515,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						Download Surat
 
 						<a href="<?= base_url("public/documents/pdfdata/" . $no_surat_data['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+						<?php $noheader = substr($no_surat_data['file'], 0, -4); ?>
+						<a href="<?= base_url("public/documents/pdfdata/" . $noheader ."-nh.pdf"); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
 					</div>
 				</div>
 			</div>

@@ -18,6 +18,38 @@
 	<!-- Custom styles for this template-->
 	<link href="<?= base_url() ?>/public/dist/css/sb-admin-2.min.css" rel="stylesheet">
 
+	<style>
+	 .ahashakeheartache {
+			-webkit-animation: kf_shake 0.4s 1 linear;
+			-moz-animation: kf_shake 0.4s 1 linear;
+			-o-animation: kf_shake 0.4s 1 linear;
+		}
+		@-webkit-keyframes kf_shake {
+			0% { -webkit-transform: translate(30px); }
+			20% { -webkit-transform: translate(-30px); }
+			40% { -webkit-transform: translate(15px); }
+			60% { -webkit-transform: translate(-15px); }
+			80% { -webkit-transform: translate(8px); }
+			100% { -webkit-transform: translate(0px); }
+		}
+		@-moz-keyframes kf_shake {
+			0% { -moz-transform: translate(30px); }
+			20% { -moz-transform: translate(-30px); }
+			40% { -moz-transform: translate(15px); }
+			60% { -moz-transform: translate(-15px); }
+			80% { -moz-transform: translate(8px); }
+			100% { -moz-transform: translate(0px); }
+		}
+		@-o-keyframes kf_shake {
+			0% { -o-transform: translate(30px); }
+			20% { -o-transform: translate(-30px); }
+			40% { -o-transform: translate(15px); }
+			60% { -o-transform: translate(-15px); }
+			80% { -o-transform: translate(8px); }
+			100% { -o-origin-transform: translate(0px); }
+		}
+	</style>
+
 </head>
 
 <body class="bg-gradient-success">
@@ -36,32 +68,21 @@
 							<div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
 							<div class="col-lg-6">
 								<div class="p-5">
-									<div class="text-center">
+									<div class="text-center mb-4">
 										<img src="<?= base_url('public/dist/img/logopps.png'); ?>" />
-										<h1 class="h4 text-gray-900 mb-4"><?= (!$ref) ? "Login SSO" : "Login non SSO"; ?></h1>
+										<!-- <h1 class="h4 text-gray-900 mb-4">Login Dahulu</h1> -->
 
 									</div>
 
 									<?php if (isset($msg) || validation_errors() !== '') : ?>
-										<div class="alert alert-warning alert-dismissible">
+										<div class="alert alert-danger alert-dismissible ahashakeheartache">
 											<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-											<h4><i class="icon fa fa-warning"></i> Alert!</h4>
+											
 											<?= validation_errors(); ?>
 											<?= isset($msg) ? $msg : ''; ?>
 										</div>
 									<?php endif; ?>
-									<?php if ($this->session->flashdata('error')) : ?>
-										<div class="alert alert-danger">
-											<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-											<?= $this->session->flashdata('error') ?>
-										</div>
-									<?php endif; ?>
-									<?php if ($this->session->flashdata('success')) : ?>
-										<div class="alert alert-success">
-											<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-											<?= $this->session->flashdata('success') ?>
-										</div>
-									<?php endif; ?>
+																
 
 									<?php echo form_open(base_url('auth/login/' . $ref), 'class="user" '); ?>
 

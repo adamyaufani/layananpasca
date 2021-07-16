@@ -25,14 +25,14 @@
 					<span class="text">Upload Pengguna</span>
 				</a>
 
-				<span class="float-right">
+				<!-- <span class="float-right">
 					<select id="selectload">
 						<option value="">-- Select Role --</option>
 						<?php foreach($role as $role ) {
 							echo "<option value='" . $role['role'] ."'>". $role['role'] ."</option>";
 						} ?>
 					</select>
-				</span>
+				</span> -->
 				
 			</div>
 
@@ -107,4 +107,5 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
 

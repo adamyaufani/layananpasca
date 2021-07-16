@@ -143,6 +143,8 @@ class Surat_model extends CI_Model
     {
         return $this->db->update('kategori_surat', $data, array('id' => $id));
     }
+
+  
     public function tambah($data)
     {
         return $this->db->insert('surat', $data);

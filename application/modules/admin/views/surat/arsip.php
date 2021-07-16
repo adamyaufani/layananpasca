@@ -7,7 +7,7 @@
 			</div>
 			<div class="card-body">
 				
-					<table id="surat-desc" class="table table-bordered tb-surats">
+					<table id="arsip" class="table table-bordered tb-surats">
 						<thead>
 							<tr>
 								<th>No Surat</th>
@@ -85,19 +85,34 @@
 <script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <script>
-	$(document).ready(function() {
-		$('#surat').DataTable({
+  //---------------------------------------------------
+  var table = $('#arsip').DataTable( {
+    "processing": true,
+    "serverSide": false,
+    "ajax": "<?=base_url('admin/surat/advance_datatable_json')?>",
+    "order": [[4,'desc']],
+    "columnDefs": [
+    { "targets": 0, "name": "id", 'searchable':true, 'orderable':true},
+    { "targets": 1, "name": "username", 'searchable':true, 'orderable':true},
+    { "targets": 2, "name": "email", 'searchable':true, 'orderable':true},
+    { "targets": 3, "name": "mobile_no", 'searchable':true, 'orderable':true},
+    { "targets": 4, "name": "created_at", 'searchable':false, 'orderable':false},
+    { "targets": 5, "name": "is_active", 'searchable':true, 'orderable':true},
+    ]
+  });
 
-			<?php if ($this->session->userdata('role') == 1) { ?> "order": [
-					[1, "asc"]
-				]
-			<?php } ?>
-			<?php if ($this->session->userdata('role') == 5) { ?> "order": [
-					[1, "desc"]
-				]
-			<?php } ?>
-
-
-		});
-	});
+  //---------------------------------------------------
+  function user_filter()
+  {
+    var _form = $("#user_search").serialize();
+    $.ajax({  
+      data: _form,
+      type: 'post',
+      url: '<?php echo base_url();?>admin/example/search',
+      async: true,
+      success: function(output){
+        table.ajax.reload( null, false );
+      }
+    });
+  }
 </script>

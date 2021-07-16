@@ -80,13 +80,13 @@ class Notif extends MY_Controller
 			}
 
 			if ($akses == 1) {
-				//set status notif menjadi sudah dibaca
-				if ($query['status'] == 0) {
-					$this->db->set('status', 1);
-					$this->db->set('dibaca', 'NOW()', FALSE);
-					$this->db->where('id', $id_notif);
-					$this->db->update('notif');
-				}
+				// //set status notif menjadi sudah dibaca
+				// if ($query['status'] == 0) {
+				// 	$this->db->set('status', 1);
+				// 	$this->db->set('dibaca', 'NOW()', FALSE);
+				// 	$this->db->where('id', $id_notif);
+				// 	$this->db->update('notif');
+				// }
 
 				// $data['notif'] = $query;
 				// $data['title'] = 'Detail Notifikasi';

@@ -39,12 +39,12 @@
           <tr>
             <td>Nama</td>
             <td>:</td>
-            <td><?= getUserbyId(get_meta_value('dosen', $surat['id'], false))['fullname']; ?></td>
+            <td><?= getUserbyId(get_meta_value('nama_dosen', $surat['id'], false))['fullname']; ?></td>
           </tr>
           <tr>
             <td>Jabatan</td>
             <td>:</td>
-            <td><?= get_meta_value('keterangan', $surat['id'], false); ?> </td>
+            <td><?= get_meta_value('jabatan', $surat['id'], false); ?> </td>
           </tr>          
         </table>
    
@@ -53,24 +53,27 @@
   <?= get_meta_value('isi_surat', $surat['id'], false); ?>
   </div>
   
-  <p>Yogyakarta, <?= $tanggal_surat; ?></p>
+  <p style="margin-top:20px;">Yogyakarta, <?= $tanggal_surat; ?></p>
 
-  <table style="width: 100%;">
-    <tr class="ttd-dir">
-      <td>
-        <p>Direktur, </p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
-      </td>
-      <td style="text-align: center; height:200px; vertical-align:middle">
-        &nbsp;
-      </td>
-    </tr>
-    <tr>
-  </table>
+  <div class="ttd-dir">
+    <table>
+      <tr class="ttd-dir">
+        <td>
+          <p>Direktur, </p>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
+        </td>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+    </table>
+  </div>
 
   
 

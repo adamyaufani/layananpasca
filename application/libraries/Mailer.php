@@ -3,8 +3,6 @@
 require_once "vendor/autoload.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
 
 class Mailer
 {
@@ -17,7 +15,7 @@ class Mailer
   public function send_mail($data)
   {
 
-    //kirim notifikasi
+    // //kirim notifikasi
     $this->_CI->notif_model->send_notif($data);
 
     $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
@@ -26,10 +24,11 @@ class Mailer
     $mail->FromName = $this->get_settings('from_email');
     //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
     $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+    $mail->Host       = 'pod51003.outlook.com';                    // Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
     $mail->Username   = $this->get_settings('email');                     // SMTP username
-    $mail->Password   = decrypt_url($this->get_settings('password_email'));
+    $mail->Password   = $this->get_settings('password_email');
+    // $mail->Password   = decrypt_url($this->get_settings('password_email'));
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
     $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
 
@@ -37,22 +36,23 @@ class Mailer
     $mail->isHTML(true);
 
 
-    // if ($attachment) {
-    // $mail->addAttachment($attachment['dokumen']);
-    // $mail->addAttachment($attachment['presentasi']);
-    // }
-
-    echo '<pre>'; print_r($data); echo '</pre>';
-
     $role = $data['role'];
+
+    echo '<pre>'; print_r($role); echo '</pre>';
 
     foreach ($role as $role) {
       if ($role != 3) {
+
+        echo $_SESSION['id_prodi'];
 
         if ($role === 5) { //dir pasca
           $users = getUsersbyRole($role, '');
         } else {
           $users = getUsersbyRole($role, $_SESSION['id_prodi']);
+
+          echo '<pre>'; print_r($users); echo '</pre>';
+
+          
         }
 
         foreach ($users as $user) {
@@ -65,7 +65,7 @@ class Mailer
           $isi_email = array (
             'penerima' => $user['fullname'],
             'link' => base_url('admin/surat/detail/'. encrypt_url($data['id_surat'])),
-            'isi'=> $sp['judul_notif'],
+            'isi'=> $sp['isi_notif'],
             'tabel'=> '
               <table class="datamhs">
                 <tr>
@@ -98,38 +98,40 @@ class Mailer
       //  echo getUserbyId($data['kepada'])['email'];
         $mail->addAddress(getUserbyId($data['kepada'])['email']);
 
-        $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
+        echo getUserbyId($data['kepada'])['email'];
 
-        $subject = $sp['judul_notif'];
-        $isi_email = array (
-          'penerima' => getUserbyId($data['kepada'])['fullname'],
-          'link' => base_url('mahasiswa/surat/tambah/'. encrypt_url($data['id_surat'])),
-          'isi'=> $sp['judul_notif'],         
-          'tabel'=> '
-            <table class="datamhs">
-              <tr>
-                <td><strong>Perihal</strong></td>
-                <td>Surat Permohonan Cuti Kuliah</td>
-              </tr>
-              <tr>
-                <td><strong>Nama</strong></td>
-                <td>' . getUserbyId($data['kepada'])['fullname'] . ' (' . getUserbyId($data['kepada'])['username']  . ')</td>
-              </tr>
-              <tr>
-                <td><strong>Prodi</strong></td>
-                <td>' . getProdibyId(getUserbyId($data['kepada'])['id_prodi'])['prodi'] . '</td>
-              </tr>                                     
-            </table>'
-        );
+        // $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
 
-        echo '<pre>'; print_r($isi_email); echo '</pre>';
+        // $subject = $sp['judul_notif'];
+        // $isi_email = array (
+        //   'penerima' => getUserbyId($data['kepada'])['fullname'],
+        //   'link' => base_url('mahasiswa/surat/tambah/'. encrypt_url($data['id_surat'])),
+        //   'isi'=> $sp['judul_notif'],         
+        //   'tabel'=> '
+        //     <table class="datamhs">
+        //       <tr>
+        //         <td><strong>Perihal</strong></td>
+        //         <td>Surat Permohonan Cuti Kuliah</td>
+        //       </tr>
+        //       <tr>
+        //         <td><strong>Nama</strong></td>
+        //         <td>' . getUserbyId($data['kepada'])['fullname'] . ' (' . getUserbyId($data['kepada'])['username']  . ')</td>
+        //       </tr>
+        //       <tr>
+        //         <td><strong>Prodi</strong></td>
+        //         <td>' . getProdibyId(getUserbyId($data['kepada'])['id_prodi'])['prodi'] . '</td>
+        //       </tr>                                     
+        //     </table>'
+        // );
 
-        $mail->Subject = $subject;
-        $mail->Body = $this->email_template($isi_email);
+     
 
-        $mail->send();
+        // $mail->Subject = $subject;
+        // $mail->Body = $this->email_template($isi_email);
 
-        $mail->ClearAddresses();
+        // $mail->send();
+
+        // $mail->ClearAddresses();
       }
     }
   }

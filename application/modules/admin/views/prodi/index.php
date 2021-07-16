@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8">
+    <div class="offset-md-2 col-md-8">
         <div class="card card-success card-outline">
             <div class="card-body box-profile">
                 

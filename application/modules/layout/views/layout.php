@@ -19,14 +19,29 @@
 	<!-- Custom styles for this template-->
 	<link href="<?= base_url() ?>public/dist/css/sb-admin-2.min.css" rel="stylesheet">
 	<link href="<?= base_url() ?>public/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-	<link href="<?= base_url() ?>/public/vendor/summernote/summernote-bs4.min.css" rel="stylesheet">
 
+	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css" />
 	<!-- Bootstrap core JavaScript-->
 	<script src="<?= base_url() ?>public/vendor/jquery/jquery.min.js"></script>
 	<script src="<?= base_url() ?>public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
 	<script src="<?= base_url() ?>public/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
+	
+	
+	<script src="<?= base_url() ?>/public/vendor/ckeditor5/build/ckeditor.js"></script>
+	
+	
+	<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+	
+<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
 </head>
 
 <body id="page-top" class="sidebar-toggled sidenav-toggled">
@@ -65,7 +80,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; 2020 <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
+						<span>Copyright &copy; 2021 <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
 							All rights reserved.</span>
 					</div>
 				</div>
@@ -102,9 +117,6 @@
 		</div>
 	</div>
 
-	<script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
-	<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
 	<script type="text/javascript">
 		$('#confirm-delete').on('show.bs.modal', function(e) {
 			$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
@@ -132,6 +144,7 @@
 				]
 			});
 		});
+
 		$(document).ready(function() {
 			$('#surat-desc').DataTable({
 				"order": [
@@ -139,6 +152,8 @@
 				]
 			});
 		});
+
+		
 	</script>
 
 	<!-- page script -->
@@ -159,38 +174,53 @@
 		}, 1000);
 	</script>
 
-	<script src="<?= base_url() ?>/public/vendor/summernote/summernote-bs4.min.js"></script>
 	<script>
-		$(document).ready(function() {
-			$('.textarea-summernote').summernote({
-				tabsize: 2,
-				height: 200,
-				
-				toolbar: [
-					['style', ['style']],
-					['font', ['bold', 'underline', 'clear']],
-					['color', ['color']],
-					['para', ['ul', 'ol', 'paragraph']],
-					['table', ['table']],
-					['view', ['fullscreen', 'codeview']]
-				],
-				
-			});
 
-			if($('.textarea-summernote').summernote('isEmpty')){
-				$('.textarea-summernote').summernote('code', ''); 
-    	}		
 
+		document.querySelectorAll('.textarea-summernote').forEach(function(val) {
+			ClassicEditor
+				.create(val, {
+					toolbar: {
+						items: [
+							'bold',
+							'italic',
+							'underline',
+							'|',
+							'heading',
+							'|',
+							'indent',
+							'outdent',
+							'alignment',
+							'|',
+							'numberedList',
+							'bulletedList',
+							'|',
+							'insertTable',
+							'|',
+							'undo',
+							'redo',
+							'|',
+							'code'
+						]
+					},
+					language: 'id',
+					table: {
+						contentToolbar: [
+							'tableColumn',
+							'tableRow',
+							'mergeTableCells'
+						]
+					},
+					licenseKey: '',
+				})
+				.catch(error => {
+					console.log(error);
+				});
 		});
-
-		$(function() {
-			$('[data-toggle="tooltip"]').tooltip()
-		})
 	</script>
 
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="<?= base_url() ?>public/dist/js/sb-admin-2.js"></script>
 </body>
 
 </html>
-
-
-<script src="<?= base_url() ?>public/dist/js/sb-admin-2.js"></script>
