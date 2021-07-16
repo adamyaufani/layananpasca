@@ -34,7 +34,7 @@
 
 			#sortable1,
 			#sortable2 {
-			
+
 				min-height: 20px;
 				list-style-type: none;
 				margin: 0;
@@ -176,73 +176,73 @@
 					<div class="col-md-5">
 						<div class="card card-success card-outline">
 							<div class="card-header">Field terpakai </div>
-							<div class="card-body box-profile ">						
-								
+							<div class="card-body box-profile ">
+
 								<div id="sortable2" class="connectedSortable errorTxt">
 									<?php
-										$this->db->select('*');
-										$this->db->from('kat_keterangan_surat');
-										$this->db->where(['id_kategori_surat' => $kat['id'], 'aktif' => 1]);
-										$this->db->order_by('urutan', 'ASC');
+									$this->db->select('*');
+									$this->db->from('kat_keterangan_surat');
+									$this->db->where(['id_kategori_surat' => $kat['id'], 'aktif' => 1]);
+									$this->db->order_by('urutan', 'ASC');
 									$field =	$this->db->get()->result_array();
 
 									$last = end($field);
 									$select = array();
 									if ($field) {
-										foreach ($field as $k=> $field) {												
-												$select[] =  'sort='.$field['id'];	
-											?>
-											
+										foreach ($field as $k => $field) {
+											$select[] =  'sort=' . $field['id'];
+									?>
+
 											<div class="ui-state-highlights" id="item-<?= $field['id']; ?>">
-												
-												<p><?= $field['kat_keterangan_surat']; ?></p>
+
+												<p class="nama_field"><span class="nama_field_disini"><?= $field['kat_keterangan_surat']; ?></span></p>
 												<div>
-													<div class="mb-3">														
-														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" />
+
+													<div class="mb-3">
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" value="1" />
 														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
-														<input  class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
+														<input class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Placeholder</label>
-														<input  class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="Placeholder" />
+														<input class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="placeholder" />
 													</div>
 													<div class="mb-3">
-														<label for="exampleFormControlInput1" class="form-label">Key</label>
-														<input  class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+														<label for="exampleFormControlInput1" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua)</label>
+														<input class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
-														<input  class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
-													</div>													
+														<input class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
 														<select class="form-control" name="type">
 															<option>Pilih jenis field</option>
-															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?> >Teks singkat</option>
+															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?>>Teks singkat</option>
 															<option value='number' <?= ($field['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
 															<option value='textarea' <?= ($field['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
 															<option value='wysiwyg' <?= ($field['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
 															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Pilih Dosen</option>
+															<option value='select_mahasiswa' <?= ($field['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
-															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Tahun Ajaran</option>
+															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
 														</select>
 													</div>
 													<div class="mb-3">
-														<input class="form-control btn btn-warning" type="submit" value="Simpan" name="simpan" />
+														<a class="form-control btn btn-warning simpan" data-id="<?= $field['id']; ?>" style="cursor:pointer">Simpan</a>
 													</div>
 												</div>
-
 											</div>
 									<?php
 										} // endforeach 
 
-										$imp = implode("&", $select );
-
+										$imp = implode("&", $select);
 									} else {
 										echo "<span class='ml-2 mb-1 belum-ada-field'>Belum ada field.</span>";
 									}
@@ -250,7 +250,7 @@
 									<span id="errNm2"></span>
 								</div>
 
-								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($field) ? $imp :''; ?>">
+								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($field) ? $imp : ''; ?>">
 
 							</div>
 						</div>
@@ -258,65 +258,76 @@
 
 					<div class="col-md-5">
 						<div class="card card-success card-outline">
-							<div class="card-header">Field tidak terpakai 	<a class="float-right"><i class="fas fa-plus"></i> Tambah form field</a></div>
+							<div class="card-header">Field tidak terpakai <a class="float-right tambah-field btn btn-sm btn-warning" data-id="<?= $kat['id']; ?>" style="cursor:pointer;"><i class="fas fa-plus"></i> Tambah form field</a></div>
 							<div class="card-body box-profile">
 
-							
-							
+
+
 								<div id="sortable1" style="list-style: none;" class="connectedSortable keterangan_surat list-group pl-0">
+
+									
+
 									<?php
 									if ($keterangan_surat) {
 
-										foreach ($keterangan_surat as $field) {										
+										foreach ($keterangan_surat as $field) {
 									?>
-												
-												<div class="ui-state-highlights" id="item-<?= $field['id']; ?>">
-												
-												<p><?= $field['kat_keterangan_surat']; ?></p>
+
+											<div class="ui-state-highlights" id="item-<?= $field['id']; ?>">
+
+												<p class="nama_field"><span class="nama_field_disini"><?= $field['kat_keterangan_surat']; ?></span></p>
 												<div>
-													<div class="mb-3">														
-														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" />
+													<div class="mb-3">
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" value="1" />
 														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
-														<input  class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
+														<input class="form-control field-kat_keterangan_surat" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Placeholder</label>
-														<input  class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="Placeholder" />
+														<input class="form-control field-placeholder" type="text" value="<?= $field['placeholder']; ?>" name="placeholder" />
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Key</label>
-														<input  class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
+														<input class="form-control field-key" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
-														<input  class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
-													</div>													
+														<input class="form-control field-deskripsi" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
-														<select class="form-control" name="type">
-															<option>Pilih jenis field</option>
-															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?> >Teks singkat</option>
+														<select class="form-control field-type" name="type">
+															<option value=''>Pilih jenis field</option>
+															<option value='text' <?= ($field['type'] == 'text') ? 'selected="selected"' : ''; ?>>Teks singkat</option>
 															<option value='number' <?= ($field['type'] == 'number') ? 'selected="selected"' : ''; ?>>Angka</option>
 															<option value='textarea' <?= ($field['type'] == 'textarea') ? 'selected="selected"' : ''; ?>>Teks panjang</option>
 															<option value='wysiwyg' <?= ($field['type'] == 'wysiwyg') ? 'selected="selected"' : ''; ?>>Teks editor</option>
 															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Pilih Dosen</option>
+															<option value='select_mahasiswa' <?= ($field['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
-															<option value='select_dosen' <?= ($field['type'] == 'select_dosen') ? 'selected="selected"' : ''; ?>>Tahun Ajaran</option>
+															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
 														</select>
 													</div>
 													<div class="mb-3">
-														<input class="form-control btn btn-warning" type="submit" value="Simpan" name="simpan" />
+														<a class="form-control btn btn-warning simpan simpan-<?= $field['id']; ?>" data-id="<?= $field['id']; ?>" style="cursor:pointer">
+															<span class="loading d-none">
+																<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+																<span class="sr-only">Loading...</span>
+															</span>
+															Simpan
+														</a>
 													</div>
+
 												</div>
-												</div>
+											</div>
 
 
-											<?php 
+									<?php
 										} // endforeach 
 									}
 									?>
@@ -332,7 +343,7 @@
 				<div class="form-group row">
 					<label for="kode" class="col-md-2 control-label"></label>
 					<div class="col-md-10">
-						<input type="submit" name="submit" value="Edit Kategori Surat" class="btn btn-perak btn-block">
+						<input type="submit" name="submit" value="Edit Kategori Surat" class="btn btn-success btn-block">
 					</div>
 				</div>
 				<?php echo form_close(); ?>
@@ -345,35 +356,118 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+
+	$('.tambah-field').on('click', function() {
+		var id = $(this).data('id');
+
+		$.ajax({
+					url: SITEURL + "admin/kategorisurat/tambah_field/" + id,					
+					success: function(res) {
+						console.log(res);
+						location.reload();
+					},
+					error: function(data) {
+						console.log('Error:', data);
+					}
+				});
+	});
+
+});
+
+
+var SITEURL = '<?php echo base_url(); ?>';
+	
 	$(function() {
+
 		
 		$("#sortable1, #sortable2")
-		.accordion({
-      collapsible:true,
-        header: "> div > p",
+			.accordion({
+				collapsible: true,
+				header: "> div > p",
 				active: false
-      })
+			})
 			.sortable({
-			connectWith: ".connectedSortable"
-		}).disableSelection();
+				connectWith: ".connectedSortable"
+			}).disableSelection();
 	});
 
 	$("#sortable2")
-	
-	.sortable({
-		placeholder: "ui-state-active",
-		update: function(event, ui) {
-			var sorted = $("#sortable2").sortable("serialize", {
-				key: "sort"
-			});
-			// console.log(sorted);
-			$('.field_surat').val(sorted);
-			$("#sortable2").css('border-color', '#eeeeee');
-			$("#errNm2").html('');
-		},
-	});
 
-	var SITEURL = '<?php echo base_url(); ?>';
+		.sortable({
+			placeholder: "ui-state-active",
+			update: function(event, ui) {
+				var sorted = $("#sortable2").sortable("serialize", {
+					key: "sort"
+				});
+				// console.log(sorted);
+				$('.field_surat').val(sorted);
+				$("#sortable2").css('border-color', '#eeeeee');
+				$("#errNm2").html('');
+			},
+		});
+
+
+
+	$('.simpan').on('click', function() {
+
+		var id = $(this).data('id');
+		//aktifkan preloader setelah button diklik
+		$('.simpan-' + id).children('.loading').removeClass('d-none');
+
+		var req = $('#item-' + id + ' div').children('input[name=required]').val(),
+			kks = $('#item-' + id + ' div').children('input[name=kat_keterangan_surat]').val(),
+			placeholder = $('#item-' + id + ' div').children('input[name=placeholder]').val(),
+			deskripsi = $('#item-' + id + ' div').children('input[name=deskripsi]').val(),
+			key = $('#item-' + id + ' div').children('input[name=key]').val(),
+			type = $('#item-' + id + ' div').children('select[name=type]').val();
+
+		$.ajax({
+			url: SITEURL + "admin/kategorisurat/edit_field/" + id,
+			data: {
+				required: req,
+				kat_keterangan_surat: kks,
+				placeholder: placeholder,
+				deskripsi: deskripsi,
+				key: key,
+				type: type
+			},
+			type: "post",
+			dataType: 'json',
+			success: function(res) {
+				if (res.status == 'Error') {
+					// foreach error keynya
+					Object.keys(res.error).forEach(function(k) {
+						if (res.error[k] !== '') {
+							$('#item-' + id + ' div').find(".field-" + k).next('.invalid-feedback').hide();
+							$('#item-' + id + ' div').find(".field-" + k).addClass('is-invalid');
+							$('#item-' + id + ' div').find(".field-" + k).after('<div class="invalid-feedback">' + res.error[k] + '</div>');
+
+						} else {
+
+							$('#item-' + id + ' div').find(".field-" + k).next('.invalid-feedback').hide();
+							$('#item-' + id + ' div').find(".field-" + k).removeClass('is-invalid');
+
+						}
+					});
+
+				} else {
+					$('#item-' + id + ' div').find('.invalid-feedback').hide();
+					$('#item-' + id + ' div').find("input, select").removeClass('is-invalid');
+				}
+
+				//sembunyikan preloader
+				$('.simpan-' + id).children('.loading').addClass('d-none').delay(3000);
+				$('#item-' + id + ' p.nama_field').children('.nama_field_disini').html(res.data)
+
+			},
+			error: function(data) {
+				console.log('Error:', data);
+			}
+		});
+
+	});
 
 	$("#edit_kategori_surat").validate({
 		ignore: ":hidden:not(.field_surat)",
@@ -504,3 +598,5 @@
 
 	});
 </script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

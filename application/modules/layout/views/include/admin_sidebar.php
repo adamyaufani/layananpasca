@@ -26,31 +26,39 @@
 	</div>
 
 	<li class="nav-item" id="semua_surat">
-		<?php echo $link = (tampil_notif()->num_rows() > 0) ?$this->session->userdata('role') : ''; ?>
+		<?php echo $link = (tampil_notif()->num_rows() > 0) ? $this->session->userdata('role') : ''; ?>
 		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $link); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
-			<span>Inbox Pengajuan <?= (tampil_notif()->num_rows() > 0) ? '<span class="float-right badge badge-warning">' . tampil_notif()->num_rows() . '</span>' : ''; ?></span></a>
+			<span>Pengajuan <?= (tampil_notif()->num_rows() > 0) ? '<span class="float-right badge badge-warning">' . tampil_notif()->num_rows() . '</span>' : ''; ?></span></a>
 	</li>
-	<li class="nav-item" id="semua_surat">
-		<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">
-			<i class="fas fa-fw fa-envelope"></i>
-			<span>Arsip Surat Keluar</span></a>
-	</li>
-	<!-- <li class="nav-item" id="menu_surat">
-		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
-			<i class="fas fa-fw fa-envelope"></i>
-			<span>Perlu diproses</span><?= (countSurat() > 0) ? '<span class="float-right badge badge-warning">' . countSurat(1) . '</a>' : ''; ?></span></a>
-	</li> -->
 
 	<?php if ($this->session->userdata('role') == 1) { ?>
-
-
 		<li class="nav-item" id="semua_surat">
 			<a class="nav-link" href="<?= base_url("admin/surat/internal/"); ?>">
 				<i class="fas fa-fw fa-envelope"></i>
-				<span>Surat Internal</span></a>
+				<span>Pengajuan Saya</span></a>
 		</li>
+	<?php } ?>
+	<hr class="sidebar-divider d-none d-md-block">
+	<div class="sidebar-heading">
+		Kelola Surat
+	</div>
 
+	<li class="nav-item" id="semua_surat">
+		<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">
+			<i class="fas fa-fw fa-envelope"></i>
+			<span>Surat Keluar</span></a>
+	</li>
+
+
+
+	<?php if ($this->session->userdata('role') == 1) { ?>
+
+		<li class="nav-item" id="semua_surat">
+			<a class="nav-link" href="<?= base_url("admin/suratmasuk"); ?>">
+				<i class="fas fa-fw fa-envelope"></i>
+				<span>Surat masuk</span></a>
+		</li>
 		<!-- Divider -->
 		<hr class="sidebar-divider d-none d-md-block">
 		<div class="sidebar-heading">

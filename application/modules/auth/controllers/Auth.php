@@ -21,70 +21,45 @@ class Auth extends CI_Controller
 		}
 	}
 	//--------------------------------------------------------------
-	public function login($referrer = null)
+	public function login()
 	{
-		//check referer page
-		if (isset($referrer)) {
-			// jika referrernya non sso
-			if ($referrer === 'non-sso') {
-				if ($this->input->post('submit')) {
-					$this->form_validation->set_rules('username', 'Username', 'trim|required');
-					$this->form_validation->set_rules('password', 'Password', 'trim|required');
+		if ($this->input->post('submit')) {
+			$this->form_validation->set_rules('username', 'Username', 'trim|required');
+			$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-					if ($this->form_validation->run() == FALSE) {
-						$data['ref'] = $referrer;
-						$this->load->view('auth/login', $data);
-					} else {
-						$data = array(
-							'username' => $this->input->post('username'),
-							'password' => $this->input->post('password')
-						);
-						$result = $this->auth_model->login($data);
-						if ($result) {
-							$user_data = array(
-								'user_id' => $result['id'],
-								'username' => $result['username'],
-								'fullname' => $result['fullname'],
-								'role' => $result['role'],
-								'id_prodi' => $result['id_prodi'],
-								'is_login' => TRUE,
-							);
-
-							$this->session->set_userdata($user_data);
-							if ($result['role'] != 3) {
-								redirect(base_url('admin/dashboard'), 'refresh');
-							} else {
-								redirect(base_url('mahasiswa/dashboard'), 'refresh');
-							}
-						} else {
-							$data['msg'] = 'Invalid Username or Password!';
-							$data['ref'] = $referrer;
-							$this->load->view('auth/login', $data);
-						}
-					}
-				} else {
-					$data['ref'] = $referrer;
-					$this->load->view('auth/login', $data);
-				}
-				// jika referrernya salah
+			if ($this->form_validation->run() == FALSE) {
+				$data['ref'] = '';
+				$this->load->view('auth/login', $data);
 			} else {
-				echo "404";
-			}
-			//jika tanpa referrer maka menggunakan SSO UMY
-		} else {
-			if ($this->input->post('submit')) {
-				$this->form_validation->set_rules('username', 'Username', 'trim|required');
-				$this->form_validation->set_rules('password', 'Password', 'trim|required');
 
-				if ($this->form_validation->run() == FALSE) {
-					$data['ref'] = $referrer;
-					$this->load->view('auth/login', $data);
+				$data = array(
+					'username' => $this->input->post('username'),
+					'password' => $this->input->post('password')
+				);
+
+				$result = $this->auth_model->login($data);
+
+				if ($result) {
+					$user_data = array(
+						'user_id' => $result['id'],
+						'username' => $result['username'],
+						'fullname' => $result['fullname'],
+						'role' => $result['role'],
+						'id_prodi' => $result['id_prodi'],
+						'is_login' => TRUE,
+					);
+				
+					$this->session->set_userdata($user_data);
+
+					if($result['role'] != '3') {
+						redirect(base_url('admin/dashboard'), 'refresh');
+					} else {
+						redirect(base_url('mahasiswa/dashboard'), 'refresh');
+					}
+
 				} else {
 
-					$data = array(
-						'username' => $this->input->post('username'),
-						'password' => $this->input->post('password')
-					);
+					//periksa di tabel mhs
 
 					$params = http_build_query($data);
 
@@ -109,28 +84,21 @@ class Auth extends CI_Controller
 
 						$result = $db2->query("SELECT * from V_Simpel_Pasca WHERE EMAIL ='$email' ")->row_array();
 
-
 						//cek apakah mahasiswa pasca
 						// jika iya, diperbolehkan login
 						if ($result['name_of_faculty'] === "PASCA SARJANA") {
 
 							//cek keaktifan semester ini
-							$thn_ajaran = date('Y');
-							$cur_semester = (date("n") <= 6) ?  0 : 1;
-							$nim = $result['STUDENTID'];
-
-							$cek_aktif = $db2->query("select* FROM [s1makumyny4].[dbo].[V_Simpel_Pasca]  where studentid in (select studentid from STUDENT_COURSE_KRS where thajaranid='$thn_ajaran' and termid='$cur_semester')
-					and studentid='$nim'");
-
+							// $thn_ajaran = date('Y');
+							// $cur_semester = (date("n") <= 6) ?  0 : 1;
+				
 							$user_data = array(
 								'username' => $result['STUDENTID'],
 								'fullname' => $result['FULLNAME'],
 								'email' => $result['EMAIL'],
 								'telp' => $result['TELP'],
-							//	'fakultas' => $result['name_of_faculty'],
 								'id_prodi' => $result['department_id'],
 								'role' => 3,
-							//	'aktif' => ($cek_aktif->num_rows() > 0) ? 1 : 0,
 								'created_at' => date('Y-m-d : h:m:s'),
 							);
 
@@ -147,21 +115,23 @@ class Auth extends CI_Controller
 								$this->session->set_userdata('user_id', $result);
 							}
 							redirect(base_url('mahasiswa/dashboard'), 'refresh');
+
+							// JIKA bukan pasca dilempar ke login
 						} else {
-							$data['ref'] = $referrer;
+							$data['ref'] = '';
 							$data['msg'] = 'Anda tidak berhak mengakses!';
 							$this->load->view('auth/login', $data);
 						}
 					} else {
-						$data['ref'] = $referrer;
-						$data['msg'] = 'Invalid Username or Password!';
+						$data['ref'] = '';
+						$data['msg'] = 'Kesalahan Email atau Password!';
 						$this->load->view('auth/login', $data);
 					}
 				}
-			} else {
-				$data['ref'] = $referrer;
-				$this->load->view('auth/login', $data);
 			}
+		} else {
+			$data['ref'] = '';
+			$this->load->view('auth/login', $data);
 		}
 	}
 

@@ -32,7 +32,7 @@
   <p>Dengan hormat,</p>
   <p>Kami sampaikan bahwa mahasiswa dari Program Studi <?= $surat['prodi']; ?> yang bernama:</p>
 
-  <table class="nama">
+  <table style="width:90%; margin-left:5%;margin-bottom:10px;" class="nama">
     <tr>
       <td style="width:25%;">Nama</td>
       <td> : <?= $surat['fullname']; ?></td>
@@ -43,39 +43,45 @@
     </tr> 
   </table>
 
-  <?php $tgl=  explode(' - ', get_meta_value('waktu_penelitian', $surat['id'], false));
+  <?php 
+  // $tgl=  explode(' - ', get_meta_value('waktu_penelitian', $surat['id'], false));
   
-  $dateawal=date_create($tgl[0]);
-  $awal = date_format($dateawal,"j F Y");
-  $dateakhir=date_create($tgl[1]);
-  $akhir = date_format($dateakhir,"j F Y");
-  //durasi hari
-  $hari=date_diff($dateawal,$dateakhir);
+  // $dateawal=date_create($tgl[0]);
+  // $awal = date_format($dateawal,"j F Y");
+  // $dateakhir=date_create($tgl[1]);
+  // $akhir = date_format($dateakhir,"j F Y");
+  // //durasi hari
+  // $hari=date_diff($dateawal,$dateakhir);
   
   ?>
 
-  <p>Bermaksud untuk melakukan penelitian <?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?> dengan tema : <em> "<?= get_meta_value('tema_penelitian', $surat['id'], false); ?>"</em>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin selama <?= $hari->format("%a"); ?> hari.</p>
+  <p>Bermaksud untuk melakukan penelitian <?= get_meta_value('tujuan_penelitian', $surat['id'], false); ?> dengan tema : <em> "<?= get_meta_value('keterangan', $surat['id'], false); ?>"</em>. Maka, kami mohon mahasiswa yang bersangkutan dapat diberikan ijin untuk melaksanakan penelitian di tempat yang Bapak/Ibu pimpin.</p>
+ 
 
   <p>Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
 
-  <p><em>Wassalamulaikum warahmatullaahi wabarakatuh</em></p>
+  <p class="salam">Wassalamulaikum warahmatullaahi wabarakatuh</p>
+  <div class="ttd-dir">
+    <table>
+      <tr class="ttd-dir">
+        <td>
+          <p>Direktur, </p>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
+        </td>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+    </table>
+  </div>
+  
 
-  <table style="width: 100%;">
-    <tr class="ttd-dir">
-      <td>
-        <p>Direktur, </p>
-        <br />
-        <br />
-        <br />
-        <br />
-        <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
-      </td>
-      <td style="text-align: center; height:200px; vertical-align:middle">
-        &nbsp;
-      </td>
-    </tr>
-    <tr>
-  </table>
 
 
 </div>

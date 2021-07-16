@@ -57,6 +57,11 @@
             width:100%;
         }  
 
+        table.nama td {
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+
         .isi_surat table {
             width: 100%;
             margin-left: 30px;

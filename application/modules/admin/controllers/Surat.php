@@ -13,7 +13,7 @@ class Surat extends Admin_Controller
 	public function index($role = 0)
 	{
 		$data['query'] = $this->surat_model->get_surat($role);
-		$data['title'] = 'Surat Admin';
+		$data['title'] = 'Pengajuan';
 		$data['view'] = 'surat/index';
 		$this->load->view('layout/layout', $data);
 	}
@@ -344,7 +344,8 @@ class Surat extends Admin_Controller
 				if($data['surat']['kode'] == 'SU') {
 					$kategori = $no_surat['hal'];
 				} else {
-					$kategori = $data['surat']['kategori_surat'];
+					$kategori = $data['surat']['kategori_surat'];				
+					
 				}
 
 					$nim = $data['surat']['username'];
@@ -413,6 +414,8 @@ class Surat extends Admin_Controller
 					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
 				
 			}
+
+			
 		}
 	}
 
@@ -431,7 +434,7 @@ class Surat extends Admin_Controller
 	{
 		$role = $_SESSION['role'];
 		$data['query'] = $this->surat_model->get_surat_internal($role);
-		$data['title'] = 'Surat Internal';
+		$data['title'] = 'Pengajuan Saya';
 		$data['view'] = 'surat/internal';
 		$this->load->view('layout/layout', $data);
 	}
@@ -466,16 +469,13 @@ class Surat extends Admin_Controller
 		//ambil id surat berdasarkan last id status surat
 		$insert_id2 = $this->db->select('id_surat')->from('surat_status')->where('id=', $this->db->insert_id())->get()->row_array();
 		// ambil keterangan surat berdasar kategori surat
-		$kat_surat = $this->db->select('kat_keterangan_surat')->from('kategori_surat')->where('id=', $id)->get()->row_array();
+		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where('id_kategori_surat=', $id)->get()->result_array();
 
-		// echo '<pre>';
-		// print_r($kat_surat['kat_keterangan_surat']);
-		// echo '</pre>';
-		// foreach keterangan surat, lalu masukkan nilai awal (nilai kosong) berdasakan keterangan dari kategori surat
+		echo '<pre>'; print_r($kat_surat); echo '</pre>';
+
 		if ($kat_surat) {
-			$unserial = unserialize($kat_surat['kat_keterangan_surat']);
 
-			foreach ($unserial as $row) {
+			foreach ($kat_surat as $row) {
 
 				$this->db->insert(
 					'keterangan_surat',
@@ -487,6 +487,7 @@ class Surat extends Admin_Controller
 				);
 			}
 		}
+
 
 		$data_notif = array(
 			'id_surat' => $insert_id2['id_surat'],
@@ -511,19 +512,22 @@ class Surat extends Admin_Controller
 
 		if ($this->input->post('submit')) {
 
+			echo '<pre>'; print_r($this->input->post('dokumen')); echo '</pre>';
+
 			// validasi form, form ini digenerate secara otomatis
 			foreach ($this->input->post('dokumen') as $id => $dokumen) {
 				$this->form_validation->set_rules(
 					'dokumen[' . $id . ']',
-					kat_keterangan_surat($id)['kat_keterangan_surat'],
+					 kat_keterangan_surat($id)['kat_keterangan_surat'],				
 					'trim|required',
 					array('required' => '%s wajib diisi.')
 				);
 			}
 
 			if ($this->form_validation->run() == FALSE) {
-				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');				
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
 				$data['title'] = 'Ajukan Surat';
@@ -584,6 +588,7 @@ class Surat extends Admin_Controller
 			if ($id_surat) {
 				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
 				if ($data['surat']['id_status'] == 10) {
@@ -606,24 +611,21 @@ class Surat extends Admin_Controller
 		}
 	}
 
-	/* arsip surat */
-	// public function arsip()
-	// {
-	// 	$data['query'] = $this->surat_model->get_surat_arsip();
-	// 	$data['title'] = 'Arsip Surat';
-	// 	$data['view'] = 'surat/arsip';
-	// 	$this->load->view('layout/layout', $data);
-	// }
-
 	//---------------------------------------------------
 	// Advanced Search Example
-	public function arsip(){
+	public function arsip($klien = null){
+			
+		$data['kategori_surat'] =  $this->surat_model->get_kategori_surat($klien);
+		$data['klien'] =  $klien;
 
-		// $this->session->unset_userdata('user_search_type');
-		$this->session->unset_userdata('arsip_search_from');
-		$this->session->unset_userdata('arsip_search_to');
+		$prodi = $this->db->select('*')->from('prodi')->get()->result_array();
+		$data['prodi'] =  $prodi;
 
-		$data['title'] = 'Arsip Surat';
+		$this->session->unset_userdata('kategori_surat');
+		$this->session->unset_userdata('prodi');
+		$this->session->unset_userdata('klien');
+	
+		$data['title'] = 'Arsip Surat Keluar';
 		$data['view'] = 'surat/arsip2';
 		$this->load->view('layout/layout', $data);
 	}
@@ -631,30 +633,53 @@ class Surat extends Admin_Controller
 	//-------------------------------------------------------
 	function search(){
 
-		// $this->session->set_userdata('user_search_type',$this->input->post('user_search_type'));
-		$this->session->set_userdata('arsip_search_from',$this->input->post('arsip_search_from'));
-		$this->session->set_userdata('arsip_search_to',$this->input->post('arsip_search_to'));
+		$kategori_surat = $this->input->post('kategori_surat');
+		// $klien = $this->input->post('klien');
+
+	 	$this->session->set_userdata('kategori_surat' ,$this->input->post('kategori_surat'));
+		$this->session->set_userdata('prodi' ,$this->input->post('prodi'));
+		// $this->session->set_userdata('arsip_search_from',$this->input->post('arsip_search_from'));
+		// $this->session->set_userdata('arsip_search_to',$this->input->post('arsip_search_to'));
+
+		// echo "sesi";
+		echo json_encode($kategori_surat);	
+	}
+
+	function sesi() {
+		echo '<pre>'; print_r($_SESSION); echo '</pre>'; ;
+
+		echo '<pre>'; print_r($this->surat_model->get_surat_arsip('')); echo '</pre>';
 	}
 
 	//---------------------------------------------------
 	// Server-side processing Datatable Example with Advance Search
-	public function arsip_json(){	
+	public function arsip_json($klien = null){	
 
-		$records['data'] = $this->surat_model->get_arsip_surat();
-		$data = array();
-		$i=0;
+		$records['data'] = $this->surat_model->get_surat_arsip($klien);
+		$data = array();	
 		foreach ($records['data']  as $row) 
-		{  
-			
+		{  			
 			$data[]= array(
-				++$i,
-				$row['id'],
-				$row['no_surat'],
+				$row['no_lengkap'],
 				$row['tanggal_terbit'],
-				
+				$row['fullname'],
+				$row['kategori_surat'],
+				$row['prodi'],
+				$row['instansi'],
+				$row['hal'],
+				'<a class="btn btn-sm btn-success" href="' . base_url('public/documents/pdfdata/'. $row['file']) . '"><i class="fas fa-file-pdf"></i></a>',				
 			);
 		}
 		$records['data'] = $data;
-		echo json_encode($records);						   
+		echo json_encode($records);	
 	}
+
+	public function get_kategori_surat_by_klien()
+	{
+		$klien = $this->session->userdata('klien');
+		$data = $this->db->query("SELECT id, kategori_surat FROM kategori_surat WHERE klien = '$klien'")->result_array();
+		echo json_encode($data);
+	}
+
+
 }

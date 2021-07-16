@@ -36,6 +36,26 @@ class Notif_model extends CI_Model
 		return $query;
 	}
 
+	public function get_notif_by_surat($id_surat)
+	{
+		
+		$query = $this->db->select("*")->from("notif")
+			 ->where(["id_surat" => $id_surat, "role" => 3, "status" => 0])
+			->get()->result_array();
+
+		return $query;
+	}
+
+	public function notif_read($id_notif)
+	{
+		$data = [ "status" => 1,
+			"dibaca" => date('Y-m-d H:i:s'),							
+		];
+		$query = $this->db->update('notif', $data, ["id" => $id_notif]);
+
+		return $query;
+	}
+
 
 	public function send_notif($data)
 	{

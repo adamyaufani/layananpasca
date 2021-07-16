@@ -48,7 +48,7 @@ class Kategorisurat extends MY_Controller
 				array('required' => '%s wajib diisi.')
 			);
 
-			if ($this->form_validation->run() == FALSE) {			
+			if ($this->form_validation->run() == FALSE) {
 				$data['title'] = 'Tambah';
 				$data['view'] = 'kategori/tambah';
 				$this->load->view('layout/layout', $data);
@@ -143,5 +143,87 @@ class Kategorisurat extends MY_Controller
 			];
 			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
 		}
+	}
+
+	public function edit_field($id)
+	{
+
+		// if ($this->input->post()) {
+
+		$this->form_validation->set_rules(
+			'kat_keterangan_surat',
+			'Nama Field',
+			'trim|required',
+			array('required' => '%s wajib diisi')
+		);
+		$this->form_validation->set_rules(
+			'key',
+			'Key',
+			'trim|required|callback_alpha_dash_space',
+			array('required' => '%s wajib diisi')
+		);
+		$this->form_validation->set_rules(
+			'type',
+			'Jenis Field',
+			'required',
+			array('required' => '%s wajib diisi')
+		);
+
+		if ($this->form_validation->run() == FALSE) {
+			$error = [
+				'kat_keterangan_surat' => form_error('kat_keterangan_surat'),
+				'key' => form_error('key'),
+				'type' => form_error('type')
+			];
+			echo json_encode(array("status" => "Error", "error" => $error));
+		} else {
+
+			$data = [
+				"required" => $this->input->post('required'),
+				"kat_keterangan_surat" => $this->input->post('kat_keterangan_surat'),
+				"placeholder" => $this->input->post('placeholder'),
+				"key" => $this->input->post('key'),
+				"deskripsi" => $this->input->post('deskripsi'),
+				"type" => $this->input->post('type'),
+			];
+
+
+			$query = $this->surat_model->edit_form_field($data, $id);
+
+			if ($query) {
+				echo json_encode(array("status" => 'Success', 'data' => $data['kat_keterangan_surat']));
+			} else {
+				echo json_encode(array("status" => "Error Updating"));
+			}
+		}
+
+
+		// }
+	}
+
+	function alpha_dash_space($fullname)
+	{
+		if (!preg_match('/^[a-z\_]+$/', $fullname)) {
+			$this->form_validation->set_message('alpha_dash_space', 'Hanya huruf kecil dan tanpa spasi, spasi boleh diganti underscore (_)');
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+	public function tambah_field($id_kat) {
+
+		$query =  $this->db->query('SELECT id FROM kat_keterangan_surat 
+		ORDER BY id DESC LIMIT 1')->row_array();
+
+		$data = [
+			"kat_keterangan_surat" => "Nama Field " . $query['id'],
+			"id_kategori_surat" => $id_kat,
+		];
+
+		$this->db->insert('kat_keterangan_surat', $data);
+		$last_id = $this->db->insert_id();
+
+		echo json_encode(array("status" => $last_id));
 	}
 }

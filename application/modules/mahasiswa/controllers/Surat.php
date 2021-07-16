@@ -55,7 +55,7 @@ class Surat extends Mahasiswa_Controller
 		//ambil id surat berdasarkan last id status surat
 		$insert_id2 = $this->db->select('id_surat')->from('surat_status')->where('id=', $this->db->insert_id())->get()->row_array();
 		// ambil keterangan surat berdasar kategori surat
-		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where('id_kategori_surat=', $id)->get()->result_array();
+		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where(['id_kategori_surat'=> $id, 'aktif' => 1])->get()->result_array();
 
 		if ($kat_surat) {
 
@@ -94,6 +94,8 @@ class Surat extends Mahasiswa_Controller
 		$id_notif = $this->input->post('id_notif');
 
 		if ($this->input->post('submit')) {
+
+			echo '<pre>'; print_r($this->input->post('dokumen')); echo '</pre>';
 
 			// validasi form, form ini digenerate secara otomatis
 			foreach ($this->input->post('dokumen') as $id => $dokumen) {
@@ -171,6 +173,14 @@ class Surat extends Mahasiswa_Controller
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+
+				//menghapus notifikasi
+				$notif = $this->notif_model->get_notif_by_surat($id_surat);			
+				if($notif) {
+					foreach( $notif as $notif ) {
+						$this->notif_model->notif_read($notif['id'], $id_surat);
+					}
+				}
 
 				if ($data['surat']['id_status'] == 10) {
 					$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
@@ -347,6 +357,20 @@ class Surat extends Mahasiswa_Controller
 				'value' => $anggota['id'],
 				'id' => $anggota['id'],
 				'text' => $anggota['fullname']
+			];
+			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
+		}
+	}
+	public function getmahasiswa()
+	{
+		$search = $this->input->post('search');
+		$result_anggota = $this->surat_model->getMahasiswa($search);
+
+		foreach ($result_anggota as $anggota) {
+			$selectajax[] = [
+				'value' => $anggota['STUDENTID'],
+				'id' => $anggota['STUDENTID'],
+				'text' => $anggota['FULLNAME']
 			];
 			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
 		}

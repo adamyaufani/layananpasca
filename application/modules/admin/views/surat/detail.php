@@ -299,22 +299,22 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Stempel Basah
-								<small id="emailHelp" class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
+								<small  class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
 								<?php
 
-								// if ((validation_errors())) {
-								// 	$set_stempel = set_checkbox('stempel_basah');
-								// } else {
-								// 	if ($no_surat_data['stempel_basah'] == NULL) {
-								// 		if (get_meta_value('hal', $surat['id'], false)) {
-								// 			$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
-								// 		} else {
-								// 			$value_kepada = $surat['kategori_surat'];
-								// 		}
-								// 	}
-								// }
+								if ((validation_errors())) {
+									$set_stempel = set_checkbox('stempel_basah');
+								} else {
+									if ($no_surat_data['stempel_basah'] == NULL) {
+										if (get_meta_value('hal', $surat['id'], false)) {
+											$value_kepada = get_meta_value('tujuan_surat', $surat['id'], false);
+										} else {
+											$value_kepada = $surat['kategori_surat'];
+										}
+									}
+								}
 								?>
 
 								<input type="checkbox" name="stempel_basah" id="" <?= (validation_errors()) ? set_checkbox('stempel_basah') : (($no_surat_data['stempel_basah'] == 'on') ? 'checked' : ''); ?>> Centang untuk stempel basah.
@@ -324,7 +324,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Nomor Surat
-								<small id="emailHelp" class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
+								<small  class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
 							</label>
 							<div class="col-md-8">
 
@@ -403,7 +403,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Lampiran
-								<small id="emailHelp" class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
+								<small  class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
 							<div class="col-md-8">
 
 								<input type="number" min="0" max="20" step="1" name="lamp" id="lamp" class="form-control" value="<?= (validation_errors()) ? set_value('lamp') : (($no_surat_data['lamp']) ? $no_surat_data['lamp'] : '');  ?>">
@@ -413,7 +413,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Hal
-								<small id="emailHelp" class="form-text text-muted">Hal bisa disesuaikan.</small></label>
+								<small  class="form-text text-muted">Hal bisa disesuaikan.</small></label>
 							<div class="col-md-8">
 
 								<?php
@@ -440,7 +440,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Kepada
-								<small id="emailHelp" class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
+								<small  class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
 
 							<?php
@@ -471,7 +471,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						</div>
 						<div class="form-group row">
 							<label class="col-md-4" for="">Tembusan
-								<small id="emailHelp" class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
+								<small  class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
 							</label>
 							<div class="col-md-8">
 

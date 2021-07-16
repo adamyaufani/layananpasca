@@ -63,26 +63,7 @@ class Surat_model extends CI_Model
         return $result = $query->result_array();
     }
 
-    public function get_surat_arsip()
-    {
-        if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
-            $where = "WHERE 1 ";
-        } else {
-            $where = "WHERE ns.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
-        }
 
-        $query = $this->db->query("SELECT ns.id, ns.id_surat, ns.no_lengkap,u.fullname,ks.kategori_surat, kts.kat_tujuan_surat, ts.tujuan_surat, us.urusan as urusan_surat, p.prodi, DATE_FORMAT(ns.tanggal_terbit,'%d %M %Y') as tanggal_terbit FROM no_surat ns         
-            LEFT JOIN users u ON u.id = ns.id_user
-            LEFT JOIN kategori_surat ks ON ns.id_kategori_surat = ks.id
-            LEFT JOIN kat_tujuan_surat kts ON ns.kat_tujuan_surat = kts.id
-            LEFT JOIN tujuan_surat ts ON ns.tujuan_surat = ts.id
-            LEFT JOIN urusan_surat us ON ns.urusan_surat = us.id
-            LEFT JOIN prodi p ON ns.id_prodi = p.id
-            $where
-            ORDER BY ns.id DESC      
-        ");
-        return $result = $query->result_array();
-    }
     public function get_surat_bymahasiswa($id_mhs)
     {
         $query = $this->db->query("SELECT s.id as id_surat, ss.id_status, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full
@@ -189,6 +170,16 @@ class Surat_model extends CI_Model
         return $this->db->get()->result_array();
     }
 
+    public function getMahasiswa($search)
+    {
+        // cek user ke tabel Mhs (SQLSERVER UMY)
+        $db2 = $this->load->database('dbsqlsrv', TRUE);
+
+        $result = $db2->query("SELECT * from V_Simpel_Pasca WHERE FULLNAME LIKE '%" . $search . "%' ")->result_array();
+
+        return $result;
+    }
+
     public function generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat)
     {
 
@@ -227,84 +218,89 @@ class Surat_model extends CI_Model
 
     public function get_fields_by_id_kat_surat($id)
     {
-        $query = $this->db->query("SELECT * FROM kat_keterangan_surat where id_kategori_surat='$id' ORDER BY urutan ASC");
+        $query = $this->db->query("SELECT * FROM kat_keterangan_surat where id_kategori_surat='$id' AND aktif=1 ORDER BY urutan ASC");
         return $result = $query->result_array();
     }
 
     public function editFieldsSurat($dataFieldCheck, $id)
-	{
-		$not_exist_fields_data = $dataFieldCheck['not_exist_fields_data'];
-		$sent_fields_data = $dataFieldCheck['sent_fields_data'];
+    {
+        $not_exist_fields_data = $dataFieldCheck['not_exist_fields_data'];
+        $sent_fields_data = $dataFieldCheck['sent_fields_data'];
 
-		foreach ($sent_fields_data as $key => $field) {
+        foreach ($sent_fields_data as $key => $field) {
 
-			$data = [
-				'id_kategori_surat' => $id,
-				'id' => $field,
-				'aktif' => 1,
-				'urutan' => $key
-			];		
+            $data = [
+                'id_kategori_surat' => $id,
+                'id' => $field,
+                'aktif' => 1,
+                'urutan' => $key
+            ];
 
-			// menambahkan field yang belum ada
-			$datafield_exist = $this->db->query(
-				"SELECT id FROM kat_keterangan_surat 
+            // menambahkan field yang belum ada
+            $datafield_exist = $this->db->query(
+                "SELECT id FROM kat_keterangan_surat 
 									WHERE id_kategori_surat = $id AND id IN (
 										SELECT id FROM kat_keterangan_surat 
 										WHERE id_kategori_surat = $id AND id = " . $data['id'] . " )"
-			)->num_rows();
+            )->num_rows();
 
-			if ($datafield_exist == 0) {
-				$this->db->insert('kat_keterangan_surat', $data);
-			} else {
-				$field_property = [
-					'aktif' => 1,
-					'urutan' => $key
-				];
+            if ($datafield_exist == 0) {
+                $this->db->insert('kat_keterangan_surat', $data);
+            } else {
+                $field_property = [
+                    'aktif' => 1,
+                    'urutan' => $key
+                ];
 
-				$this->db->update(
-					'kat_keterangan_surat',
-					$field_property,
-					[
-						'id_kategori_surat' => $id,
-						'id' => $data['id'],
-					]
-				);
-			}
-			//1,3,69,70,71,72,73
+                $this->db->update(
+                    'kat_keterangan_surat',
+                    $field_property,
+                    [
+                        'id_kategori_surat' => $id,
+                        'id' => $data['id'],
+                    ]
+                );
+            }
+            //1,3,69,70,71,72,73
 
-			//mengecek field yang tidak digunakan
-			// $id_field = $data['field_id'];
-		}
+            //mengecek field yang tidak digunakan
+            // $id_field = $data['field_id'];
+        }
 
-		$query_fields = $this->db->query(
-			"SELECT id FROM kat_keterangan_surat 
+        $query_fields = $this->db->query(
+            "SELECT id FROM kat_keterangan_surat 
 			WHERE id_kategori_surat = $id 
 			-- AND field_id = $field
 			 AND id NOT IN ($not_exist_fields_data)"
-		);
+        );
 
-		$non_exist_fields = $query_fields->result_array();
+        $non_exist_fields = $query_fields->result_array();
 
-		$field_property = [
-			'aktif' => 0
-		];
+        $field_property = [
+            'aktif' => 0
+        ];
 
-		if ($query_fields->num_rows() > 0) {
-			foreach ($non_exist_fields as $field_tidak_dipakai) {
-				$this->db->update(
-					'kat_keterangan_surat',
-					$field_property,
-					[
-						'id_kategori_surat' => $id,
-						'id' => $field_tidak_dipakai['id']
-					]
-				);
-			}
-		}
+        if ($query_fields->num_rows() > 0) {
+            foreach ($non_exist_fields as $field_tidak_dipakai) {
+                $this->db->update(
+                    'kat_keterangan_surat',
+                    $field_property,
+                    [
+                        'id_kategori_surat' => $id,
+                        'id' => $field_tidak_dipakai['id']
+                    ]
+                );
+            }
+        }
 
-		// return $non_exist_fields;
-		// return $datafield_exist;
-	}
+        // return $non_exist_fields;
+        // return $datafield_exist;
+    }
+
+    public function edit_form_field($data, $id)
+    {
+        return $this->db->update('kat_keterangan_surat', $data, array('id' => $id));
+    }
 
     public function get_surat_status($id_surat)
     {
@@ -317,7 +313,8 @@ class Surat_model extends CI_Model
     //class Kategori
     public function get_kat_keterangan_surat($id_kategori_surat, $aktif)
     {
-        return $this->db->get_where('kat_keterangan_surat',['id_kategori_surat'=> $id_kategori_surat, 'aktif' => $aktif])->result_array();
+        $this->db->order_by("id", "desc");
+        return $this->db->get_where('kat_keterangan_surat', ['id_kategori_surat' => $id_kategori_surat, 'aktif' => $aktif])->result_array();
     }
 
     public function get_timeline($id_surat)
@@ -348,5 +345,45 @@ class Surat_model extends CI_Model
             $this->db->where('tanggal_terbit <= ', date('Y-m-d', strtotime($this->session->userdata('user_search_to'))));
 
         return $this->db->get('no_surat')->result_array();
+    }
+
+    public function get_surat_arsip($klien)
+    {
+        if ($this->session->userdata('role') == 1 || $this->session->userdata('role') == 5) {
+            $where = "WHERE 1 ";
+        } else {
+            $where = "WHERE ns.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
+        }
+
+        if ($klien) {
+            $klien = "AND ks.klien='" . $klien . "'";
+        } else {
+            $klien = '';
+        }
+
+        if ($this->session->userdata('kategori_surat') != '') {
+            $kat = "AND ks.id ='" . $this->session->userdata('kategori_surat') . "'";
+        } else {
+            $kat = '';
+        }
+
+        if ($this->session->userdata('prodi') != '') {
+            $prodi = "AND p.id ='" . $this->session->userdata('prodi') . "'";
+        } else {
+            $prodi = '';
+        }
+
+        $query = $this->db->query("SELECT ns.id, ns.id_surat, ns.no_lengkap, ns.instansi, ns.hal, ns.file,u.fullname,ks.kategori_surat, kts.kat_tujuan_surat, ts.tujuan_surat, us.urusan as urusan_surat, p.prodi, DATE_FORMAT(ns.tanggal_terbit,'%d %M %Y') as tanggal_terbit FROM no_surat ns         
+            LEFT JOIN users u ON u.id = ns.id_user
+            LEFT JOIN kategori_surat ks ON ns.id_kategori_surat = ks.id
+            LEFT JOIN kat_tujuan_surat kts ON ns.kat_tujuan_surat = kts.id
+            LEFT JOIN tujuan_surat ts ON ns.tujuan_surat = ts.id
+            LEFT JOIN urusan_surat us ON ns.urusan_surat = us.id
+            LEFT JOIN prodi p ON ns.id_prodi = p.id
+            $where $klien $kat $prodi         
+
+            ORDER BY ns.id DESC      
+        ");
+        return $result = $query->result_array();
     }
 }

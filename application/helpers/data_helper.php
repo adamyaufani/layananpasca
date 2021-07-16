@@ -47,6 +47,14 @@ function getUserbyId($id)
 	return  $CI->db->select('*')->from('users')->where(array('id' => $id))->get()->row_array();
 }
 // -----------------------------------------------------------------------------
+function getUserMhsbyId($id)
+{
+	$CI = &get_instance();
+	$db2 = $CI->load->database('dbsqlsrv', TRUE);
+
+	return $db2->query("SELECT * from V_Simpel_Pasca WHERE STUDENTID ='$id' ")->row_array();
+}
+// -----------------------------------------------------------------------------
 function getUsersbyRole($role, $prodi)
 {
 
@@ -72,64 +80,6 @@ function getUserPhoto($id)
 	return $CI->db->get_where('profil', array('id_user' => $id))->row_array()['photo'];
 }
 
-function countSurat()
-{
-	$CI = &get_instance();
-	// if ($CI->session->userdata('role') == 1) {
-	// 	$prodi = '';
-	// 	$in_status = "3,4,5,6,7,8";
-	// } else {
-	// 	$prodi = "AND p.id_prodi = '" . $CI->session->userdata('id_prodi') . "'";
-	// 	if ($CI->session->userdata('role') == 2) { // TU
-	// 		$in_status = "3,4,5,6,7";
-	// 	} else if ($CI->session->userdata('role') == 5) {
-	// 		$in_status = "3,4,5,6,7";
-	// 	} else if ($CI->session->userdata('role') == 6) {
-	// 		$in_status = "3,4,5,6,7";
-	// 	}
-	// }
-	//WHERE ss.id_surat NOT IN (SELECT ss2.id_surat FROM surat_status ss2 WHERE ss2.id_status IN ($in_status)) AND ss.id_status!='1' $prodi
-
-	// if ($CI->session->userdata('role') == 1) {
-	// 	$status = "id_status = 9";
-	// 	$prodi = '';
-	// } else if ($CI->session->userdata('role') == 2) {
-	// 	$status = "(id_status = 2 OR id_status = 5)";
-	// 	$prodi = "AND u.id_prodi = '" . $CI->session->userdata('id_prodi') . "'";
-	// }
-
-	// $query = $CI->db->query("SELECT COUNT(*) as JUMLAH
-	// 	FROM surat_status ss
-	// 	LEFT JOIN surat s ON s.id = ss.id_surat
-	// 	LEFT JOIN users u ON u.id = s.id_mahasiswa
-	// 	WHERE $status $prodi		
-	//     ");
-	// $result = $query->row_array();
-
-	// return $result['JUMLAH'];
-
-	//return 1;
-}
-
-function call_styles()
-{
-?>
-	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
-	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<?php
-}
-
-function call_scripts()
-{
-?>
-	<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-	<?php
-}
 
 //menampilkan kategori keterangan surat
 function kat_keterangan_surat($id)
@@ -146,7 +96,6 @@ function generate_form_field($id, $id_surat, $id_status)
 	$fields = $CI->db->select('kks.*')->from('kat_keterangan_surat kks')
 		->where(array('kks.id' => $id))
 		->get()->row_array();
-
 
 	$value = $CI->db->select('value, verifikasi')->from('keterangan_surat')
 		->where(array('id_kat_keterangan_surat' => $fields['id'], 'id_surat' => $id_surat))
@@ -259,8 +208,9 @@ function generate_form_field($id, $id_surat, $id_status)
 			</ul>
 		</div>
 
-
+	
 		<script>
+			$(document).ready(function() {
 			// Changes the status messages on our list
 			function ui_multi_update_file_status(id, status, message) {
 				$('#uploaderFile' + id).find('span').html(message).prop('class', 'status text-' + status);
@@ -371,6 +321,7 @@ function generate_form_field($id, $id_surat, $id_status)
 				});
 
 			});
+		});
 		</script>
 
 	<?php } elseif ($fields['type'] == 'textarea') {  ?>
@@ -455,6 +406,60 @@ function generate_form_field($id, $id_surat, $id_status)
 			<option value="Ganjil" <?= (validation_errors()) ? set_select('dokumen[' . $id . ']', "Ganjil") : ""; ?><?= ($field_value == "Ganjil") ? "selected" : ""; ?>>Ganjil</option>
 			<option value="Genap" <?= (validation_errors()) ? set_select('dokumen[' . $id . ']', "Genap") : ""; ?> <?= ($field_value == "Genap") ? "selected" : ""; ?>>Genap</option>
 		</select>
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+		<!--  Piih Mahasiswa -->
+	<?php } elseif ($fields['type'] == 'select_mahasiswa') { //tahun akademik 
+	?>
+
+
+
+		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
+			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserMhsbyId($field_value)['FULLNAME'] : ''; ?></option>
+		</select>
+
+		<script>
+			$(document).ready(function() {
+				$('.<?= $fields['key']; ?>').select2({
+					ajax: {
+						url: '<?= base_url('mahasiswa/surat/getmahasiswa'); ?>',
+						dataType: 'json',
+						type: 'post',
+						delay: 250,
+						data: function(params) {
+							return {
+								search: params.term,
+							}
+						},
+						processResults: function(data) {
+							return {
+								results: data
+							};
+						},
+						cache: true
+					},
+					placeholder: '<?= $fields['placeholder']; ?>',
+					minimumInputLength: 3,
+					// templateResult: formatRepo,
+					// templateSelection: formatRepoSelection
+				});
+			});
+		</script>
+
+		<!-- <select class="form-control
+		<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
+		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
+			<option value=""> -- Pilih Dosen -- </option>
+			<?php
+			$CI = &get_instance();
+			$CI->db->order_by('id', 'DESC');
+			$dosen = $CI->db->get_where('users', array('role' => 4))->result_array();
+
+			foreach ($dosen as $dosen) {
+			?>
+				<option value="<?= $dosen['id'] ?>" <?= (validation_errors()) ? set_select('dokumen[' . $id . ']',  $dosen['id']) : ""; ?><?= ($field_value ==  $dosen['id']) ? "selected" : ""; ?>><?= $dosen['fullname'] ?></option>
+			<?php } ?>
+		</select> -->
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Pembimbing -->
@@ -906,6 +911,7 @@ function tampil_notif()
 	ORDER BY id DESC");
 
 	return $notif;
+	
 }
 
 function tampil_alert($status, $role)

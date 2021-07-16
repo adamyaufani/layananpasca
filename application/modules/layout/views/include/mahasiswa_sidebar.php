@@ -12,17 +12,23 @@
 	<!-- Divider -->
 	<hr class="sidebar-divider my-0">
 
-	<!-- Nav Item - Dashboard
+	<!-- Nav Item - Dashboard -->
 	<li class="nav-item" id="menu_dashboard">
-		<a class="nav-link" href="<?= base_url("admin/dashboard"); ?>">
+		<a class="nav-link" href="<?= base_url("mahasiswa/dashboard"); ?>">
 			<i class="fas fa-fw fa-tachometer-alt"></i>
 			<span>Dashboard</span></a>
-	</li> -->
+	</li>
 
 	<li class="nav-item" id="menu_surat">
 		<a class="nav-link" href="<?= base_url("mahasiswa/surat"); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
 			<span>Surat Saya</span></a>
+	</li>
+
+	<li class="nav-item" id="menu_surat">
+		<a class="nav-link" href="<?= base_url("mahasiswa/surat/ajukan"); ?>">
+			<i class="fas fa-fw fa-plus"></i>
+			<span>Ajukan Surat</span></a>
 	</li>
 
 	<!-- Heading 
