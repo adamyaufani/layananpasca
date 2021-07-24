@@ -47,6 +47,13 @@ function getUserbyId($id)
 	return  $CI->db->select('*')->from('users')->where(array('id' => $id))->get()->row_array();
 }
 // -----------------------------------------------------------------------------
+function getDosenbyId($id)
+{
+	$CI = &get_instance();
+	$db2 = $CI->load->database('dbsqlsrv', TRUE);
+	return $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$id' ")->row_array();
+}
+// -----------------------------------------------------------------------------
 function getUserMhsbyId($id)
 {
 	$CI = &get_instance();
@@ -281,14 +288,17 @@ function generate_form_field($id, $id_surat, $id_status)
 					},
 					onUploadError: function(id, xhr, status, message) {
 						ui_multi_update_file_status(id, 'danger', message);
+
+						console.log('error');
 					},
 					onFileExtError: function(id, file) {
 						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung').removeClass('text-muted').addClass('text-danger');
+						console.log('error ext');
 					},
 					onFileSizeError: function(id, file) {
 
 						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar').removeClass('text-muted').addClass('text-danger');
-
+						console.log('error size');
 					}
 				});
 			});
@@ -375,6 +385,34 @@ function generate_form_field($id, $id_surat, $id_status)
 		</script>
 
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+		<?php } elseif ($fields['type'] == 'date') { ?>
+
+<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+
+<script type="text/javascript">
+	$(function() {
+
+		$('#input-<?= $id; ?>').daterangepicker({
+			autoUpdateInput: false,
+			locale: {
+				cancelLabel: 'Clear'
+			}
+		});
+
+		$('#input-<?= $id; ?>').on('apply.daterangepicker', function(ev, picker) {
+			$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+		});
+
+		$('#input-<?= $id; ?>').on('cancel.daterangepicker', function(ev, picker) {
+			$(this).val('');
+		});
+
+	});
+</script>
+
+<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
 
 	<?php } elseif ($fields['type'] == 'ta') { //tahun akademik 
 	?>
@@ -463,12 +501,10 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Pembimbing -->
-	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik 
-	?>
-
+	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik ?>
 
 		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
-			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserbyId($field_value)['fullname'] : ''; ?></option>
+			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getDosenbyId($field_value)['nama'] : ''; ?></option>
 		</select>
 
 		<script>
@@ -700,11 +736,16 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		<?php }
 	} elseif ($fields['type'] == 'select_dosen') {
 
+		// $CI = &get_instance();
+		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
+
 		$CI = &get_instance();
-		$dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
+	$db2 = $CI->load->database('dbsqlsrv', TRUE);
+	$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+
 		?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['fullname'];  ?>"></input>
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2
@@ -797,18 +838,6 @@ function get_dokumen_syarat($id_surat)
 
 	return $dokumen;
 
-
-
-	// $value = $CI->db->select("value")->from('keterangan_surat')->where(array('id_kat_keterangan_surat' => $id))->get()->row_array()['value'];
-
-	// if ($image == true) {
-
-	// 	$media = $CI->db->select("file")->from('media')->where(array('id' => $value))->get()->row_array()['file'];
-
-	// 	return $media;
-	// } else {
-	// 	return $value;
-	// }
 }
 
 // fungsi ini memeriksa apakah mhs udah pernah buat surat, jika sudah maka tidak diperkenankan membuat lagi sampai surat tersebut selesai

@@ -1,3 +1,50 @@
+<style>
+	@keyframes bounce {
+
+		0%,
+		100%,
+		20%,
+		50%,
+		80% {
+			-webkit-transform: translateY(0);
+			-ms-transform: translateY(0);
+			transform: translateY(0)
+		}
+
+		40% {
+			-webkit-transform: translateY(-30px);
+			-ms-transform: translateY(-30px);
+			transform: translateY(-30px)
+		}
+
+		60% {
+			-webkit-transform: translateY(-15px);
+			-ms-transform: translateY(-15px);
+			transform: translateY(-15px)
+		}
+	}
+
+	.feedback {
+		-webkit-animation-duration: 1s;
+		animation-duration: 1s;
+		-webkit-animation-fill-mode: both;
+		animation-fill-mode: both;
+		-webkit-animation-timing-function: ease-in-out;
+		animation-timing-function: ease-in-out;
+		animation-iteration-count: infinite;
+		-webkit-animation-iteration-count: infinite;
+		color: white;
+	}
+
+	.feedback:hover {
+		cursor: pointer;
+		animation-name: bounce;
+		-moz-animation-name: bounce;
+	}
+	.opacity {
+		opacity: 0.6;
+	}
+</style>
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
@@ -15,7 +62,7 @@
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
 					<?php
 					if ($fields) {
-					
+
 						foreach ($fields as $field) {
 
 							$type = $field['type'];
@@ -54,6 +101,7 @@
 				</a>
 				<div class="collapse show" id="collterbit">
 					<div class="card-body pb-3">
+
 						Download Surat
 
 						<a href="<?= base_url("public/documents/pdfdata/" . $no_surat_final['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
@@ -70,7 +118,50 @@
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
+					<?php if ($surat['id_status'] == 10) {
+						if ($sudah_survey == 1) { 
+							?>
 
+							<div class="px-5 py-2 mb-4">
+								<div class="row">
+								<div class="col-12 text-center">
+										<p>Terima kasih feedbacknya.</p>
+									</div>
+									<div class="col-4 text-center"> 
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 3 ? "border-warning":"border-0 opacity"; ?>" title="Tidak Puas" data-toggle="tooltip" data-placement="top" width="70" src="<?= base_url(); ?>public/dist/img/sad.png">
+									</div>
+									<div class="col-4 text-center">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 2 ? "border-warning":"border-0 opacity"; ?>" title="Puas" width="70" src="<?= base_url(); ?>public/dist/img/happy.png">
+									</div>
+									<div class="col-4 text-center">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 1 ? "border-warning":"border-0 opacity"; ?>" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
+									</div>
+								</div>
+							</div>
+
+						<?php } else {
+						?>
+							
+							<div class="px-5 py-2 mb-4" id="feedback">
+								<div class="row">
+									<div class="col-12 text-center">
+									<p class="p-feedback">Berikan feedbackmu untuk SIM Layanan Pasca.</p>
+									</div>
+									<div class="col-4 text-center">
+										<img data-id="3" class="feedback fb-3 img-thumbnail rounded-circle border-0" title="Tidak Puas" data-toggle="tooltip" data-placement="top" width="70" src="<?= base_url(); ?>public/dist/img/sad.png">
+									</div>
+									<div class="col-4 text-center">
+										<img data-id="2" class="feedback fb-2 img-thumbnail rounded-circle border-0" title="Puas" width="70" src="<?= base_url(); ?>public/dist/img/happy.png">
+									</div>
+									<div class="col-4 text-center">
+										<img data-id="1" class="feedback fb-1 img-thumbnail rounded-circle border-0" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
+									</div>
+								</div>
+							</div>
+
+					<?php } // endif blm survey
+					} // endif status 10 
+					?>
 					<?php if ($surat['catatan']) { ?>
 						<div class="alert alert-ijomuda ml-3 pb-0">
 							<p class="m-0"><i class="fas fa-comment-dots"></i> <strong>Catatan dari Tata Usaha</strong></p>
@@ -100,3 +191,38 @@
 	<!-- /.col -->
 </div>
 
+<script>
+	$(document).ready(function() {
+		$('.feedback').on('click', function() {
+
+			var id = $(this).data('id');
+			var SITEURL = "<?= base_url(); ?>";
+
+			$.ajax({
+				url: SITEURL + "mahasiswa/surat/feedback/<?= $surat['id']; ?>",
+				data: {
+					answer: id,
+				},
+				type: "post",
+				dataType: 'json',
+				success: function(res) {
+
+					if(res.status == 'sukses') {
+						$('p.p-feedback').html('Terima kasih feedbacknya.')
+						$('.fb-' + res.answer).addClass('border-warning');
+						$('.fb-' + res.answer).removeClass('border-0');
+						$('#feedback').find('img').removeClass('feedback');
+						$('#feedback').find('img.border-0').addClass('opacity');
+					} else {
+						$('p.p-feedback').html('Kamu sudah ngasih feedback. Cukup 1x aja.')
+					}
+					
+				},
+				error: function(data) {
+					console.log('Error:', data);
+				}
+			});
+
+		});
+	});
+</script>

@@ -6,6 +6,7 @@ class Surat extends Mahasiswa_Controller
 		parent::__construct();
 		$this->load->library('mailer');
 		$this->load->model('surat_model', 'surat_model');
+		$this->load->model('survey/survey_model', 'survey_model');
 		$this->load->model('notif/Notif_model', 'notif_model');
 		$this->load->helper('date');
 	}
@@ -17,7 +18,7 @@ class Surat extends Mahasiswa_Controller
 		$data['view'] = 'surat/index';
 		$this->load->view('layout/layout', $data);
 	}
-	
+
 	public function detail($id_surat = 0)
 	{
 		$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
@@ -55,7 +56,7 @@ class Surat extends Mahasiswa_Controller
 		//ambil id surat berdasarkan last id status surat
 		$insert_id2 = $this->db->select('id_surat')->from('surat_status')->where('id=', $this->db->insert_id())->get()->row_array();
 		// ambil keterangan surat berdasar kategori surat
-		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where(['id_kategori_surat'=> $id, 'aktif' => 1])->get()->result_array();
+		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where(['id_kategori_surat' => $id, 'aktif' => 1])->get()->result_array();
 
 		if ($kat_surat) {
 
@@ -95,7 +96,6 @@ class Surat extends Mahasiswa_Controller
 
 		if ($this->input->post('submit')) {
 
-			echo '<pre>'; print_r($this->input->post('dokumen')); echo '</pre>';
 
 			// validasi form, form ini digenerate secara otomatis
 			foreach ($this->input->post('dokumen') as $id => $dokumen) {
@@ -175,15 +175,24 @@ class Surat extends Mahasiswa_Controller
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
 				//menghapus notifikasi
-				$notif = $this->notif_model->get_notif_by_surat($id_surat);			
-				if($notif) {
-					foreach( $notif as $notif ) {
+				$notif = $this->notif_model->get_notif_by_surat($id_surat);
+				if ($notif) {
+					foreach ($notif as $notif) {
 						$this->notif_model->notif_read($notif['id'], $id_surat);
 					}
 				}
 
 				if ($data['surat']['id_status'] == 10) {
 					$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
+
+					//cek apakah sudah mengisi survey
+					$survey = $this->survey_model->get_survey($id_surat);
+					if ($survey) {
+						$data['sudah_survey'] = 1;
+						$data['hasil_survey'] = $survey;
+					} else {
+						$data['sudah_survey'] = 0;
+					}
 				}
 
 				if ($data['surat']['id_mahasiswa'] == $this->session->userdata('user_id')) {
@@ -354,9 +363,9 @@ class Surat extends Mahasiswa_Controller
 
 		foreach ($result_anggota as $anggota) {
 			$selectajax[] = [
-				'value' => $anggota['id'],
-				'id' => $anggota['id'],
-				'text' => $anggota['fullname']
+				'value' => $anggota['id_pegawai'],
+				'id' => $anggota['id_pegawai'],
+				'text' => $anggota['nama']
 			];
 			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
 		}
@@ -373,6 +382,30 @@ class Surat extends Mahasiswa_Controller
 				'text' => $anggota['FULLNAME']
 			];
 			$this->output->set_content_type('application/json')->set_output(json_encode($selectajax));
+		}
+	}
+
+	public function feedback($id)
+	{
+
+		$survey = $this->survey_model->get_survey($id);
+
+		if (!$survey) {
+
+			$insert = $this->db->set('surat_id', $id)
+				->set('user_id', $this->session->userdata('user_id'))
+				->set('answer', $this->input->post('answer'))
+				->set('created_at', 'NOW()', FALSE)
+				->insert('surveys');
+
+			if ($insert) {
+				$status = "sukses";
+			} else {
+				$status = 'error';
+			}
+			echo json_encode(array("status" => $status, "answer" => $this->input->post('answer')));
+		} else {
+			echo json_encode(array("status" => 'sudah'));
 		}
 	}
 }

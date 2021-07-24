@@ -10,7 +10,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
-	<div class="col-8">
+	<div class="col-md-8 mb-4">
 		<?php if (isset($msg) || validation_errors() !== '') : ?>
 			<div class="alert alert-danger alert-dismissible">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -58,7 +58,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collPengantar">
 					<div class="card-body">
 						<p class="font-italic">Assalamu'alaikum warahmatullahi wabarakatuh</p>
-						<p> Kepada Yth. Direktur Program Pascasarjana UMY, mohon kesediaanya untuk memberikan persetujuan pada Surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?> (<?= $surat['prodi']; ?>)</strong> </p>
+						<p>Kepada Yth. Direktur Program Pascasarjana UMY, mohon kesediaanya untuk memberikan persetujuan pada Surat <strong><?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?> (<?= $surat['prodi']; ?>)</strong> </p>
 						<p>Atas perhatiannya kami ucapkan terima kasih.</p>
 						<p class="font-italic">Wassalamu'alaikum warahmatullahi wabarakatuh</p>
 					</div>
@@ -523,11 +523,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 		<?php } ?>
 
 	</div>
-
-
-
 	<!-- /.col -->
-	<div class="col-4">
+	<div class="col-md-4">
 		<div class="card shadow">
 			<a href="#collMhs" class="d-block card-header pt-3 pb-2 bg-warning" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collMhs">
 				<p class="h6 font-weight-bold text-white">Pemohon</p>
