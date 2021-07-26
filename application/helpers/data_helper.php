@@ -253,7 +253,8 @@ function generate_form_field($id, $id_surat, $id_status)
 						var reader = new FileReader();
 						var url = '<?= base_url("public/dist/img/pdf.png"); ?>';
 
-						console.log(file);
+						console.log(file.type);
+
 						// When a new file is added using the file selector or the DnD area
 						var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
 
@@ -261,7 +262,7 @@ function generate_form_field($id, $id_surat, $id_status)
 					},
 					onBeforeUpload: function(id) {
 						// about tho start uploading a file
-						ui_multi_update_file_status(id, 'uploading', '<img width="40px" height="" src="<?= base_url() ?>/public/dist/img/spinners.gif" />');
+						ui_multi_update_file_status(id, 'uploading', '<img width="40px" height="" src="<?= base_url() ?>public/dist/img/spinners.gif" />');
 					},
 					onUploadCanceled: function(id) {
 						// Happens when a file is directly canceled by the user.
@@ -272,6 +273,8 @@ function generate_form_field($id, $id_surat, $id_status)
 					onUploadSuccess: function(id, data) {
 						// A file was successfully uploaded
 						ui_multi_update_file_status(id, 'success', '<i class="fas fa-check-circle"></i>');
+
+						console.log(data.extension);
 
 						var response = JSON.stringify(data);
 						var obj = JSON.parse(response);
