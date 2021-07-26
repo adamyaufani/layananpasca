@@ -47,6 +47,13 @@ function getUserbyId($id)
 	return  $CI->db->select('*')->from('users')->where(array('id' => $id))->get()->row_array();
 }
 // -----------------------------------------------------------------------------
+function getDosenbyId($id)
+{
+	$CI = &get_instance();
+	$db2 = $CI->load->database('dbsqlsrv', TRUE);
+	return $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$id' ")->row_array();
+}
+// -----------------------------------------------------------------------------
 function getUserMhsbyId($id)
 {
 	$CI = &get_instance();
@@ -192,11 +199,11 @@ function generate_form_field($id, $id_surat, $id_status)
 						$filename = explode('/dokumen/', $file['file']);
 						$thumb = $file['thumb'];
 					} else {
-						$thumb = '';
+						$thumb  = base_url() .'public/dist/img/pdf.png';
 					}
 					?>
 
-					<div style="background:url(<?= ($thumb) ? base_url($thumb) : ''; ?>) center top no-repeat;width:100px; height:100px;margin-right:20px;"></div>
+					<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 					<div class="media-body mb-1">
 						<p class="mb-2">
 
@@ -281,14 +288,17 @@ function generate_form_field($id, $id_surat, $id_status)
 					},
 					onUploadError: function(id, xhr, status, message) {
 						ui_multi_update_file_status(id, 'danger', message);
+
+						console.log('error');
 					},
 					onFileExtError: function(id, file) {
 						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung').removeClass('text-muted').addClass('text-danger');
+						console.log('error ext');
 					},
 					onFileSizeError: function(id, file) {
 
 						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar').removeClass('text-muted').addClass('text-danger');
-
+						console.log('error size');
 					}
 				});
 			});
@@ -346,6 +356,18 @@ function generate_form_field($id, $id_surat, $id_status)
 	<?php } elseif ($fields['type'] == 'text') {  ?>
 
 		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+
+	<?php } elseif ($fields['type'] == 'url') {  ?>
+
+		<input type="url" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+
+	<?php } elseif ($fields['type'] == 'date') {  ?>
+
+		<input type="date" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
@@ -463,12 +485,10 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Pembimbing -->
-	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik 
-	?>
-
+	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik ?>
 
 		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
-			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserbyId($field_value)['fullname'] : ''; ?></option>
+			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getDosenbyId($field_value)['nama'] : ''; ?></option>
 		</select>
 
 		<script>
@@ -559,7 +579,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 	?>
 
 		<div class="media mb-4 p-2" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
-			<div style="background:url(<?= ($thumb) ? base_url($thumb) : ''; ?>) center top no-repeat;width:100px; height:100px;margin-right:20px;"></div>
+			<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
 				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($thumb); ?>'><i class='fas fa-eye'></i> Lihat</a>
@@ -640,6 +660,46 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			</div>
 
 		<?php }
+	} elseif ($fields['type'] == 'url') { ?>
+
+		<input type="url" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php }
+	} elseif ($fields['type'] == 'date') { ?>
+
+		<input type="date" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php }
 	} elseif ($fields['type'] == 'date_range') { ?>
 
 		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
@@ -700,11 +760,16 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		<?php }
 	} elseif ($fields['type'] == 'select_dosen') {
 
+		// $CI = &get_instance();
+		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
+
 		$CI = &get_instance();
-		$dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
+	$db2 = $CI->load->database('dbsqlsrv', TRUE);
+	$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+
 		?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['fullname'];  ?>"></input>
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2
@@ -797,18 +862,6 @@ function get_dokumen_syarat($id_surat)
 
 	return $dokumen;
 
-
-
-	// $value = $CI->db->select("value")->from('keterangan_surat')->where(array('id_kat_keterangan_surat' => $id))->get()->row_array()['value'];
-
-	// if ($image == true) {
-
-	// 	$media = $CI->db->select("file")->from('media')->where(array('id' => $value))->get()->row_array()['file'];
-
-	// 	return $media;
-	// } else {
-	// 	return $value;
-	// }
 }
 
 // fungsi ini memeriksa apakah mhs udah pernah buat surat, jika sudah maka tidak diperkenankan membuat lagi sampai surat tersebut selesai

@@ -216,7 +216,7 @@
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
-														<input class="form-control" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+														<textarea class="form-control" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" /><?= $field['deskripsi']; ?></textarea>
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
@@ -230,7 +230,8 @@
 															<option value='select_mahasiswa' <?= ($field['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
-															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
+															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
+															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
 														</select>
 													</div>
@@ -295,7 +296,7 @@
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Deskripsi</label>
-														<input class="form-control field-deskripsi" type="text" value="<?= $field['deskripsi']; ?>" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" />
+														<textarea class="form-control" name="deskripsi" placeholder="Deskripsi singkat penjelasan field" /><?= $field['deskripsi']; ?></textarea>
 													</div>
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Jenis Field</label>
@@ -309,7 +310,8 @@
 															<option value='select_mahasiswa' <?= ($field['type'] == 'select_mahasiswa') ? 'selected="selected"' : ''; ?>>Pilih Mahasiswa</option>
 															<option value='sem' <?= ($field['type'] == 'sem') ? 'selected="selected"' : ''; ?>>Semester</option>
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
-															<option value='date_range' <?= ($field['type'] == 'date_range') ? 'selected="selected"' : ''; ?>>Rentang Tanggal</option>
+															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
+															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
 															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
 														</select>
 													</div>
@@ -419,7 +421,7 @@ var SITEURL = '<?php echo base_url(); ?>';
 		var req = $('#item-' + id + ' div').children('input[name=required]').val(),
 			kks = $('#item-' + id + ' div').children('input[name=kat_keterangan_surat]').val(),
 			placeholder = $('#item-' + id + ' div').children('input[name=placeholder]').val(),
-			deskripsi = $('#item-' + id + ' div').children('input[name=deskripsi]').val(),
+			deskripsi = $('#item-' + id + ' div').children('textarea[name=deskripsi]').val(),
 			key = $('#item-' + id + ' div').children('input[name=key]').val(),
 			type = $('#item-' + id + ' div').children('select[name=type]').val();
 

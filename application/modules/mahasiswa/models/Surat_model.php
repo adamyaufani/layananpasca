@@ -163,11 +163,14 @@ class Surat_model extends CI_Model
 
     public function getPembimbing($search)
     {
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->like('fullname', $search);
-        $this->db->limit(10);
-        return $this->db->get()->result_array();
+        // cek user ke tabel Mhs (SQLSERVER UMY)
+        $db2 = $this->load->database('dbsqlsrv', TRUE);
+
+        $db2->select('*');
+        $db2->from('V_Import_Simpegawai');
+        $db2->like('nama', $search);
+        $db2->limit(10);
+        return $db2->get()->result_array();
     }
 
     public function getMahasiswa($search)
