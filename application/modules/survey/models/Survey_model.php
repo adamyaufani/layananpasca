@@ -19,7 +19,7 @@ class Survey_model extends CI_Model
   }
 
   public function get_surveys() {
-    return $this->db->query('select answer, count(answer) as juml_answer,  count(answer)/t.a*100 as persen, surveys_option.* from surveys 
+    return $this->db->query('select answer, count(answer) as juml_answer,  count(answer)/t.a*100 as persen, surveys_option.id, surveys_option.* from surveys 
     INNER JOIN surveys_option ON surveys.answer = surveys_option.id
     CROSS JOIN (SELECT COUNT(answer) AS a FROM surveys) t
     GROUP BY answer')->result_array();
