@@ -199,11 +199,11 @@ function generate_form_field($id, $id_surat, $id_status)
 						$filename = explode('/dokumen/', $file['file']);
 						$thumb = $file['thumb'];
 					} else {
-						$thumb = '';
+						$thumb  = base_url() .'public/dist/img/pdf.png';
 					}
 					?>
 
-					<div style="background:url(<?= ($thumb) ? base_url($thumb) : ''; ?>) center top no-repeat;width:100px; height:100px;margin-right:20px;"></div>
+					<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 					<div class="media-body mb-1">
 						<p class="mb-2">
 
@@ -359,6 +359,18 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
+	<?php } elseif ($fields['type'] == 'url') {  ?>
+
+		<input type="url" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+
+	<?php } elseif ($fields['type'] == 'date') {  ?>
+
+		<input type="date" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+
 	<?php } elseif ($fields['type'] == 'date_range') { ?>
 
 		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
@@ -385,34 +397,6 @@ function generate_form_field($id, $id_surat, $id_status)
 		</script>
 
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
-
-		<?php } elseif ($fields['type'] == 'date') { ?>
-
-<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
-
-<script type="text/javascript">
-	$(function() {
-
-		$('#input-<?= $id; ?>').daterangepicker({
-			autoUpdateInput: false,
-			locale: {
-				cancelLabel: 'Clear'
-			}
-		});
-
-		$('#input-<?= $id; ?>').on('apply.daterangepicker', function(ev, picker) {
-			$(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-		});
-
-		$('#input-<?= $id; ?>').on('cancel.daterangepicker', function(ev, picker) {
-			$(this).val('');
-		});
-
-	});
-</script>
-
-<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
-
 
 	<?php } elseif ($fields['type'] == 'ta') { //tahun akademik 
 	?>
@@ -595,7 +579,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 	?>
 
 		<div class="media mb-4 p-2" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
-			<div style="background:url(<?= ($thumb) ? base_url($thumb) : ''; ?>) center top no-repeat;width:100px; height:100px;margin-right:20px;"></div>
+			<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
 				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($thumb); ?>'><i class='fas fa-eye'></i> Lihat</a>
@@ -659,6 +643,46 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 	} elseif ($fields['type'] == 'text') { ?>
 
 		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php }
+	} elseif ($fields['type'] == 'url') { ?>
+
+		<input type="url" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+		<?php }
+	} elseif ($fields['type'] == 'date') { ?>
+
+		<input type="date" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2

@@ -14,8 +14,8 @@ class Survey_model extends CI_Model
   //   ->get()->result_array();
   // }
 
-  public function get_survey($id_surat) {
-    return $this->db->get_where('surveys',['surat_id' => $id_surat, 'user_id' => $_SESSION['user_id']])->row_array();
+  public function get_survey($id_surat, $user_id) {
+    return $this->db->get_where('surveys',['surat_id' => $id_surat, 'user_id' => $user_id])->row_array();
   }
 
   public function get_surveys() {

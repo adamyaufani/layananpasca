@@ -45,6 +45,7 @@
 		opacity: 0.6;
 	}
 </style>
+
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
@@ -61,6 +62,8 @@
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
 					<?php
+
+				
 					if ($fields) {
 
 						foreach ($fields as $field) {

@@ -109,8 +109,8 @@ class Surat extends Mahasiswa_Controller
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
-				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);				
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 
 				$data['title'] = 'Ajukan Surat';
@@ -186,7 +186,7 @@ class Surat extends Mahasiswa_Controller
 					$data['no_surat_final'] = $this->surat_model->get_no_surat($id_surat);
 
 					//cek apakah sudah mengisi survey
-					$survey = $this->survey_model->get_survey($id_surat);
+					$survey = $this->survey_model->get_survey($id_surat, $_SESSION['user_id']);
 					if ($survey) {
 						$data['sudah_survey'] = 1;
 						$data['hasil_survey'] = $survey;

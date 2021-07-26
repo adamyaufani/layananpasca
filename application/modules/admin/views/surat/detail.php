@@ -6,11 +6,15 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 	.textarea-summernote.is-invalid+.note-editor {
 		border: 1px solid #b0272b;
 	}
+	.opacity {
+		opacity: 0.6;
+	}
 </style>
+
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
-	<div class="col-md-8 mb-4">
+	<div class="col-lg-8 mb-4">
 		<?php if (isset($msg) || validation_errors() !== '') : ?>
 			<div class="alert alert-danger alert-dismissible">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -102,8 +106,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
 						<div class="form-row">
-							<label class="col-md-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
-							<div class="col-md-7">
+							<label class="col-lg-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
+							<div class="col-lg-7">
 								<?php
 								// memanggil form (data_helper.php)
 								generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status']); ?>
@@ -524,7 +528,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 	</div>
 	<!-- /.col -->
-	<div class="col-md-4">
+	<div class="col-lg-4">
 		<div class="card shadow">
 			<a href="#collMhs" class="d-block card-header pt-3 pb-2 bg-warning" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collMhs">
 				<p class="h6 font-weight-bold text-white">Pemohon</p>
@@ -550,6 +554,36 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
+				<?php if ($surat['id_status'] == 10) {
+						if ($sudah_survey == 1) { 
+							?>
+
+							<div class="px-5 py-2 mb-4">
+								<div class="row">
+								<div class="col-12 text-center">
+										<p>Feedback dari Mahasiswa.</p>
+									</div>
+									<div class="col-4 text-center"> 
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 3 ? "border-warning":"border-0 opacity"; ?>" title="Tidak Puas" data-toggle="tooltip" data-placement="top" width="70" src="<?= base_url(); ?>public/dist/img/sad.png">
+									</div>
+									<div class="col-4 text-center">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 2 ? "border-warning":"border-0 opacity"; ?>" title="Puas" width="70" src="<?= base_url(); ?>public/dist/img/happy.png">
+									</div>
+									<div class="col-4 text-center">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 1 ? "border-warning":"border-0 opacity"; ?>" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
+									</div>
+								</div>
+							</div>
+
+						<?php } else {
+						?>
+							<p>Belum ada feedback dari Mahasiswa.</p>
+							
+
+					<?php } // endif blm survey
+					} // endif status 10 
+					?>
+
 					<div class="timeline timeline-xs">
 						<?php foreach ($timeline as $tl) { ?>
 							<div class="timeline-item <?= ($tl['id_status'] === 7 || $tl['id_status'] === 9) ? 'd-none' : '' ?>">

@@ -8,6 +8,7 @@ class Surat extends Admin_Controller
 		$this->load->model('mahasiswa/surat_model', 'surat_model');
 		$this->load->model('notif/Notif_model', 'notif_model');
 		$this->load->library('mailer');
+		$this->load->model('survey/survey_model', 'survey_model');
 	}
 
 	public function index($role = 0)
@@ -38,6 +39,19 @@ class Surat extends Admin_Controller
 			if (($data['surat']['id_prodi'] == $this->session->userdata('id_prodi') && $this->session->userdata('role') !== 1) ||
 				$this->session->userdata('role') == 1 || $this->session->userdata('role') == 5
 			) {
+
+				if ($data['surat']['id_status'] == 10) {
+		
+					//cek apakah sudah mengisi survey
+					$survey = $this->survey_model->get_survey($id_surat, $data['surat']['id_mahasiswa']);
+					if ($survey) {
+						$data['sudah_survey'] = 1;
+						$data['hasil_survey'] = $survey;
+					} else {
+						$data['sudah_survey'] = 0;
+					}
+				}
+
 
 				$data['title'] = 'Detail Surat';
 				$data['view'] = 'surat/detail';
