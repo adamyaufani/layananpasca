@@ -136,7 +136,7 @@
         <h6 class="m-0 font-weight-bold text-success">Survey Kepuasan Layanan Pasca</h6>
       </div>
       <div class="card-body">
-        <?php
+        <?php /*
         foreach ($survey as $survey) { ?>
           <div class="row mb-2">
             <div class="col-2"><img width="26" height="" style="float:right" src="<?= base_url(); ?>public/dist/img/<?= $survey['image']; ?>"> </div>
@@ -149,7 +149,7 @@
               <span style="font-size:12px;"><?= round($survey['persen'],2); ?>% <?= $survey['option']; ?> </span>
             </div>
           </div>
-        <?php } ?>
+        <?php } */ ?>
       </div>
     </div>
   </div>
