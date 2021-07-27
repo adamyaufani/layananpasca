@@ -2,8 +2,14 @@
 class Yudisium_model extends CI_Model
 {
     public function get_yudisium() {
+      if(($_SESSION['role'] == 2) || ($_SESSION['role'] == 6)) {
+        $where = " WHERE id_prodi= " . $_SESSION['id_prodi'];
+      } else {
+        $where ='';
+      }
       $query = $this->db->query("SELECT y.*, u.fullname, u.username from yudisium y
         LEFT JOIN users u ON y.user_id = u.id
+        $where 
         ORDER BY y.id DESC      
       ");
       return $result = $query->result_array();
