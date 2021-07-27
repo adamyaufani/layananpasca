@@ -10,8 +10,8 @@ class Dashboard extends Admin_Controller
 	{
 		parent::__construct();
 		$this->load->library('mailer');
-		$this->load->model('dashboard_model', 'dashboard_model');		
-		$this->load->model('survey/survey_model', 'survey_model');		
+	 $this->load->model('dashboard_model', 'dashboard_model');		
+	//	$this->load->model('survey/survey_model', 'survey_model');		
 	}
 
 	public function index()
