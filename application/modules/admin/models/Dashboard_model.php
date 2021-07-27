@@ -1,8 +1,16 @@
 <?php
 	class Dashboard_model extends CI_Model{		
 		public function for_graph($status){
-      return $this->db->query("SELECT count(id) as jumlah_surat, DATE_FORMAT(date,'%b') as bulan, DATE_FORMAT(date,'%m') as angka_bulan FROM surat_status
-      WHERE id_status = '$status'
+      if(($_SESSION['role'] == '6') || ($_SESSION['role'] == '2') ) {
+        $prodi = ' AND u.id_prodi = ' . $_SESSION['id_prodi'];
+        $prodi ='';
+      } else {
+        $prodi = '';
+      }
+      return $this->db->query("SELECT count(ss.id) as jumlah_surat, DATE_FORMAT(ss.date,'%b') as bulan, DATE_FORMAT(ss.date,'%m') as angka_bulan, s.* , u.id_prodi FROM surat_status ss
+      LEFT JOIN surat s ON s.id = ss.id_surat
+      LEFT JOIN users u ON u.id = s.id_mahasiswa
+      WHERE ss.id_status IN ($status) $prodi
       GROUP BY bulan, angka_bulan
       ORDER BY angka_bulan ASC      
       ");

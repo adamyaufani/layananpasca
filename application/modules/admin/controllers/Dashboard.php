@@ -17,7 +17,9 @@ class Dashboard extends Admin_Controller
 	public function index()
 	{
 		$data['notif'] = $this->dashboard_model->notif();
-		$data['juml_surat'] = $this->dashboard_model->for_graph(10);
+		$data['juml_surat'] = $this->dashboard_model->for_graph('11');
+
+		echo '<pre>'; print_r($data['juml_surat']->result_array()); echo '</pre>';
 		$data['survey'] = $this->survey_model->get_surveys();
 		$data['title'] = 'Dashboard';
 		$data['view'] = 'dashboard/index';

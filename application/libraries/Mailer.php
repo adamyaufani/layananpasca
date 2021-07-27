@@ -38,21 +38,14 @@ class Mailer
 
     $role = $data['role'];
 
-    echo '<pre>'; print_r($role); echo '</pre>';
-
     foreach ($role as $role) {
       if ($role != 3) {
 
-        echo $_SESSION['id_prodi'];
-
+   
         if ($role === 5) { //dir pasca
           $users = getUsersbyRole($role, '');
         } else {
-          $users = getUsersbyRole($role, $_SESSION['id_prodi']);
-
-          echo '<pre>'; print_r($users); echo '</pre>';
-
-          
+          $users = getUsersbyRole($role, $_SESSION['id_prodi']);          
         }
 
         foreach ($users as $user) {
@@ -95,43 +88,47 @@ class Mailer
 
       } else {
 
+        echo "mahasiswa";
+
       //  echo getUserbyId($data['kepada'])['email'];
         $mail->addAddress(getUserbyId($data['kepada'])['email']);
 
         echo getUserbyId($data['kepada'])['email'];
 
-        // $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
+        echo "<hr>";
 
-        // $subject = $sp['judul_notif'];
-        // $isi_email = array (
-        //   'penerima' => getUserbyId($data['kepada'])['fullname'],
-        //   'link' => base_url('mahasiswa/surat/tambah/'. encrypt_url($data['id_surat'])),
-        //   'isi'=> $sp['judul_notif'],         
-        //   'tabel'=> '
-        //     <table class="datamhs">
-        //       <tr>
-        //         <td><strong>Perihal</strong></td>
-        //         <td>Surat Permohonan Cuti Kuliah</td>
-        //       </tr>
-        //       <tr>
-        //         <td><strong>Nama</strong></td>
-        //         <td>' . getUserbyId($data['kepada'])['fullname'] . ' (' . getUserbyId($data['kepada'])['username']  . ')</td>
-        //       </tr>
-        //       <tr>
-        //         <td><strong>Prodi</strong></td>
-        //         <td>' . getProdibyId(getUserbyId($data['kepada'])['id_prodi'])['prodi'] . '</td>
-        //       </tr>                                     
-        //     </table>'
-        // );
+        $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
+
+        $subject = $sp['judul_notif'];
+        $isi_email = array (
+          'penerima' => getUserbyId($data['kepada'])['fullname'],
+          'link' => base_url('mahasiswa/surat/tambah/'. encrypt_url($data['id_surat'])),
+          'isi'=> $sp['judul_notif'],         
+          'tabel'=> '
+            <table class="datamhs">
+              <tr>
+                <td><strong>Perihal</strong></td>
+                <td>Surat Permohonan Cuti Kuliah</td>
+              </tr>
+              <tr>
+                <td><strong>Nama</strong></td>
+                <td>' . getUserbyId($data['kepada'])['fullname'] . ' (' . getUserbyId($data['kepada'])['username']  . ')</td>
+              </tr>
+              <tr>
+                <td><strong>Prodi</strong></td>
+                <td>' . getProdibyId(getUserbyId($data['kepada'])['id_prodi'])['prodi'] . '</td>
+              </tr>                                     
+            </table>'
+        );
 
      
 
-        // $mail->Subject = $subject;
-        // $mail->Body = $this->email_template($isi_email);
+        $mail->Subject = $subject;
+        $mail->Body = $this->email_template($isi_email);
 
-        // $mail->send();
+        $mail->send();
 
-        // $mail->ClearAddresses();
+        $mail->ClearAddresses();
       }
     }
   }

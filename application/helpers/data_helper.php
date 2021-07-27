@@ -169,7 +169,7 @@ function generate_form_field($id, $id_surat, $id_status)
 		<!-- pad akondisi default (data value kosong), form dNd muncul, listing tidak muncul -->
 		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') : (($verifikasi == 0) && ($id_status == 4) ? '' : $field_value);  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 || $id_status == 2 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 
-		<div class="tampilUploader">
+		<div class="tampilUploader bg-perak">
 			<div id="drag-and-drop-zone-<?= $id; ?>" class="dm-uploader p-3 <?= $form; ?> <?= $error; ?>">
 				<h5 class="mb-2 mt-2 text-muted">Seret &amp; lepaskan berkas di sini</h5>
 
@@ -203,7 +203,7 @@ function generate_form_field($id, $id_surat, $id_status)
 					}
 					?>
 
-					<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
+					<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 					<div class="media-body mb-1">
 						<p class="mb-2">
 
@@ -251,12 +251,10 @@ function generate_form_field($id, $id_surat, $id_status)
 					onNewFile: function(id, file) {
 
 						var reader = new FileReader();
-						var url = '<?= base_url("public/dist/img/pdf.png"); ?>';
-
-						console.log(file.type);
+						var url = '<?= base_url("public/dist/img/pdf.png"); ?>';					
 
 						// When a new file is added using the file selector or the DnD area
-						var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
+						var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;background-size:180px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
 
 						$('#files-<?= $id; ?>').prepend(template);
 					},
@@ -274,11 +272,14 @@ function generate_form_field($id, $id_surat, $id_status)
 						// A file was successfully uploaded
 						ui_multi_update_file_status(id, 'success', '<i class="fas fa-check-circle"></i>');
 
-						console.log(data.extension);
-
 						var response = JSON.stringify(data);
 						var obj = JSON.parse(response);
-						var url_bg = 'url(<?= base_url(); ?>' + obj.thumb + ')';
+		
+						if(data.extension == '.pdf') {
+							var url_bg = 'url(<?= base_url(); ?>public/dist/img/pdf.png)';
+						} else {
+							var url_bg = 'url(<?= base_url(); ?>' + obj.thumb + ')';
+						}
 
 						$('.id-dokumen-<?= $id; ?>').val(obj.id);
 						$('.deleteUser').removeClass('d-none', '3000');
@@ -578,14 +579,13 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			$thumb = '';
 		}
 
-
 	?>
 
-		<div class="media mb-4 p-2" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
-			<div style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
+		<div class="media mb-4 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
+			<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
-				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($thumb); ?>'><i class='fas fa-eye'></i> Lihat</a>
+				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($image); ?>'><i class='fas fa-eye'></i> Lihat</a>
 			</div>
 		</div>
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))

@@ -49,6 +49,16 @@
 			<i class="fas fa-fw fa-envelope"></i>
 			<span>Surat Keluar</span></a>
 	</li>
+	<hr class="sidebar-divider d-none d-md-block">
+	<div class="sidebar-heading">
+		Yudisium
+	</div>
+
+	<li class="nav-item" id="semua_surat">
+		<a class="nav-link" href="<?= base_url("admin/yudisium"); ?>">
+			<i class="fas fa-graduation-cap"></i>
+			<span>Yudisium</span></a>
+	</li>
 
 
 

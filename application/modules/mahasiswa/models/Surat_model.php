@@ -389,4 +389,8 @@ class Surat_model extends CI_Model
         ");
         return $result = $query->result_array();
     }
+
+    public function get_surat_yudisium() {
+        echo "surat yudisium";
+    }
 }
