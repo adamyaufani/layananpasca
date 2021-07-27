@@ -11,6 +11,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 	}
 </style>
 
+
+
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
@@ -83,11 +85,19 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						($surat['id_status'] == 8 && $this->session->userdata('role') == 5) ||
 						($surat['id_status'] == 7 && $this->session->userdata('role') == 6)
 					) {
-						echo form_open('admin/surat/disetujui');
+						
+
+						if($surat['id_kategori_surat'] == 6) {
+							echo form_open('admin/surat/acc_yudisium');
+						} else {
+							echo form_open('admin/surat/disetujui');
+						}
 					}
 
 					if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) {
-						echo form_open('admin/surat/verifikasi');
+					
+							echo form_open('admin/surat/verifikasi');
+				
 					}
 					?>
 					<?= ($surat['id_status'] == 1) ? '<a href="' . base_url('admin/surat/proses_surat/' . $surat['id']) . '" class="btn btn-warning btn-sm">Klik untuk Memproses</a>' : '' ?>
@@ -132,7 +142,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 											<?= $this->session->userdata('fullname'); ?> menyatakan bahwa permohonan <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong> : </p>
 
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item"><input type="radio" name="rev2" id="diterima" value="7" /> Diterima dan dapat diproses lebih lanjut
+											<li class="list-group-item"><input type="radio" name=
+											"rev2" id="diterima" value="7" /> Diterima dan dapat diproses lebih lanjut
 											</li>
 
 											<li class="list-group-item"><input type="radio" name="rev2" id="ditolak" value="6" /> Ditolak

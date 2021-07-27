@@ -75,6 +75,61 @@ class Surat extends Admin_Controller
 
 		redirect(base_url('admin/surat/detail/' . $id_surat));
 	}
+	public function acc_yudisium() {
+
+		if ($this->input->post('submit')) {
+
+			$verifikasi = $this->input->post('verifikasi'); //ambil nilai 
+			$id_surat = $this->input->post('id_surat');
+			$id_notif = $this->input->post('id_notif');
+
+			//set status
+			$this->db->set('id_status', '11')
+				->set('pic', $this->session->userdata('user_id'))
+				->set('date', 'NOW()', FALSE)
+				->set('id_surat', $id_surat)
+				->set('catatan', $this->input->post('catatan'))
+				->insert('surat_status');
+
+			foreach ($verifikasi as $id => $value_verifikasi) {
+
+				$this->db->where(array('id_kat_keterangan_surat' => $id, 'id_surat' => $id_surat))
+					->update(
+						'keterangan_surat',
+						array(
+							'verifikasi' =>  $value_verifikasi,
+						)
+					);
+			}
+
+			//set Yudisium
+			$this->db->set('user_id', $this->input->post('user_id'))
+				->insert('yudisium');
+
+			// buat notifikasi
+			$data_notif = array(
+				'id_surat' => $id_surat,
+				'id_status' => 11,
+				'kepada' => $this->input->post('user_id'),
+				'role' => [3]
+			);
+
+			//sendmail & notif
+			$this->mailer->send_mail($data_notif);
+
+			//remove notif yg berkaitan sama surat ini
+			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+
+			if ($set_notif) {
+				$this->session->set_flashdata('msg', 'Pendaftaran Yudisium disetujui!');
+				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
+			}
+		} else {
+			$data['title'] = 'Forbidden';
+			$data['view'] = 'restricted';
+			$this->load->view('layout/layout', $data);
+		}
+	}
 	public function verifikasi()
 	{
 		if ($this->input->post('submit')) {
