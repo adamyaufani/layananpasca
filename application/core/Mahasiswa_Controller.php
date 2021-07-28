@@ -5,7 +5,7 @@ class Mahasiswa_Controller extends MY_Controller
     {
         parent::__construct();
 
-        if (($this->session->userdata('role') != 3)) {
+        if (($this->session->userdata('role') != 3) && ($this->session->userdata('role') != 2)) {
             $data['view'] = 'layout/restricted';
             $this->load->view('layout/layout', $data);
         }

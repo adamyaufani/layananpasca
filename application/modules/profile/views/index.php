@@ -10,22 +10,14 @@
 			</div>
 		<?php endif; ?>
 
-	</div>
-
-	<div class="col-md-2">
-		<div class="card card-success card-outline">
-			<div class="card-body box-profile">
-				<?php if ($user['photo'] == '') { ?>
-
-					<img class="profile-user-img img-fluid img-circle" src="<?= base_url(); ?>public/dist/img/nophoto.png" alt="User profile picture">
-
-				<?php } else { ?>
-
-					<img class="profile-user-img img-fluid img-circle" src="<?= base_url($user['photo']); ?>">
-
-				<?php } ?>
-			</div>
+		<!-- fash message yang muncul ketika proses penghapusan data berhasil dilakukan -->
+		<?php if ($this->session->flashdata('msg') != '') : ?>
+		<div class="alert alert-success flash-msg alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<h4>Sukses!</h4>
+			<?= $this->session->flashdata('msg'); ?>
 		</div>
+		<?php endif; ?>
 	</div>
 
 
@@ -33,7 +25,7 @@
 		<div class="card card-success card-outline">
 			<div class="card-body box-profile">
 
-				<?php echo form_open_multipart(base_url('admin/profile'), 'class="form-horizontal"');  ?>
+				<?php echo form_open_multipart(base_url('profile'), 'class="form-horizontal"');  ?>
 				<div class="form-group">
 					<label for="username" class="control-label">Username</label>
 					<div class="">

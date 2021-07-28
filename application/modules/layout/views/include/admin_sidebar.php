@@ -55,9 +55,21 @@
 	</div>
 
 	<li class="nav-item" id="semua_surat">
+		<a class="nav-link" href="<?= base_url("admin/surat/yudisium"); ?>">
+			<i class="fas fa-graduation-cap"></i>
+			<span>Surat Yudisium</span></a>
+	</li>
+
+	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/yudisium"); ?>">
 			<i class="fas fa-graduation-cap"></i>
-			<span>Yudisium</span></a>
+			<span>Peserta Yudisium</span></a>
+	</li>
+
+	<li class="nav-item" id="semua_surat">
+		<a class="nav-link" href="<?= base_url("mahasiswa/surat/yudisium"); ?>">
+			<i class="fas fa-graduation-cap"></i>
+			<span>Tambah Data Yudisium</span></a>
 	</li>
 
 
