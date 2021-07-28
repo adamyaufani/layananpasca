@@ -100,7 +100,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				
 					}
 					?>
-					<?= ($surat['id_status'] == 1) ? '<a href="' . base_url('admin/surat/proses_surat/' . $surat['id']) . '" class="btn btn-warning btn-sm">Klik untuk Memproses</a>' : '' ?>
+					<!-- <?= ($surat['id_status'] == 1) ? '<a href="' . base_url('admin/surat/proses_surat/' . $surat['id']) . '" class="btn btn-warning btn-sm">Klik untuk Memproses</a>' : '' ?> -->
 
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
