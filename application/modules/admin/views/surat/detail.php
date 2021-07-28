@@ -609,9 +609,28 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							</div>
 						<?php } ?>
 					</div>
+				
 				</div>
 			</div>
 		</div>
+
+		<?php if ($surat['id_status'] == 7 ) { ?>
+		<div class="card shadow mt-3">
+			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+				<p class="h5 text-center font-weight-bold text-white"> ACC Kaprodi </p>
+			</a>
+			<div class="collapse show" id="collStatus">
+				<div class="card-body pl-3">
+					<p class="text-center">Perwakilan ACC Kaprodi oleh TU</p>
+					<?php echo form_open('admin/surat/persetujuan_kaprodi'); ?>
+						<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
+						<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
+						<button type="submit" class="btn btn-danger form-control" ><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
+					<?php echo form_close(); ?>					
+				</div>
+			</div>
+		</div>
+		<?php } ?>
 	</div>
 	<!-- /.col -->
 </div>

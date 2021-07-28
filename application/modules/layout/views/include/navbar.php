@@ -59,7 +59,7 @@
     <div class="topbar-divider d-none d-sm-block"></div>
     <!-- Nav Item - User Information -->
     <li class="nav-item ">
-      <a class="nav-link">
+      <a class="nav-link" href="<?=  base_url('profile'); ?>">
         <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $this->session->userdata('fullname'); ?></span>
         <?= ($this->session->userdata('role') == 3) ? profPic($this->session->userdata('username'), 30) : ''; ?>
       </a>

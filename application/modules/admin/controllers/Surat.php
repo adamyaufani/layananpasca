@@ -19,6 +19,14 @@ class Surat extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
+	public function yudisium()
+	{
+		$data['query'] = $this->surat_model->get_surat_yudisium();
+		$data['title'] = 'Surat Pendaftaran Yudisium';
+		$data['view'] = 'surat/index';
+		$this->load->view('layout/layout', $data);
+	}
+
 	public function detail($id_surat = 0)
 	{
 
@@ -750,5 +758,22 @@ class Surat extends Admin_Controller
 		echo json_encode($data);
 	}
 
+	public function persetujuan_kaprodi() {
+		$id_surat = $this->input->post('id_surat');
+		$id_mhs = $this->input->post('id_mhs');
+		//set status
+		$this->db->set('id_status', '11')
+		->set('pic', $this->session->userdata('user_id'))
+		->set('date', 'NOW()', FALSE)
+		->set('id_surat', $id_surat)
+		->set('catatan', '')
+		->insert('surat_status');
 
+			//set Yudisium
+		$this->db->set('user_id', $id_mhs )
+				->insert('yudisium');
+		
+				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
+
+	}
 }

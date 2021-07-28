@@ -18,30 +18,13 @@ class Profile extends MY_Controller
 				$data['title'] = 'Profil Saya';
 				$data['view'] = 'profile/index';
 				$this->load->view('layout/layout', $data);
-			} else {
-
-				$upload_path = './uploads/fotoProfil';
-
-				if (!is_dir($upload_path)) {
-					mkdir($upload_path, 0777, TRUE);
-				}
-				//$newName = "hrd-".date('Ymd-His');
-				$config = array(
-					'upload_path' => $upload_path,
-					'allowed_types' => "jpg|png|jpeg",
-					'overwrite' => FALSE,
-				);
-
-				$this->load->library('upload', $config);
-				$this->upload->do_upload('foto_profil');
-				$foto_profil = $this->upload->data();
+			} else {			
 
 				$data = array(
 				
 					'email' => $this->input->post('email'),
 					'password' => ($this->input->post('password') !== "" ? password_hash($this->input->post('password'), PASSWORD_BCRYPT) : $this->input->post('password_hidden')),
 					'updated_at' => date('Y-m-d : h:m:s'),
-					'photo' => ($foto_profil['file_name']) !== "" ? $upload_path . '/' . $foto_profil['file_name'] : $this->input->post('foto_profil_hidden'),
 				);
 
 				$data = $this->security->xss_clean($data);
