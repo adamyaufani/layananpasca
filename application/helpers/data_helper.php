@@ -169,7 +169,7 @@ function generate_form_field($id, $id_surat, $id_status)
 		<!-- pad akondisi default (data value kosong), form dNd muncul, listing tidak muncul -->
 		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') : (($verifikasi == 0) && ($id_status == 4) ? '' : $field_value);  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 || $id_status == 2 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
 
-		<div class="tampilUploader bg-perak">
+		<div class="tampilUploader">
 			<div id="drag-and-drop-zone-<?= $id; ?>" class="dm-uploader p-3 <?= $form; ?> <?= $error; ?>">
 				<h5 class="mb-2 mt-2 text-muted">Seret &amp; lepaskan berkas di sini</h5>
 
@@ -181,8 +181,8 @@ function generate_form_field($id, $id_surat, $id_status)
 
 			<span class="text-danger error"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-			<ul class="list-unstyled p-2 d-flex flex-column col mt-2" id="files-<?= $id; ?>" style="border:1px solid #ddd; border-radius:4px;">
-				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>">Belum ada file yang diupload.</li>
+			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>" >
+				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>"></li>
 
 				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? '' : 'd-none'; ?> error-revisi"> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
 				<li class="media <?= $listing; ?> ">
@@ -296,12 +296,12 @@ function generate_form_field($id, $id_surat, $id_status)
 						console.log('error');
 					},
 					onFileExtError: function(id, file) {
-						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung').removeClass('text-muted').addClass('text-danger');
+						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya jpg, jpeg, png & pdf').removeClass('text-muted d-none').addClass('text-danger');
 						console.log('error ext');
 					},
 					onFileSizeError: function(id, file) {
 
-						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar').removeClass('text-muted').addClass('text-danger');
+						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar. Maksimum 2MB').removeClass('text-muted d-none').addClass('text-danger');
 						console.log('error size');
 					}
 				});
@@ -586,6 +586,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
 				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($image); ?>'><i class='fas fa-eye'></i> Lihat</a>
+				
 			</div>
 		</div>
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
