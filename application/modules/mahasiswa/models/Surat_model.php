@@ -179,7 +179,7 @@ class Surat_model extends CI_Model
         // cek user ke tabel Mhs (SQLSERVER UMY)
         $db2 = $this->load->database('dbsqlsrv', TRUE);
 
-        $result = $db2->query("SELECT * from V_Simpel_Pasca WHERE FULLNAME LIKE '%" . $search . "%' AND name_of_faculty = 'PASCA SARJANA' AND name_of_faculty = 'PROGRAM DOKTOR'")->result_array();
+        $result = $db2->query("SELECT * from V_Simpel_Pasca WHERE FULLNAME LIKE '%" . $search . "%' ")->result_array();
 
         return $result;
     }
