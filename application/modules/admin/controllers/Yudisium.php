@@ -20,7 +20,6 @@ class Yudisium extends Admin_Controller
 
 	public function detail($id)
 	{
-
 		$id_yudisium= decrypt_url($id);
 
 		if ($this->input->post('submit')) {

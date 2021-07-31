@@ -72,7 +72,7 @@ class Surat_model extends CI_Model
         LEFT JOIN surat_status ss ON ss.id_surat = s.id
         LEFT JOIN status st ON st.id = ss.id_status
         LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat
-        WHERE s.id_mahasiswa='$id_mhs' AND ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id) 
+        WHERE s.id_mahasiswa='$id_mhs' AND ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)  AND ss.id_status NOT IN(20)
         ORDER BY s.id DESC        
         ");
         return $result = $query->result_array();
@@ -179,7 +179,7 @@ class Surat_model extends CI_Model
         // cek user ke tabel Mhs (SQLSERVER UMY)
         $db2 = $this->load->database('dbsqlsrv', TRUE);
 
-        $result = $db2->query("SELECT * from V_Simpel_Pasca WHERE FULLNAME LIKE '%" . $search . "%' ")->result_array();
+        $result = $db2->query("SELECT * from V_Simpel_Pasca WHERE FULLNAME LIKE '%" . $search . "%' AND department_id =" . $_SESSION['id_prodi'])->result_array();
 
         return $result;
     }
