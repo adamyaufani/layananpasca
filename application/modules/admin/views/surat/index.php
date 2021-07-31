@@ -34,7 +34,8 @@
 						</thead>
 						<tbody>
 							<?php
-							foreach ($query as $surat) {  ?>
+
+								foreach ($query as $surat) {  ?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td>
 										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
@@ -55,11 +56,11 @@
 											<?php if($surat['id_status'] != 20) { ?>
 												<a href="" style="color:#fff;" title="Hapus"
 												class="delete btn btn-sm  btn-circle btn-danger"
-												data-href="<?= base_url('admin/surat/hapus/d/' . $surat['id_surat']); ?>"
+												data-href="<?= base_url('admin/surat/hapus/d/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>"
 												data-toggle="modal" data-target="#confirm-delete"> <i
 													class="fa fa-trash-alt"></i></a>
 											<?php } else { ?>
-												<a href="<?= base_url('admin/surat/hapus/r/' . $surat['id_surat']); ?>" style="color:#fff;" title="Kembalikan"
+												<a href="<?= base_url('admin/surat/hapus/r/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>" style="color:#fff;" title="Kembalikan"
 												class="restore btn btn-sm  btn-circle btn-success"> <i
 													class="fa fa-undo"></i></a>
 											<?php } ?>

@@ -67,29 +67,56 @@ class Surat extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
-	public function hapus($kode, $id_surat) {
+	public function hapus($kode, $id_kat, $id_surat) {
 
-		if($kode == 'd') {
-			$hapus = $this->db->set('id_status', '20')
-			->set('date', 'NOW()', FALSE)
-			->set('id_surat', $id_surat)
-			->set('pic', $_SESSION['user_id'])
-			->insert('surat_status');
+		$id_surat = decrypt_url($id_surat);
+		if($id_surat) {
 
-			//hapus notif yg berkaitan
-			$this->db->where(['id_surat'=> $id_surat]);
-      $hapus = $this->db->delete('notif');
+			if($kode == 'd') {
 
-		} else if( $kode == 'r') {
+				$hapus_exist = $this->db->get_where('surat_status',['id_surat' => $id_surat, 'id_status' => 20])->num_rows();
 
-			$this->db->where(['id_surat'=> $id_surat, 'id_status' => '20']);
-      $hapus = $this->db->delete('surat_status');
-		}
-		
+				if($hapus_exist < 1 ) {
 
-		if($hapus) {
-			$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
-			redirect(base_url('admin/surat/index'));
+					$hapus = $this->db->set('id_status', '20')
+					->set('date', 'NOW()', FALSE)
+					->set('id_surat', $id_surat)
+					->set('pic', $_SESSION['user_id'])
+					->insert('surat_status');
+
+				} else {
+					redirect(base_url('admin/surat/index'));
+				}
+
+				//hapus notif yg berkaitan
+				$this->db->where(['id_surat'=> $id_surat]);
+				$hapus = $this->db->delete('notif');
+
+				//hapus yudisium yg berkaitan jika berhubungan drn kategori surat yudisium
+				if($id_kat == 6 ) {
+					$this->db->where(['id_surat'=> $id_surat]);
+					$hapus = $this->db->update('yudisium',['aktif' => 'd']);
+				}
+
+			} else if( $kode == 'r') {
+				$this->db->where(['id_surat'=> $id_surat, 'id_status' => '20']);
+				$this->db->delete('surat_status');
+
+				//kembalikan peserta di tabel yudisium yjika berhubungan drn kategori surat yudisium
+				if($id_kat == 6 ) {
+					$this->db->where(['id_surat'=> $id_surat]);
+					$hapus = $this->db->update('yudisium',['aktif' => '']);
+				}
+			}
+
+			if($hapus) {
+				$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
+				redirect(base_url('admin/surat/index'));
+			}
+		} else {
+			$data['title'] = 'Halaman tidak ditemukan';
+			$data['view'] = 'error404';
+			$this->load->view('layout/layout', $data);
 		}
 	}
 	public function proses_surat($id_surat = 0)
