@@ -109,10 +109,10 @@ class Surat extends Admin_Controller
 				}
 			}
 
-			if($hapus) {
+			
 				$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
 				redirect(base_url('admin/surat/index'));
-			}
+			
 		} else {
 			$data['title'] = 'Halaman tidak ditemukan';
 			$data['view'] = 'error404';
