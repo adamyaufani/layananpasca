@@ -441,7 +441,7 @@ class Surat extends Mahasiswa_Controller
 				// cek user ke tabel Mhs (SQLSERVER UMY)
 				$db2 = $this->load->database('dbsqlsrv', TRUE);
 
-				$data_mhs = $db2->query("SELECT * from V_Simpel_Pasca WHERE STUDENTID = '$nim' AND name_of_faculty = 'PASCA SARJANA'")->row_array();			
+				$data_mhs = $db2->query("SELECT * from V_Simpel_Pasca WHERE STUDENTID = '$nim' AND department_id =" . $_SESSION['id_prodi'])->row_array();			
 				
 				$data = ['username'=> $data_mhs['EMAIL']];
 				$mhs_exist = $this->auth_model->user_exist($data);
@@ -451,7 +451,7 @@ class Surat extends Mahasiswa_Controller
 					$user_data = array(
 						'username' => $data_mhs['STUDENTID'],
 						'fullname' => $data_mhs['FULLNAME'],
-						'email' => $data_mhs['EMAIL'],
+						'email' => (isset($data_mhs['EMAIL'])) ? $data_mhs['EMAIL'] : '' ,
 						'telp' => $data_mhs['TELP'],
 						'id_prodi' => $data_mhs['department_id'],
 						'role' => 3,
@@ -501,8 +501,7 @@ class Surat extends Mahasiswa_Controller
 				}
 			
 				$this->session->set_flashdata('msg', 'Berhasil!');
-				redirect(base_url('mahasiswa/surat/tambah_by_admin/' . encrypt_url($insert_id) . '/' . $mhs_exist ));
-				
+				redirect(base_url('mahasiswa/surat/tambah_by_admin/' . encrypt_url($insert_id) . '/' . $mhs_exist ));			
 
 			}
 

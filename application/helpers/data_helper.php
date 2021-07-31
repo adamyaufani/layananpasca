@@ -206,7 +206,6 @@ function generate_form_field($id, $id_surat, $id_status)
 					<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 					<div class="media-body mb-1">
 						<p class="mb-2">
-
 							<strong><?= ($file) ? $filename['1'] : ''; ?></strong> <span class="text-muted"></span>
 						</p>
 						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $form; ?>' data-id='<?= ($file) ? $file['id'] : ''; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
@@ -919,7 +918,7 @@ function cek_sudah_buat_surat($id_mahasiswa, $id_kategori_surat, $min_semester)
 
 		//status 10 = selesai
 		//status 6 = ditolak
-		if (($status['id_status'] == 10) || ($status['id_status']  == 6)) {
+		if (($status['id_status'] == 10) || ($status['id_status']  == 6) || ($status['id_status']  == 20)) {
 			$diperbolehkan = 1;
 		} else {
 			$diperbolehkan = 2;

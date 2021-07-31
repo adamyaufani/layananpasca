@@ -19,14 +19,6 @@ class Surat extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
-	public function yudisium()
-	{
-		$data['query'] = $this->surat_model->get_surat_yudisium();
-		$data['title'] = 'Surat Pendaftaran Yudisium';
-		$data['view'] = 'surat/index';
-		$this->load->view('layout/layout', $data);
-	}
-
 	public function detail($id_surat = 0)
 	{
 
@@ -74,6 +66,32 @@ class Surat extends Admin_Controller
 
 		$this->load->view('layout/layout', $data);
 	}
+
+	public function hapus($kode, $id_surat) {
+
+		if($kode == 'd') {
+			$hapus = $this->db->set('id_status', '20')
+			->set('date', 'NOW()', FALSE)
+			->set('id_surat', $id_surat)
+			->set('pic', $_SESSION['user_id'])
+			->insert('surat_status');
+
+			//hapus notif yg berkaitan
+			$this->db->where(['id_surat'=> $id_surat]);
+      $hapus = $this->db->delete('notif');
+
+		} else if( $kode == 'r') {
+
+			$this->db->where(['id_surat'=> $id_surat, 'id_status' => '20']);
+      $hapus = $this->db->delete('surat_status');
+		}
+		
+
+		if($hapus) {
+			$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
+			redirect(base_url('admin/surat/index'));
+		}
+	}
 	public function proses_surat($id_surat = 0)
 	{
 		$this->db->set('id_status', 2)
@@ -83,6 +101,15 @@ class Surat extends Admin_Controller
 
 		redirect(base_url('admin/surat/detail/' . $id_surat));
 	}
+	
+	public function yudisium()
+	{
+		$data['query'] = $this->surat_model->get_surat_yudisium();
+		$data['title'] = 'Surat Pendaftaran Yudisium';
+		$data['view'] = 'surat/index';
+		$this->load->view('layout/layout', $data);
+	}
+
 	public function acc_yudisium() {
 
 		if ($this->input->post('submit')) {
@@ -771,6 +798,7 @@ class Surat extends Admin_Controller
 
 			//set Yudisium
 		$this->db->set('user_id', $id_mhs )
+				->set('id_surat', $id_surat )
 				->insert('yudisium');
 		
 				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
