@@ -614,6 +614,22 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</div>
 		</div>
 
+		<?php if ($surat['id_status'] == 1 ) { ?>
+		<div class="card shadow mt-3">
+			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+				<p class="h5 text-center font-weight-bold text-white"> Ambil Alih </p>
+			</a>
+			<div class="collapse show" id="collStatus">
+				<div class="card-body pl-3 text-center">
+					<p class="text-center">TU dapat mengambil alih proses pengisian data <strong>jika ada kasus khusus</strong>, seperti mahasiswa kesulitan login, tidak bisa mengisi, dll.</p>
+					
+						<a class="btn btn-ungutua btn-md text-white" href="<?= base_url("mahasiswa/surat/tambah/" . encrypt_url($surat['id']) ); ?>" ><i class="fas fa-exclamation-triangle"></i> Ambil alih sekarang</a>
+						
+				</div>
+			</div>
+		</div>
+		<?php } ?>
+
 		<?php if ($surat['id_status'] == 7 ) { ?>
 		<div class="card shadow mt-3">
 			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
