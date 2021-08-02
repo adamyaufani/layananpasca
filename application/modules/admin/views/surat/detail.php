@@ -614,7 +614,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</div>
 		</div>
 
-		<?php if ($surat['id_status'] == 1 ) { ?>
+		<?php if($surat['id_kategori_surat'] == 6) {
+		
+		
+		if (($surat['id_status'] == 1) || ($surat['id_status'] == 4) ) { ?>
 		<div class="card shadow mt-3">
 			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
 				<p class="h5 text-center font-weight-bold text-white"> Ambil Alih </p>
@@ -628,7 +631,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				</div>
 			</div>
 		</div>
-		<?php } ?>
+		<?php } 
+		}?>
 
 		<?php if ($surat['id_status'] == 7 ) { ?>
 		<div class="card shadow mt-3">
