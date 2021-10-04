@@ -84,7 +84,7 @@ class Auth extends CI_Controller
 
 						$result = $db2->query("SELECT * from V_Simpel_Pasca WHERE EMAIL ='$email' ")->row_array();
 
-						//cek apakah mahasiswa pasca
+						//cek apakah mahasiswa pasca dan doktor
 						// jika iya, diperbolehkan login
 						if (($result['name_of_faculty'] === "PASCA SARJANA") OR ($result['name_of_faculty'] === "PROGRAM DOKTOR")) {
 
