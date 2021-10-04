@@ -86,7 +86,7 @@ class Auth extends CI_Controller
 
 						//cek apakah mahasiswa pasca
 						// jika iya, diperbolehkan login
-						if ($result['name_of_faculty'] === "PASCA SARJANA") {
+						if (($result['name_of_faculty'] === "PASCA SARJANA") OR ($result['name_of_faculty'] === "PROGRAM DOKTOR")) {
 
 							//cek keaktifan semester ini
 							// $thn_ajaran = date('Y');
