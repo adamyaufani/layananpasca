@@ -6,6 +6,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 	.textarea-summernote.is-invalid+.note-editor {
 		border: 1px solid #b0272b;
 	}
+
 	.opacity {
 		opacity: 0.6;
 	}
@@ -85,9 +86,9 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						($surat['id_status'] == 8 && $this->session->userdata('role') == 5) ||
 						($surat['id_status'] == 7 && $this->session->userdata('role') == 6)
 					) {
-						
 
-						if($surat['id_kategori_surat'] == 6) {
+
+						if ($surat['id_kategori_surat'] == 6) {
 							echo form_open('admin/surat/acc_yudisium');
 						} else {
 							echo form_open('admin/surat/disetujui');
@@ -95,9 +96,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					}
 
 					if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) {
-					
-							echo form_open('admin/surat/verifikasi');
-				
+
+						echo form_open('admin/surat/verifikasi');
 					}
 					?>
 					<!-- <?= ($surat['id_status'] == 1) ? '<a href="' . base_url('admin/surat/proses_surat/' . $surat['id']) . '" class="btn btn-warning btn-sm">Klik untuk Memproses</a>' : '' ?> -->
@@ -108,25 +108,24 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					<input type="hidden" name="sizeof_ket_surat" value="<?= count($fields); ?>">
 					<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
 
-					<?php 					
-					if ($fields) {					
+					<?php
+					if ($fields) {
 						foreach ($fields as $field) {
 
 							$type = $field['type'];
 							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
-						<div class="form-row">
-							<label class="col-lg-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
-							<div class="col-lg-7">
-								<?php
-								// memanggil form (data_helper.php)
-								generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status']); ?>
+							<div class="form-row">
+								<label class="col-lg-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
+								<div class="col-lg-7">
+									<?php
+									// memanggil form (data_helper.php)
+									generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status']); ?>
+								</div>
 							</div>
-						</div>
 
-					<?php } 
-					
-						}?>
+					<?php }
+					} ?>
 
 					<?php if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) { ?>
 						<div class="form-row pt-3">
@@ -142,8 +141,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 											<?= $this->session->userdata('fullname'); ?> menyatakan bahwa permohonan <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong> : </p>
 
 										<ul class="list-group list-group-flush">
-											<li class="list-group-item"><input type="radio" name=
-											"rev2" id="diterima" value="7" /> Diterima dan dapat diproses lebih lanjut
+											<li class="list-group-item"><input type="radio" name="rev2" id="diterima" value="7" /> Diterima dan dapat diproses lebih lanjut
 											</li>
 
 											<li class="list-group-item"><input type="radio" name="rev2" id="ditolak" value="6" /> Ditolak
@@ -314,7 +312,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Stempel Basah
-								<small  class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
+								<small class="form-text text-muted">Berdasarkan permintaan. Memerlukan komunikasi lebih lanjut dengan admin Pasca.</small></label>
 							<div class="col-md-8">
 
 								<?php
@@ -339,7 +337,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Nomor Surat
-								<small  class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
+								<small class="form-text text-muted">+1 dari nomor sebelumnya dengan kategori yang sama</small>
 							</label>
 							<div class="col-md-8">
 
@@ -418,7 +416,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Lampiran
-								<small  class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
+								<small class="form-text text-muted">Kosongkan jika tidak ada lampiran.</small></label>
 							<div class="col-md-8">
 
 								<input type="number" min="0" max="20" step="1" name="lamp" id="lamp" class="form-control" value="<?= (validation_errors()) ? set_value('lamp') : (($no_surat_data['lamp']) ? $no_surat_data['lamp'] : '');  ?>">
@@ -428,7 +426,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Hal
-								<small  class="form-text text-muted">Hal bisa disesuaikan.</small></label>
+								<small class="form-text text-muted">Hal bisa disesuaikan.</small></label>
 							<div class="col-md-8">
 
 								<?php
@@ -455,7 +453,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Kepada
-								<small  class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
+								<small class="form-text text-muted">Surat ini ditujukan kepada. Tujuan surat bisa diganti jika diperlukan.</small>
 							</label>
 
 							<?php
@@ -486,7 +484,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						</div>
 						<div class="form-group row">
 							<label class="col-md-4" for="">Tembusan
-								<small  class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
+								<small class="form-text text-muted">Tembusan bisa disesuaikan. Pisahkan dengan koma jika lebih dari satu.</small>
 							</label>
 							<div class="col-md-8">
 
@@ -531,7 +529,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<a href="<?= base_url("public/documents/pdfdata/" . $no_surat_data['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 						<?php $noheader = substr($no_surat_data['file'], 0, -4); ?>
-						<a href="<?= base_url("public/documents/pdfdata/" . $noheader ."-nh.pdf"); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
+						<a href="<?= base_url("public/documents/pdfdata/" . $noheader . "-nh.pdf"); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
 					</div>
 				</div>
 			</div>
@@ -565,23 +563,23 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-				<?php if ($surat['id_status'] == 10) {
-						if ($sudah_survey == 1) { 
-							?>
+					<?php if ($surat['id_status'] == 10) {
+						if ($sudah_survey == 1) {
+					?>
 
 							<div class="px-5 py-2 mb-4">
 								<div class="row">
-								<div class="col-12 text-center">
+									<div class="col-12 text-center">
 										<p>Feedback dari Mahasiswa.</p>
 									</div>
-									<div class="col-4 text-center"> 
-										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 3 ? "border-warning":"border-0 opacity"; ?>" title="Tidak Puas" data-toggle="tooltip" data-placement="top" width="70" src="<?= base_url(); ?>public/dist/img/sad.png">
+									<div class="col-4 text-center">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 3 ? "border-warning" : "border-0 opacity"; ?>" title="Tidak Puas" data-toggle="tooltip" data-placement="top" width="70" src="<?= base_url(); ?>public/dist/img/sad.png">
 									</div>
 									<div class="col-4 text-center">
-										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 2 ? "border-warning":"border-0 opacity"; ?>" title="Puas" width="70" src="<?= base_url(); ?>public/dist/img/happy.png">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 2 ? "border-warning" : "border-0 opacity"; ?>" title="Puas" width="70" src="<?= base_url(); ?>public/dist/img/happy.png">
 									</div>
 									<div class="col-4 text-center">
-										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 1 ? "border-warning":"border-0 opacity"; ?>" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
+										<img class="img-thumbnail rounded-circle <?= $hasil_survey['answer'] == 1 ? "border-warning" : "border-0 opacity"; ?>" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
 									</div>
 								</div>
 							</div>
@@ -589,7 +587,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						<?php } else {
 						?>
 							<p>Belum ada feedback dari Mahasiswa.</p>
-							
+
 
 					<?php } // endif blm survey
 					} // endif status 10 
@@ -609,47 +607,84 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							</div>
 						<?php } ?>
 					</div>
-				
+
 				</div>
 			</div>
 		</div>
 
-		<?php if($surat['id_kategori_surat'] == 6) {
-		
-		
-		if (($surat['id_status'] == 1) || ($surat['id_status'] == 4) ) { ?>
-		<div class="card shadow mt-3">
-			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
-				<p class="h5 text-center font-weight-bold text-white"> Ambil Alih </p>
-			</a>
-			<div class="collapse show" id="collStatus">
-				<div class="card-body pl-3 text-center">
-					<p class="text-center">TU dapat mengambil alih proses pengisian data <strong>jika ada kasus khusus</strong>, seperti mahasiswa kesulitan login, tidak bisa mengisi, dll.</p>
-					
-						<a class="btn btn-ungutua btn-md text-white" href="<?= base_url("mahasiswa/surat/tambah/" . encrypt_url($surat['id']) ); ?>" ><i class="fas fa-exclamation-triangle"></i> Ambil alih sekarang</a>
-						
-				</div>
-			</div>
-		</div>
-		<?php } 
-		}?>
+		<?php if ($surat['id_kategori_surat'] == 6) {
 
-		<?php if ($surat['id_status'] == 7 ) { ?>
-		<div class="card shadow mt-3">
-			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
-				<p class="h5 text-center font-weight-bold text-white"> ACC Kaprodi </p>
-			</a>
-			<div class="collapse show" id="collStatus">
-				<div class="card-body pl-3">
-					<p class="text-center">Perwakilan ACC Kaprodi oleh TU</p>
-					<?php echo form_open('admin/surat/persetujuan_kaprodi'); ?>
+			if (($surat['id_status'] == 1) || ($surat['id_status'] == 4)) { ?>
+				<div class="card shadow mt-3">
+					<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+						<p class="h5 text-center font-weight-bold text-white"> Ambil Alih </p>
+					</a>
+					<div class="collapse show" id="collStatus">
+						<div class="card-body pl-3 text-center">
+							<p class="text-center">TU dapat mengambil alih proses pengisian data <strong>jika ada kasus khusus</strong>, seperti mahasiswa kesulitan login, tidak bisa mengisi, dll.</p>
+
+							<a class="btn btn-ungutua btn-md text-white" href="<?= base_url("mahasiswa/surat/tambah/" . encrypt_url($surat['id'])); ?>"><i class="fas fa-exclamation-triangle"></i> Ambil alih sekarang</a>
+
+						</div>
+					</div>
+				</div>
+			<?php }
+	
+			if ($surat['id_status'] == 7) { ?>
+				<div class="card shadow mt-3">
+					<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+						<p class="h5 text-center font-weight-bold text-white"> Acc Surat Yudisium </p>
+					</a>
+					<div class="collapse show" id="collStatus">
+						<div class="card-body pl-3 text-center">
+							<p class="text-center">Acc Surat Yudisium.</p>
+							<?php echo form_open('admin/surat/persetujuan_kaprodi_yudisium'); ?>
+							<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
+							<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
+							<button type="submit" class="btn btn-ungutua form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
+							<?php echo form_close(); ?>
+
+						</div>
+					</div>
+				</div>
+		<?php }
+		} ?>
+
+		<?php if (($surat['id_status'] == 7) && ($this->session->userdata('role') == 2) &&  ($surat['id_kategori_surat'] != 6)) { ?>
+			<div class="card shadow mt-3">
+				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+					<p class="h5 text-center font-weight-bold text-white"> ACC Kaprodi </p>
+				</a>
+				<div class="collapse show" id="collStatus">
+					<div class="card-body pl-3">
+						<p class="text-center">Perwakilan ACC Kaprodi oleh TU</p>
+						<?php echo form_open('admin/surat/persetujuan_kaprodi'); ?>
 						<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
 						<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
-						<button type="submit" class="btn btn-danger form-control" ><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
-					<?php echo form_close(); ?>					
+						<button type="submit" class="btn btn-danger form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
+						<?php echo form_close(); ?>
+					</div>
 				</div>
 			</div>
-		</div>
+		<?php } ?>
+
+
+		<?php if (($surat['id_status'] == 8) && ($this->session->userdata('role') == 1)) { ?>
+			<div class="card shadow mt-3">
+				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
+					<p class="h5 text-center font-weight-bold text-white"> ACC Direktur </p>
+				</a>
+				<div class="collapse show" id="collStatus">
+					<div class="card-body pl-3">
+						<p class="text-center">Perwakilan ACC Direktur oleh TU Pasca</p>
+						<?php echo form_open('admin/surat/persetujuan_direktur'); ?>
+						<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
+						<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
+						<button type="submit" class="btn btn-danger form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
+						<?php echo form_close(); ?>
+					</div>
+				</div>
+			</div>
 		<?php } ?>
 	</div>
 	<!-- /.col -->

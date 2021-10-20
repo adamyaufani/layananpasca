@@ -65,14 +65,12 @@
 			<i class="fas fa-graduation-cap"></i>
 			<span>Peserta Yudisium</span></a>
 	</li>
-
+<!-- 
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("mahasiswa/surat/yudisium"); ?>">
 			<i class="fas fa-graduation-cap"></i>
 			<span>Tambah Data Yudisium</span></a>
-	</li>
-
-
+	</li> -->
 
 	<?php if ($this->session->userdata('role') == 1) { ?>
 

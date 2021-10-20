@@ -30,7 +30,7 @@ class Surat_model extends CI_Model
         LEFT JOIN status st ON st.id = ss.id_status
         LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
         WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
-        -- AND ss.id_status != 1 
+        AND ss.id_status != 1 AND ss.id_status != 11
         $id_status
         $prodi
         ORDER BY s.id DESC      
@@ -331,7 +331,7 @@ class Surat_model extends CI_Model
         LEFT JOIN status st ON st.id = ss.id_status
         LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
         WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
-         AND s.id_kategori_surat = 6
+         AND s.id_kategori_surat = 6 AND ss.id_status != 1
         $prodi
         ORDER BY s.id DESC      
         ");
