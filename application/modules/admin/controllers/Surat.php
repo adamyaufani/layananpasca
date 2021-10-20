@@ -375,7 +375,7 @@ class Surat extends Admin_Controller
 				$tujuan_surat = $this->input->post('tujuan_surat');
 				$urusan_surat = $this->input->post('urusan_surat');
 				$date = date('Y-m-d');
-				$tanggal_surat = date("d F Y", strtotime($date));
+				$tanggal_surat = tgl_indo(date("Y-m-d", strtotime($date)));
 				$no_surat =	 $this->surat_model->generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat, $date);	
 
 				$pratinjau = array(
@@ -470,7 +470,9 @@ class Surat extends Admin_Controller
 					$data['pratinjau'] = $no_surat;
 					$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 					$data['no_surat'] = $no_surat['no_lengkap'];
-					$data['tanggal_surat'] = date("d F Y", strtotime($no_surat['tanggal_terbit']));
+
+					$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
+					$data['tanggal_surat'] = tgl_indo($tgl_surat);
 
 				if($data['surat']['kode'] == 'SU') {
 					$kategori = $no_surat['hal'];
@@ -816,6 +818,27 @@ class Surat extends Admin_Controller
 		$id_surat = $this->input->post('id_surat');
 		$id_mhs = $this->input->post('id_mhs');
 		//set status
+		$this->db->set('id_status', '8')
+		->set('pic', $this->session->userdata('user_id'))
+		->set('date', 'NOW()', FALSE)
+		->set('id_surat', $id_surat)
+		->set('catatan', '')
+		->insert('surat_status');
+
+			//hapus notif yg berkaitan
+			
+			//remove notif yg berkaitan sama surat ini
+			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+
+		
+				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
+
+	}
+
+	public function persetujuan_kaprodi_yudisium() {
+		$id_surat = $this->input->post('id_surat');
+		$id_mhs = $this->input->post('id_mhs');
+		//set status
 		$this->db->set('id_status', '11')
 		->set('pic', $this->session->userdata('user_id'))
 		->set('date', 'NOW()', FALSE)
@@ -823,12 +846,33 @@ class Surat extends Admin_Controller
 		->set('catatan', '')
 		->insert('surat_status');
 
-			//set Yudisium
-		$this->db->set('user_id', $id_mhs )
-				->set('id_surat', $id_surat )
-				->insert('yudisium');
+			//hapus notif yg berkaitan
+			
+			//remove notif yg berkaitan sama surat ini
+			// $set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+
 		
 				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
+
+	}
+
+	public function persetujuan_direktur() {
+		$id_surat = $this->input->post('id_surat');
+		$id_mhs = $this->input->post('id_mhs');
+		//set status
+		$this->db->set('id_status', '9')
+		->set('pic', $this->session->userdata('user_id'))
+		->set('date', 'NOW()', FALSE)
+		->set('id_surat', $id_surat)
+		->set('catatan', '')
+		->insert('surat_status');
+
+			//hapus notif yg berkaitan
+			
+			//remove notif yg berkaitan sama surat ini
+			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 8]);
+		
+			redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
 
 	}
 }

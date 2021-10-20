@@ -3,7 +3,7 @@ class Yudisium_model extends CI_Model
 {
     public function get_yudisium() {
       if(($_SESSION['role'] == 2) || ($_SESSION['role'] == 6)) {
-        $where = " AND WHERE id_prodi= " . $_SESSION['id_prodi'];
+        $where = " AND id_prodi= " . $_SESSION['id_prodi'];
       } else {
         $where ='';
       }

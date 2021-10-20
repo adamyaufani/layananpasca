@@ -48,7 +48,7 @@
           <div class="form-group">
             <label for="ipk" class="control-label">IPK</label>
             <div class="">
-              <input type="number" min="2.00" max="4.00" step="0.1" value="<?= (validation_errors()) ? set_value('ipk') : $yudisium['ipk'];  ?>" class="form-control <?= (form_error('ipk')) ? 'is-invalid' : ''; ?>" name="ipk">
+              <input type="number" min="2.00" max="4.00" step="any" value="<?= (validation_errors()) ? set_value('ipk') : $yudisium['ipk'];  ?>" class="form-control <?= (form_error('ipk')) ? 'is-invalid' : ''; ?>" name="ipk" placeholder="contoh :3,6">
               <span class="text-danger" style="font-size: 80%;"><?php echo form_error('ipk'); ?></span>
             </div>
           </div>
