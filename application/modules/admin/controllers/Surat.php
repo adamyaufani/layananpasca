@@ -849,7 +849,12 @@ class Surat extends Admin_Controller
 			//hapus notif yg berkaitan
 			
 			//remove notif yg berkaitan sama surat ini
-			// $set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+
+			//set Yudisium
+			$this->db->set('user_id', $id_mhs )
+			->set('id_surat', $id_surat )
+			->insert('yudisium');
 
 		
 				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));

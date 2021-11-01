@@ -641,7 +641,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							<?php echo form_open('admin/surat/persetujuan_kaprodi_yudisium'); ?>
 							<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
 							<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
-							<button type="submit" class="btn btn-ungutua form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat ini</button>
+							<button type="submit" class="btn btn-ungutua form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat Yudisium</button>
 							<?php echo form_close(); ?>
 
 						</div>
