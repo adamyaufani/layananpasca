@@ -41,9 +41,8 @@
 							<?php
 							if ($cek_sudah_buat_surat > 1) { ?>
 								<div class="alert alert-danger">
-									<span><i class="fas fa-exclamation-triangle"></i><strong> Anda tidak diperkenankan mengajukan surat ini</strong> karena
-										<?php if ($cek_sudah_buat_surat == 2) {
-											echo "surat " . $kategori['kategori_surat'] . " yang Anda ajukan sebelumnya masih diproses. ";
+									<span><i class="fas fa-exclamation-triangle"></i> <?php if ($cek_sudah_buat_surat == 2) {
+											echo "Surat yang Anda ajukan sebelumnya masih diproses. Klik <a href='" . base_url('mahasiswa/surat/') . "'>di sini </a> untuk melihat. ";
 										} ?>
 										<?php if ($cek_sudah_buat_surat == 3) {
 											echo "syarat minimum semester (semester 2) belum terpenuhi.";
