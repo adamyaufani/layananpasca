@@ -14,7 +14,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 
 
-<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
+<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> <?= $surat['id']; ?> </h1>
 
 <div class="row">
 	<div class="col-lg-8 mb-4">
@@ -647,10 +647,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						</div>
 					</div>
 				</div>
-		<?php }
+		<?php } 
 		} ?>
 
-		<?php if (($surat['id_status'] == 7) && ($this->session->userdata('role') == 2) &&  ($surat['id_kategori_surat'] != 6)) { ?>
+		<?php /* if (($surat['id_status'] == 7) && ($this->session->userdata('role') == 2) &&  ($surat['id_kategori_surat'] != 6)) { ?>
 			<div class="card shadow mt-3">
 				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
 					<p class="h5 text-center font-weight-bold text-white"> ACC Kaprodi </p>
@@ -666,10 +666,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+		<?php } */ ?>
 
 
-		<?php if (($surat['id_status'] == 8) && ($this->session->userdata('role') == 1)) { ?>
+		<?php /* if (($surat['id_status'] == 8) && ($this->session->userdata('role') == 1)) { ?>
 			<div class="card shadow mt-3">
 				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
 					<p class="h5 text-center font-weight-bold text-white"> ACC Direktur </p>
@@ -685,7 +685,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+		<?php } */ ?>
 	</div>
 	<!-- /.col -->
 </div>
