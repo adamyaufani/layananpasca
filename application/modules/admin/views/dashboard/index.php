@@ -78,7 +78,7 @@
 <div class="row">
 
   <!-- Area Chart -->
-
+<?php /*
   <div class="col-xl-8 col-lg-7">
     <div class="card shadow mb-4">
       <!-- Card Header - Dropdown -->
@@ -113,16 +113,16 @@
       </div>
     </div>
   </div>
-
+*/ ?>
   <!-- Pie Chart -->
   <div class="col-xl-4 col-lg-5">
-    <div class="card border-left-warning shadow py-2 mb-4">
+    <div class="card border-left-danger shadow py-2 mb-4">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
           <div class="col mr-2">
-            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
               Total Surat Terbit</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $juml_surat->num_rows(); ?></div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= count($total_surat); ?></div>
           </div>
           <div class="col-auto">
             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -131,12 +131,12 @@
       </div>
     </div>
 
-    <div class="card border-left-ijomuda shadow py-2">
+    <?php /*<div class="card border-left-ijomuda shadow py-2">
       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
         <h6 class="m-0 font-weight-bold text-success">Survey Kepuasan Layanan Pasca</h6>
       </div>
       <div class="card-body">
-        <?php /*
+        
         foreach ($survey as $survey) { ?>
           <div class="row mb-2">
             <div class="col-2"><img width="26" height="" style="float:right" src="<?= base_url(); ?>public/dist/img/<?= $survey['image']; ?>"> </div>
@@ -149,9 +149,9 @@
               <span style="font-size:12px;"><?= round($survey['persen'],2); ?>% <?= $survey['option']; ?> </span>
             </div>
           </div>
-        <?php } */ ?>
+        <?php }
       </div>
-    </div>
+    </div> */ ?>
   </div>
 </div>
 

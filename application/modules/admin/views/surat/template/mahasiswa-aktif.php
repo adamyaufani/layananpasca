@@ -70,6 +70,8 @@
       <tr>
     </table>
   </div>
+  <br>
+  <br>
   <?php if ($pratinjau['tembusan']) {
     $explode = explode(',', $pratinjau['tembusan']);
     echo "<p>Tembusan Yth:</p>";
