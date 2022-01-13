@@ -1,6 +1,6 @@
 <div class="kertas">
 
-<p style="text-align:center;"><strong><u>SURAT KETERANGAN AKTIF KULIAH</u></strong></p>
+<p style="text-align:center;"><strong><u>SURAT KETERANGAN LULUS</u></strong></p>
   <p style="text-align:center;"><strong><u>NO: <?= $no_surat; ?></u></strong></p>
   <br>
   <br>
@@ -51,22 +51,15 @@
         <td>:</td>
         <td><?= $surat['prodi']; ?></td>
       </tr>
-      <tr>
-        <td>Semester</td>
-        <td>:</td>
-        <td><?= get_meta_value('semester_angka', $surat['id'], false); ?> </td>
-      </tr>
+     
     </table>
 
   </div>
 
+    <p>Telah menyelesaikan pendidikan di Program Studi <?= $surat['prodi']; ?> Universitas Muhammadiyah Yogyakarta pada tanggal <?= $surat['tanggal_lulus']; ?>, dan dinyatakan Lulus (Berdasarkan Berita Acara Yudisium Program Studi <?= $surat['prodi']; ?> Nomor: <?= $surat['no_sk_yudisium']; ?> dan Surat Keputusan Direktur Program Pascasarjana Nomor: <?= $surat['no_sk_yudisium_dirpasca']; ?> tentang Kelulusan dan Yudisium Wisuda Periode <?= $surat['periode_wisuda']; ?> Tahun Akademik <?= $surat['ta']; ?>). </p>
 
-   <p> Dengan ini menerangkan bahwa nama tersebut diatas benar-benar masih aktif sebagai mahasiswa Program Studi <?= $surat['prodi']; ?> Semester <?= get_meta_value('ganjil_genap', $surat['id'], false); ?> TA <?= get_meta_value('ta', $surat['id'], false); ?>. Dan surat keterangan ini dibuat sebagai syarat untuk keperluan mendaftar beasiswa.</p>
-
-    <p>Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
-
-
-  </div>
+    <p>Demikian surat keterangan lulus ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
+  
   <p class="salam">Wassalamulaikum warahmatullaahi wabarakatuh</p>
   <div class="ttd-dir">
     <table>

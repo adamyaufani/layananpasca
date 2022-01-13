@@ -43,7 +43,8 @@
         <br />
         <br />
         <br />
-        <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
+        <p><u><?= getUserbyId(getProdiById('11')['ka_prodi'])['fullname']; ?></u>
+        <br>NIK. <?= getUserbyId(getProdiById('11')['ka_prodi'])['nik']; ?></p>
       </td>
       <td style="text-align: center; height:200px; vertical-align:middle">
         &nbsp;
