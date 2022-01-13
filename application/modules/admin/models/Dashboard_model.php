@@ -1,7 +1,10 @@
 <?php
 	class Dashboard_model extends CI_Model{		
 		public function for_graph($status){
-      return $this->db->query("SELECT count(id) as jumlah_surat, DATE_FORMAT(date,'%b') as bulan, DATE_FORMAT(date,'%m') as angka_bulan FROM surat_status
+      return $this->db->query("SELECT 
+      DATE_FORMAT(date,'%b') as bulan, 
+      DATE_FORMAT(date,'%m') as angka_bulan 
+      FROM surat_status
       WHERE id_status = '$status'
       GROUP BY bulan, angka_bulan
       ORDER BY angka_bulan ASC      

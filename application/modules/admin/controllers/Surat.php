@@ -25,14 +25,14 @@ class Surat extends Admin_Controller
 		$id_surat = decrypt_url($id_surat);
 
 		if ($id_surat) {
-		
+
 			$data['status'] = $this->surat_model->get_surat_status($id_surat);
 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 
-			if ($data['surat']['id_status'] == 9 || $data['surat']['id_status'] == 10 ) {
-				$data['no_surat_data'] = $this->surat_model->get_no_surat($id_surat);		
+			if ($data['surat']['id_status'] == 9 || $data['surat']['id_status'] == 10) {
+				$data['no_surat_data'] = $this->surat_model->get_no_surat($id_surat);
 			}
 
 			//cek apakah admin atau pengguna prodi ( admin prodi, tu, kaprodi, kecuali mhs)
@@ -41,7 +41,7 @@ class Surat extends Admin_Controller
 			) {
 
 				if ($data['surat']['id_status'] == 10) {
-		
+
 					//cek apakah sudah mengisi survey
 					$survey = $this->survey_model->get_survey($id_surat, $data['surat']['id_mahasiswa']);
 					if ($survey) {
@@ -67,52 +67,50 @@ class Surat extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
-	public function hapus($kode, $id_kat, $id_surat) {
+	public function hapus($kode, $id_kat, $id_surat)
+	{
 
 		$id_surat = decrypt_url($id_surat);
-		if($id_surat) {
+		if ($id_surat) {
 
-			if($kode == 'd') {
+			if ($kode == 'd') {
 
-				$hapus_exist = $this->db->get_where('surat_status',['id_surat' => $id_surat, 'id_status' => 20])->num_rows();
+				$hapus_exist = $this->db->get_where('surat_status', ['id_surat' => $id_surat, 'id_status' => 20])->num_rows();
 
-				if($hapus_exist < 1 ) {
+				if ($hapus_exist < 1) {
 
 					$hapus = $this->db->set('id_status', '20')
-					->set('date', 'NOW()', FALSE)
-					->set('id_surat', $id_surat)
-					->set('pic', $_SESSION['user_id'])
-					->insert('surat_status');
-
+						->set('date', 'NOW()', FALSE)
+						->set('id_surat', $id_surat)
+						->set('pic', $_SESSION['user_id'])
+						->insert('surat_status');
 				} else {
 					redirect(base_url('admin/surat/index'));
 				}
 
 				//hapus notif yg berkaitan
-				$this->db->where(['id_surat'=> $id_surat]);
+				$this->db->where(['id_surat' => $id_surat]);
 				$hapus = $this->db->delete('notif');
 
 				//hapus yudisium yg berkaitan jika berhubungan drn kategori surat yudisium
-				if($id_kat == 6 ) {
-					$this->db->where(['id_surat'=> $id_surat]);
-					$hapus = $this->db->update('yudisium',['aktif' => 'd']);
+				if ($id_kat == 6) {
+					$this->db->where(['id_surat' => $id_surat]);
+					$hapus = $this->db->update('yudisium', ['aktif' => 'd']);
 				}
-
-			} else if( $kode == 'r') {
-				$this->db->where(['id_surat'=> $id_surat, 'id_status' => '20']);
+			} else if ($kode == 'r') {
+				$this->db->where(['id_surat' => $id_surat, 'id_status' => '20']);
 				$this->db->delete('surat_status');
 
 				//kembalikan peserta di tabel yudisium yjika berhubungan drn kategori surat yudisium
-				if($id_kat == 6 ) {
-					$this->db->where(['id_surat'=> $id_surat]);
-					$hapus = $this->db->update('yudisium',['aktif' => '']);
+				if ($id_kat == 6) {
+					$this->db->where(['id_surat' => $id_surat]);
+					$hapus = $this->db->update('yudisium', ['aktif' => '']);
 				}
 			}
 
-			
-				$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
-				redirect(base_url('admin/surat/index'));
-			
+
+			$this->session->set_flashdata('msg', 'Surat berhasil dihapus!');
+			redirect(base_url('admin/surat/index'));
 		} else {
 			$data['title'] = 'Halaman tidak ditemukan';
 			$data['view'] = 'error404';
@@ -128,7 +126,7 @@ class Surat extends Admin_Controller
 
 		redirect(base_url('admin/surat/detail/' . $id_surat));
 	}
-	
+
 	public function yudisium()
 	{
 		$data['query'] = $this->surat_model->get_surat_yudisium();
@@ -137,7 +135,8 @@ class Surat extends Admin_Controller
 		$this->load->view('layout/layout', $data);
 	}
 
-	public function acc_yudisium() {
+	public function acc_yudisium()
+	{
 
 		if ($this->input->post('submit')) {
 
@@ -180,7 +179,7 @@ class Surat extends Admin_Controller
 			$this->mailer->send_mail($data_notif);
 
 			//remove notif yg berkaitan sama surat ini
-			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+			$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => $this->session->userdata('role')]);
 
 			if ($set_notif) {
 				$this->session->set_flashdata('msg', 'Pendaftaran Yudisium disetujui!');
@@ -238,7 +237,7 @@ class Surat extends Admin_Controller
 			$this->mailer->send_mail($data_notif);
 
 			//remove notif yg berkaitan sama surat ini
-			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+			$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => $this->session->userdata('role')]);
 
 			if ($set_notif) {
 				$this->session->set_flashdata('msg', 'Surat sudah diperiksa oleh TU!');
@@ -273,13 +272,13 @@ class Surat extends Admin_Controller
 					);
 
 					//setelah diacc dir pasca, isi tbl no_surat
-					$insert = $this->db->insert('no_surat', ['id_surat'=> $id_surat]);
+					$insert = $this->db->insert('no_surat', ['id_surat' => $id_surat]);
 
 					//sendmail & notif
 					$this->mailer->send_mail($data_notif);
 
 					//remove notif yg berkaitan sama surat ini
-					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+					$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => $this->session->userdata('role')]);
 
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Direktur Pascasarjana!');
@@ -306,7 +305,7 @@ class Surat extends Admin_Controller
 					$this->mailer->send_mail($data_notif);
 
 					//remove notif yg berkaitan sama surat ini
-					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
+					$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => $this->session->userdata('role')]);
 
 					$this->session->set_flashdata('msg', 'Surat sudah diberi persetujuan oleh Kaprodi!');
 					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
@@ -376,11 +375,11 @@ class Surat extends Admin_Controller
 				$urusan_surat = $this->input->post('urusan_surat');
 				$date = date('Y-m-d');
 				$tanggal_surat = tgl_indo(date("Y-m-d", strtotime($date)));
-				$no_surat =	 $this->surat_model->generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat, $date);	
+				$no_surat =	 $this->surat_model->generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat, $date);
 
 				$pratinjau = array(
 					'stempel_basah' => $stempel_basah,
-				//	'id_surat' => $id_surat,
+					//	'id_surat' => $id_surat,
 					'id_user' => $this->input->post('user_id'),
 					'id_prodi' => $this->input->post('id_prodi'),
 					'id_kategori_surat' => $id_kategori_surat,
@@ -388,25 +387,25 @@ class Surat extends Admin_Controller
 					'kat_tujuan_surat' => $kat_tujuan_surat,
 					'tujuan_surat' => $tujuan_surat,
 					'urusan_surat' => $urusan_surat,
-					'tembusan' => $this->input->post('tembusan'),					
+					'tembusan' => $this->input->post('tembusan'),
 					'instansi' => $this->input->post('instansi'),
 					'lamp' => $this->input->post('lamp'),
 					'hal' => $this->input->post('hal'),
 					'tanggal_terbit' => $date,
 					'no_lengkap' => $no_surat,
 				);
-				
+
 				$update = $this->db->update('no_surat', $pratinjau, array('id_surat' => $id_surat));
-					
-	
+
+
 				$data['pratinjau'] = $pratinjau;
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['no_surat'] = $no_surat;
 				$data['tanggal_surat'] = $tanggal_surat;
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
-	
 
-				if($update) {
+
+				if ($update) {
 
 					$data['title'] = 'Pratinjau Surat';
 					$data['view'] = 'surat/pratinjau_surat';
@@ -415,8 +414,7 @@ class Surat extends Admin_Controller
 					$data['view'] = 'surat/pratinjau_surat_error';
 				}
 
-				$this->load->view('layout/layout', $data);			
-
+				$this->load->view('layout/layout', $data);
 			}
 		}
 	}
@@ -426,20 +424,87 @@ class Surat extends Admin_Controller
 
 		$id_surat = decrypt_url($id_surat);
 
-			if ($id_surat) {
-			
-			 $no_surat = $this->surat_model->get_no_surat($id_surat);			 
-				
-				if ($no_surat) {
+		if ($id_surat) {
 
-					$this->load->library('ciqrcode');
+			$no_surat = $this->surat_model->get_no_surat($id_surat);
 
-					$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
-					$params['level'] = 'L';
-					$params['size'] = 2;
-					$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
-					$this->ciqrcode->generate($params);
+			$data['pratinjau'] = $no_surat;
 
+			$this->db->set('id_status', 10)
+				->set('date', 'NOW()', FALSE)
+				->set('id_surat', $id_surat)
+				->set('pic', $data['pratinjau']['id_user'])
+				->insert('surat_status');
+
+			$data_notif = array(
+				'id_surat' => $id_surat,
+				'id_status' => 10,
+				'kepada' => $data['pratinjau']['id_user'],
+				'role' => array(3)
+			);
+
+			//sendmail & notif
+			$this->mailer->send_mail($data_notif);
+
+			//remove notif yg berkaitan sama surat ini
+			$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => $this->session->userdata('role')]);
+
+
+			$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
+			redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
+		}
+	}
+
+	public function cetak_surat($id_surat, $header)
+	{
+
+		echo $id_surat = decrypt_url($id_surat);
+
+		if ($id_surat) {
+
+			$no_surat = $this->surat_model->get_no_surat($id_surat);
+
+			$data['pratinjau'] = $no_surat;
+
+			if ($no_surat) {
+
+				$this->load->library('ciqrcode');
+
+				$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+				$params['level'] = 'L';
+				$params['size'] = 2;
+				$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
+				$this->ciqrcode->generate($params);
+
+				$data['pratinjau'] = $no_surat;
+				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['no_surat'] = $no_surat['no_lengkap'];
+
+				$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
+				$data['tanggal_surat'] = tgl_indo($tgl_surat);
+
+				if ($data['surat']['kode'] == 'SU') {
+					$kategori = $no_surat['hal'];
+				} else {
+					$kategori = $data['surat']['kategori_surat'];
+				}
+
+				$nim = $data['surat']['username'];
+
+				$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
+
+				$edit_nosurat = array(
+					'file' => $filename . '.pdf',
+				);
+				$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
+
+				$view = $this->load->view('surat/tampil_surat', $data, TRUE);
+				$data['view'] = 'surat/tampil_surat';
+
+				$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
+				$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
+
+				if ($header == 'header') {
 					$mpdf = new \Mpdf\Mpdf([
 						'tempDir' => 'public/documents/pdfdata',
 						'mode' => 'utf-8',
@@ -453,6 +518,29 @@ class Surat extends Admin_Controller
 						'float' => 'left',
 						'setAutoTopMargin' => 'stretch'
 					]);
+
+
+					$mpdf->SetHTMLHeader('
+				<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
+						<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
+				</div>');
+					$mpdf->SetHTMLFooter('
+		
+				<div class="futer">
+					<table style="width:100%">
+						<tr>
+							<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
+							<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
+						</tr>
+					</table>					
+				</div>');
+
+					$mpdf->WriteHTML($view);
+
+					$mpdf->Output($filename . '.pdf', 'D');
+
+				} else {
+
 					$mpdf2 = new \Mpdf\Mpdf([
 						'tempDir' => 'public/documents/pdfdata',
 						'mode' => 'utf-8',
@@ -462,93 +550,19 @@ class Surat extends Admin_Controller
 						'margin_right' => 0,
 						'margin_footer' => 3,
 						'margin_bottom' => 40,
-						'margin_top' => 20,
+						'margin_top' => 40,
 						'float' => 'left',
 						'setAutoTopMargin' => 'stretch'
 					]);
 
-					$data['pratinjau'] = $no_surat;
-					$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-					$data['no_surat'] = $no_surat['no_lengkap'];
-
-					$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
-					$data['tanggal_surat'] = tgl_indo($tgl_surat);
-
-				if($data['surat']['kode'] == 'SU') {
-					$kategori = $no_surat['hal'];
-				} else {
-					$kategori = $data['surat']['kategori_surat'];				
-					
-				}
-
-					$nim = $data['surat']['username'];
-
-					$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
-
-					$edit_nosurat = array(
-						'file' => $filename . '.pdf',
-					);
-					$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
-
-					$view = $this->load->view('surat/tampil_surat', $data, TRUE);
-					$data['view'] = 'surat/tampil_surat';		
-
-					$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
-					$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
-				
-
-					$mpdf->SetHTMLHeader('
-					<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
-							<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
-					</div>');
-					$mpdf->SetHTMLFooter('
-			
-					<div class="futer">
-						<table style="width:100%">
-							<tr>
-								<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
-								<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
-							</tr>
-						</table>					
-					</div>');
-
-					$mpdf->WriteHTML($view);
-
-					$mpdf->Output(FCPATH . 'public/documents/pdfdata/' . $filename . '.pdf', 'F');			
-					
 					$mpdf2->SetHTMLHeader('');
 					$mpdf2->SetHTMLFooter('');
 
 					$mpdf2->WriteHTML($view);
 
-					$mpdf2->Output(FCPATH . 'public/documents/pdfdata/' . $filename . '-nh.pdf', 'F');		
-
-					$this->db->set('id_status', 10)
-						->set('date', 'NOW()', FALSE)
-						->set('id_surat', $id_surat)
-						->set('pic', $data['pratinjau']['id_user'])
-						->insert('surat_status');
-
-					$data_notif = array(
-						'id_surat' => $id_surat,
-						'id_status' => 10,
-						'kepada' => $data['pratinjau']['id_user'],
-						'role' => array(3)
-					);
-
-					//sendmail & notif
-					$this->mailer->send_mail($data_notif);
-
-					//remove notif yg berkaitan sama surat ini
-					$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> $this->session->userdata('role')]);
-
-
-					$this->session->set_flashdata('msg', 'Surat berhasil diterbitkan!');
-					redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat)));
-				
+					$mpdf2->Output( $filename . '-nh.pdf', 'D');
+				}
 			}
-
-			
 		}
 	}
 
@@ -604,7 +618,9 @@ class Surat extends Admin_Controller
 		// ambil keterangan surat berdasar kategori surat
 		$kat_surat = $this->db->select('*')->from('kat_keterangan_surat')->where('id_kategori_surat=', $id)->get()->result_array();
 
-		echo '<pre>'; print_r($kat_surat); echo '</pre>';
+		echo '<pre>';
+		print_r($kat_surat);
+		echo '</pre>';
 
 		if ($kat_surat) {
 
@@ -645,20 +661,22 @@ class Surat extends Admin_Controller
 
 		if ($this->input->post('submit')) {
 
-			echo '<pre>'; print_r($this->input->post('dokumen')); echo '</pre>';
+			echo '<pre>';
+			print_r($this->input->post('dokumen'));
+			echo '</pre>';
 
 			// validasi form, form ini digenerate secara otomatis
 			foreach ($this->input->post('dokumen') as $id => $dokumen) {
 				$this->form_validation->set_rules(
 					'dokumen[' . $id . ']',
-					 kat_keterangan_surat($id)['kat_keterangan_surat'],				
+					kat_keterangan_surat($id)['kat_keterangan_surat'],
 					'trim|required',
 					array('required' => '%s wajib diisi.')
 				);
 			}
 
 			if ($this->form_validation->run() == FALSE) {
-				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');				
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('p');
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
@@ -746,53 +764,59 @@ class Surat extends Admin_Controller
 
 	//---------------------------------------------------
 	// Advanced Search Example
-	public function arsip($klien = null){
-			
-		$data['kategori_surat'] =  $this->surat_model->get_kategori_surat($klien);
+	public function arsip($klien = null)
+	{
 		$data['klien'] =  $klien;
-
+		
+		$data['kategori_surat'] =  $this->surat_model->get_kategori_surat($klien);
 		$prodi = $this->db->select('*')->from('prodi')->get()->result_array();
 		$data['prodi'] =  $prodi;
 
 		$this->session->unset_userdata('kategori_surat');
 		$this->session->unset_userdata('prodi');
 		$this->session->unset_userdata('klien');
-	
+
 		$data['title'] = 'Arsip Surat Keluar';
 		$data['view'] = 'surat/arsip2';
 		$this->load->view('layout/layout', $data);
 	}
 
 	//-------------------------------------------------------
-	function search(){
+	function search()
+	{
 
 		$kategori_surat = $this->input->post('kategori_surat');
 		// $klien = $this->input->post('klien');
 
-	 	$this->session->set_userdata('kategori_surat' ,$this->input->post('kategori_surat'));
-		$this->session->set_userdata('prodi' ,$this->input->post('prodi'));
+		$this->session->set_userdata('kategori_surat', $this->input->post('kategori_surat'));
+		$this->session->set_userdata('prodi', $this->input->post('prodi'));
 		// $this->session->set_userdata('arsip_search_from',$this->input->post('arsip_search_from'));
 		// $this->session->set_userdata('arsip_search_to',$this->input->post('arsip_search_to'));
 
 		// echo "sesi";
-		echo json_encode($kategori_surat);	
+		echo json_encode($kategori_surat);
 	}
 
-	function sesi() {
-		echo '<pre>'; print_r($_SESSION); echo '</pre>'; ;
+	function sesi()
+	{
+		echo '<pre>';
+		print_r($_SESSION);
+		echo '</pre>';;
 
-		echo '<pre>'; print_r($this->surat_model->get_surat_arsip('')); echo '</pre>';
+		echo '<pre>';
+		print_r($this->surat_model->get_surat_arsip(''));
+		echo '</pre>';
 	}
 
 	//---------------------------------------------------
 	// Server-side processing Datatable Example with Advance Search
-	public function arsip_json($klien = null){	
+	public function arsip_json($klien = null)
+	{
 
 		$records['data'] = $this->surat_model->get_surat_arsip($klien);
-		$data = array();	
-		foreach ($records['data']  as $row) 
-		{  			
-			$data[]= array(
+		$data = array();
+		foreach ($records['data']  as $row) {
+			$data[] = array(
 				$row['no_lengkap'],
 				$row['tanggal_terbit'],
 				$row['fullname'],
@@ -800,11 +824,13 @@ class Surat extends Admin_Controller
 				$row['prodi'],
 				$row['instansi'],
 				$row['hal'],
-				'<a class="btn btn-sm btn-success" href="' . base_url('public/documents/pdfdata/'. $row['file']) . '"><i class="fas fa-file-pdf"></i></a>',				
+				
+				'<a class="btn btn-sm btn-success" href="' . base_url('/admin/surat/cetak_surat/' . encrypt_url($row['id_surat']) ) . '/header"><i class="fas fa-file-pdf"></i></a>',
 			);
+			
 		}
 		$records['data'] = $data;
-		echo json_encode($records);	
+		echo json_encode($records);
 	}
 
 	public function get_kategori_surat_by_klien()
@@ -814,70 +840,70 @@ class Surat extends Admin_Controller
 		echo json_encode($data);
 	}
 
-	public function persetujuan_kaprodi() {
+	public function persetujuan_kaprodi()
+	{
 		$id_surat = $this->input->post('id_surat');
 		$id_mhs = $this->input->post('id_mhs');
 		//set status
 		$this->db->set('id_status', '8')
-		->set('pic', $this->session->userdata('user_id'))
-		->set('date', 'NOW()', FALSE)
-		->set('id_surat', $id_surat)
-		->set('catatan', '')
-		->insert('surat_status');
+			->set('pic', $this->session->userdata('user_id'))
+			->set('date', 'NOW()', FALSE)
+			->set('id_surat', $id_surat)
+			->set('catatan', '')
+			->insert('surat_status');
 
-			//hapus notif yg berkaitan
-			
-			//remove notif yg berkaitan sama surat ini
-			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+		//hapus notif yg berkaitan
 
-		
-				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
+		//remove notif yg berkaitan sama surat ini
+		$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => 6]);
 
+
+		redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
 	}
 
-	public function persetujuan_kaprodi_yudisium() {
+	public function persetujuan_kaprodi_yudisium()
+	{
 		$id_surat = $this->input->post('id_surat');
 		$id_mhs = $this->input->post('id_mhs');
 		//set status
 		$this->db->set('id_status', '11')
-		->set('pic', $this->session->userdata('user_id'))
-		->set('date', 'NOW()', FALSE)
-		->set('id_surat', $id_surat)
-		->set('catatan', '')
-		->insert('surat_status');
+			->set('pic', $this->session->userdata('user_id'))
+			->set('date', 'NOW()', FALSE)
+			->set('id_surat', $id_surat)
+			->set('catatan', '')
+			->insert('surat_status');
 
-			//hapus notif yg berkaitan
-			
-			//remove notif yg berkaitan sama surat ini
-			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 6]);
+		//hapus notif yg berkaitan
 
-			//set Yudisium
-			$this->db->set('user_id', $id_mhs )
-			->set('id_surat', $id_surat )
+		//remove notif yg berkaitan sama surat ini
+		$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => 6]);
+
+		//set Yudisium
+		$this->db->set('user_id', $id_mhs)
+			->set('id_surat', $id_surat)
 			->insert('yudisium');
 
-		
-				redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
 
+		redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
 	}
 
-	public function persetujuan_direktur() {
+	public function persetujuan_direktur()
+	{
 		$id_surat = $this->input->post('id_surat');
 		$id_mhs = $this->input->post('id_mhs');
 		//set status
 		$this->db->set('id_status', '9')
-		->set('pic', $this->session->userdata('user_id'))
-		->set('date', 'NOW()', FALSE)
-		->set('id_surat', $id_surat)
-		->set('catatan', '')
-		->insert('surat_status');
+			->set('pic', $this->session->userdata('user_id'))
+			->set('date', 'NOW()', FALSE)
+			->set('id_surat', $id_surat)
+			->set('catatan', '')
+			->insert('surat_status');
 
-			//hapus notif yg berkaitan
-			
-			//remove notif yg berkaitan sama surat ini
-			$set_notif = $this->db->update('notif',['dibaca'=> date('Y-m-d H:i:s'), 'status'=>1],['id_surat'=> $id_surat,'role'=> 8]);
-		
-			redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
+		//hapus notif yg berkaitan
 
+		//remove notif yg berkaitan sama surat ini
+		$set_notif = $this->db->update('notif', ['dibaca' => date('Y-m-d H:i:s'), 'status' => 1], ['id_surat' => $id_surat, 'role' => 8]);
+
+		redirect(base_url('admin/surat/detail/' . encrypt_url($id_surat) . '/' . $id_mhs));
 	}
 }

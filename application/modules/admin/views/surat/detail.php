@@ -14,7 +14,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 
 
-<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> <?= $surat['id']; ?> </h1>
+<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
 
 <div class="row">
 	<div class="col-lg-8 mb-4">
@@ -527,9 +527,9 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					<div class="card-body pb-3">
 						Download Surat
 
-						<a href="<?= base_url("public/documents/pdfdata/" . $no_surat_data['file']); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
-						<?php $noheader = substr($no_surat_data['file'], 0, -4); ?>
-						<a href="<?= base_url("public/documents/pdfdata/" . $noheader . "-nh.pdf"); ?>" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
+						<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+					
+						<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/noheader" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
 					</div>
 				</div>
 			</div>
