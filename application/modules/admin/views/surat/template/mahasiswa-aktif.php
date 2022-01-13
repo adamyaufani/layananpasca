@@ -61,7 +61,7 @@
   </div>
 
 
-   <p> Dengan ini menerangkan bahwa nama tersebut diatas benar-benar masih aktif sebagai mahasiswa Program Studi <?= $surat['prodi']; ?> Semester <?= get_meta_value('ganjil_genap', $surat['id'], false); ?> TA <?= get_meta_value('ta', $surat['id'], false); ?>. Dan surat keterangan ini dibuat sebagai syarat untuk keperluan mendaftar beasiswa.</p>
+   <p> Dengan ini menerangkan bahwa nama tersebut diatas benar-benar masih aktif sebagai mahasiswa Program Studi <?= $surat['prodi']; ?> Semester <?= get_meta_value('ganjil_genap', $surat['id'], false); ?> TA <?= get_meta_value('ta', $surat['id'], false); ?>. Dan surat keterangan ini dibuat sebagai syarat untuk keperluan <?= get_meta_value('keperluan_surat', $surat['id'], false); ?>.</p>
 
     <p>Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
 
