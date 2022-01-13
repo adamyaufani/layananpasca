@@ -1,6 +1,6 @@
 <div class="kertas">
 
-  <p style="text-align:center;"><strong><u>SURAT KETERANGAN AKTIF KULIAH</u></strong></p>
+  <p style="text-align:center;"><strong><u>SURAT TUGAS</u></strong></p>
   <p style="text-align:center;"><strong><u>NO: <?= $no_surat; ?></u></strong></p>
   <br>
   <br>
@@ -65,7 +65,8 @@
           <br>
           <br>
           <br>
-          <p><u>Ir. Sri Atmaja P. Rosyidi, M.Sc.Eng., Ph.D., P.Eng.,IPM</u><br>NIK. 19780415200004123046</p>
+          <p><u><?= getUserbyId(getProdiById('11')['ka_prodi'])['fullname']; ?></u>
+          <br>NIK. <?= getUserbyId(getProdiById('11')['ka_prodi'])['nik']; ?></p>
         </td>
         <td>
           &nbsp;
