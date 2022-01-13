@@ -188,8 +188,6 @@
 
 									$last = end($field);
 									$select = array();
-
-									// echo '<pre>'; print_r($field); echo '</pre>';
 									
 									if ($field) {
 										foreach ($field as $k => $field) {
@@ -254,7 +252,7 @@
 									<span id="errNm2"></span>
 								</div>
 
-								<input type="text" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($field) ? $imp : ''; ?>">
+								<input type="hidden" name="field_surat" data-error="#errNm2" class="field_surat" id="" value="<?= ($field) ? $imp : ''; ?>">
 
 							</div>
 						</div>

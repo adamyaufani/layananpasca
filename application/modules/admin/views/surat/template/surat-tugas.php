@@ -7,15 +7,16 @@
   <p>Yang bertanda tangan di bawah ini :</p>
   <div class="isi_surat">
     <table style="width: 100%;">
+     
       <tr>
         <td>Nama</td>
         <td>:</td>
-        <td>Ir. Sri Atmaja P.Rosyidi, M.Sc.Eng., Ph.D.,P.E.,IPM</td>
+        <td><?= getUserbyId(getProdiById('11')['ka_prodi'])['fullname']; ?></td>
       </tr>
       <tr>
         <td>NIK/NIDN</td>
         <td>:</td>
-        <td>19780415200004 123 046 / 0515047801 </td>
+        <td><?= getUserbyId(getProdiById('11')['ka_prodi'])['nik']; ?> / <?= getUserbyId(getProdiById('11')['ka_prodi'])['nidn']; ?> </td>
       </tr>
       <tr>
         <td>Jabatan</td>
