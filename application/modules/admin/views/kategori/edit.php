@@ -7,6 +7,8 @@
 
 	</div>
 
+
+
 	<div class="col-md-12">
 		<div id="success-alert" class="alert alert-success simpan"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true"> × </button>
 			<h4> Sukses! </h4>Data berhasil diubah
@@ -57,7 +59,9 @@
 		</style>
 
 		<div class="card card-success card-outline">
-
+			<div class="card-header">
+				Kategori Surat
+			</div>
 			<div class="card-body box-profile">
 
 				<?php echo form_open('', array('id' => 'edit_kategori_surat', 'class' => 'form-horizontal'));  ?>
@@ -153,21 +157,6 @@
 					</div>
 				</div> -->
 
-				<div class="form-group row">
-					<label for="template" class="col-md-2 control-label">Template surat</label>
-					<div class="col-md-10">
-						<select name="template" class="form-control">
-							<option value="" <?php echo  set_select('template', '', TRUE); ?>>Pilih Template</option>
-
-							<?php foreach ($template as $tpl) { ?>
-								<option value="<?= $tpl; ?>" <?= (validation_errors()) ? set_select('template', $kat['template']) : "";
-																							echo ($kat['template'] == $tpl) ? "selected" : ""; ?>>
-									<?= $tpl; ?></option>
-							<?php } ?>
-						</select>
-						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('template'); ?></span>
-					</div>
-				</div>
 
 				<div class="form-group row">
 					<label for="template" class="col-md-2 control-label">Form Field
@@ -188,7 +177,7 @@
 
 									$last = end($field);
 									$select = array();
-									
+
 									if ($field) {
 										foreach ($field as $k => $field) {
 											$select[] =  'sort=' . $field['id'];
@@ -267,7 +256,7 @@
 
 								<div id="sortable1" style="list-style: none;" class="connectedSortable keterangan_surat list-group pl-0">
 
-									
+
 
 									<?php
 									if ($keterangan_surat) {
@@ -353,38 +342,71 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="col-md-12 mt-4">
+
+		<div class="card card-success card-outline">
+
+			<div class="card-header">
+				Template Surat
+				<?php echo form_open(base_url('admin/templatesurat/tambah/t'), array('id' => 'tambah_kategori_surat', 'class' => 'form-horizontal  float-right'));  ?>
+				<input type="hidden" value="<?= $kat['id']; ?>" name="id_kategori_surat">
+				<button class="btn btn-sm btn-warning" name="submit" value="submit"><i class="fas fa-edit"></i> Tambah template</button>
+				<?php echo form_close(); ?>
+			</div>
+			<div class="card-body">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th width="92%">Nama Template</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($template as $template) { ?>
+							<tr>
+								<td><?= ($template["nama_template"]) ? $template["nama_template"] : "Template " . $template["id"]; ?></td>
+								<td class="text-center"><a href="<?= base_url('admin/templatesurat/edit/' . $template["id"]); ?>" class="btn btn-success btn-sm"><i class="fas fa-edit"></i> Edit</a></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
+
+
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="<?= base_url('public/vendor/jquery-ui-1.12.1/jquery-ui.min.js'); ?>"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 
 <script type="text/javascript">
+	$(document).ready(function() {
 
-$(document).ready(function() {
+		$('.tambah-field').on('click', function() {
+			var id = $(this).data('id');
 
-	$('.tambah-field').on('click', function() {
-		var id = $(this).data('id');
+			$.ajax({
+				url: SITEURL + "admin/kategorisurat/tambah_field/" + id,
+				success: function(res) {
+					console.log(res);
+					location.reload();
+				},
+				error: function(data) {
+					console.log('Error:', data);
+				}
+			});
+		});
 
-		$.ajax({
-					url: SITEURL + "admin/kategorisurat/tambah_field/" + id,					
-					success: function(res) {
-						console.log(res);
-						location.reload();
-					},
-					error: function(data) {
-						console.log('Error:', data);
-					}
-				});
 	});
 
-});
 
+	var SITEURL = '<?php echo base_url(); ?>';
 
-var SITEURL = '<?php echo base_url(); ?>';
-	
 	$(function() {
 
-		
+
 		$("#sortable1, #sortable2")
 			.accordion({
 				collapsible: true,

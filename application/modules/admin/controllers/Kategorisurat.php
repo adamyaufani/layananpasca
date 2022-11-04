@@ -8,6 +8,7 @@ class Kategorisurat extends MY_Controller
 		parent::__construct();
 		$this->load->model('mahasiswa/surat_model', 'surat_model');
 		$this->load->model('prodi_model', 'prodi_model');
+		$this->load->model('admin/template_model', 'template_model');
 	}
 
 	public function index()
@@ -28,10 +29,8 @@ class Kategorisurat extends MY_Controller
 
 	public function edit($id)
 	{
-		$directory = APPPATH . '/modules/admin/views/surat/template/';
-		$scanned_directory = array_diff(scandir($directory), array('..', '.'));
 		$data['kat'] = $this->surat_model->get_kategori_surat_byid($id);
-		$data['template'] = $scanned_directory;
+		$data['template'] = $this->template_model->get_template_bykat($id);
 		$data['keterangan_surat'] = $this->surat_model->get_kat_keterangan_surat($id, 0);
 		$data['title'] = 'Edit Kategori Surat';
 		$data['view'] = 'kategori/edit';

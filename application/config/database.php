@@ -98,15 +98,16 @@ $db['dbsqlsrv'] = array(
 $db['dbmysql'] = array(
 	'dsn'	=> '',
 
-	'hostname' => '10.0.1.66',
-	'username' => 'UserLPasca',
-	'password' => '2944ebaf277b7a566953736820eea3fe',
-/*
+	// 'hostname' => '10.0.1.66',
+	// 'username' => 'UserLPasca',
+	// 'password' => '2944ebaf277b7a566953736820eea3fe',
+	// 'database' => 'DBLayananpasca',
+	
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-*/
 	'database' => 'DBLayananpasca',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

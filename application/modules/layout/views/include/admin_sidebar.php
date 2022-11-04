@@ -101,6 +101,11 @@
 				<i class="fas fa-fw fa-list"></i>
 				<span>Kategori Surat</span></span></a>
 		</li>
+		<li class="nav-item" id="menu_templatesurat">
+			<a class="nav-link" href="<?= base_url("admin/templatesurat"); ?>">
+				<i class="fas fa-fw fa-newspaper"></i>
+				<span>Template Surat</span></span></a>
+		</li>
 	<?php } // ednif role = 1
 	?>
 

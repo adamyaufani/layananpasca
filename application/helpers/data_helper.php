@@ -110,6 +110,11 @@ function getUserPhoto($id)
 	$CI = &get_instance();
 	return $CI->db->get_where('profil', array('id_user' => $id))->row_array()['photo'];
 }
+function getDirektur()
+{
+	$CI = &get_instance();
+	return $CI->db->query("select prodi.id, users.fullname, users.nik from prodi  left join users on prodi.ka_prodi = users.id where prodi.id = 11")->row_array();
+}
 
 
 //menampilkan kategori keterangan surat
@@ -650,7 +655,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		<?php }
 	} elseif ($fields['type'] == 'wysiwyg') { ?>
 
-		<textarea class="form-control mb-2 textarea-summernote" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+		<textarea class="form-control mb-2 textarea-summernotes" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2

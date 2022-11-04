@@ -423,6 +423,23 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<span class="text-danger"><?php echo form_error('lamp'); ?></span>
 							</div>
 						</div>
+						<div class="form-group row">
+							<label class="col-md-4" for="">Template surat
+								<small class="form-text text-muted">Template surat yang dipakai untuk surat ini.</small></label>
+							<div class="col-md-8">
+
+							<select name="template_surat" id="" class="form-control <?= (form_error('template_surat')) ? 'is-invalid' : ''; ?> ">
+									<option value="">template Surat</option>
+									<?php foreach ($template as $template) { ?>
+										<option value="<?= $template['id']; ?>" <?=
+																													(validation_errors()) ? set_select('template_surat', $template['id']) : (($no_surat_data['template_surat'] == $template['id']) ? "selected" : '');
+																													?>>
+											<?= $template['nama_template']; ?></option>
+									<?php } ?>
+								</select>
+								<span class="text-danger"><?php echo form_error('lamp'); ?></span>
+							</div>
+						</div>
 
 						<div class="form-group row">
 							<label class="col-md-4" for="">Hal

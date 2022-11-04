@@ -18,9 +18,10 @@ class Pengguna_model extends CI_Model
 	public function get_pengguna( $role )
 	{
 		if ($role == '') {
-			$where ="WHERE a.role != 1";
+			// $where ="WHERE a.role != 1";
+			$where ="";
 		} else {
-			$where ="WHERE a.role != 1 AND a.role=$role";
+			$where ="WHERE a.role=$role";
 		}
 		return $this->db->query("SELECT a.*, r.role FROM users a
 		LEFT JOIN role r ON r.id = a.role

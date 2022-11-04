@@ -14,7 +14,8 @@
 		"php": ">=5.3.7",
 		"phpoffice/phpspreadsheet": "^1.13",
 		"mpdf/mpdf": "^8.0",
-		"phpmailer/phpmailer": "^6.4"
+		"phpmailer/phpmailer": "^6.4",
+		"tinymce/tinymce": "^6.2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

@@ -84,7 +84,7 @@ class Surat_model extends CI_Model
         s.id_kategori_surat, 
         s.id_mahasiswa, 
         k.kategori_surat, 
-        k.template, 
+        -- k.template, 
         k.klien, 
         k.tujuan_surat, 
         k.tembusan, 

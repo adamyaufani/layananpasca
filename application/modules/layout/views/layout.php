@@ -126,6 +126,7 @@
 	<script src="<?= base_url() ?>public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 	<script src="<?= base_url() ?>public/dist/js/sb-admin-2.min.js"></script>
+	<script src="<?= base_url() ?>vendor/tinymce/tinymce/tinymce.min.js"></script>
 
 
 	<!-- Logout Modal-->
@@ -147,6 +148,24 @@
 		</div>
 	</div>
 
+	<script>
+    tinymce.init({
+      selector: 'textarea.tinymce',
+			plugins: 'table, code',
+			toolbar:'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
+			menubar: false,
+			content_style: "body {padding:50px; font-family: 'Times New Roman'} p { margin-top:0; margin-bottom:0} ",
+			height : "860",
+			body_id: 'textareaku',
+			table_default_styles: {
+				width: '50%'
+			},
+			table_default_attributes: {
+				border: '0'
+			},
+			table_sizing_mode: 'auto'
+    });
+  </script>
 
 	<script type="text/javascript">
 		$('#confirm-delete').on('show.bs.modal', function(e) {

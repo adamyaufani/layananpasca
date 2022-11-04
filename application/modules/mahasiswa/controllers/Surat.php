@@ -136,6 +136,8 @@ class Surat extends Mahasiswa_Controller
 				//insert field ke tabel keterangan_surat
 				if ($insert) {
 					foreach ($this->input->post('dokumen') as $id => $dokumen) {
+
+						echo $dokumen;
 						$this->db->where(array('id_kat_keterangan_surat' => $id, 'id_surat' => $id_surat));
 						$this->db->update(
 							'keterangan_surat',

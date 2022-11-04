@@ -11,7 +11,8 @@ class Auth_model extends CI_Model
 			//Compare the password attempt with the password we have stored.
 			$result = $query->row_array();
 			$validPassword = password_verify($data['password'], $result['password']);
-			if ($validPassword) {
+			// $validPassword = "mumet";
+			if ($validPassword == $data['password']) {
 				return $result = $query->row_array();
 			}
 		}

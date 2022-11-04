@@ -9,6 +9,7 @@ class Surat extends Admin_Controller
 		$this->load->model('notif/Notif_model', 'notif_model');
 		$this->load->library('mailer');
 		$this->load->model('survey/survey_model', 'survey_model');
+		$this->load->model('admin/template_model', 'template_model');
 	}
 
 	public function index($role = 0)
@@ -30,6 +31,7 @@ class Surat extends Admin_Controller
 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 			$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+			$data['template'] = $this->template_model->get_template_bykat($data['surat']['id_kategori_surat']);
 
 			if ($data['surat']['id_status'] == 9 || $data['surat']['id_status'] == 10) {
 				$data['no_surat_data'] = $this->surat_model->get_no_surat($id_surat);
@@ -51,8 +53,6 @@ class Surat extends Admin_Controller
 						$data['sudah_survey'] = 0;
 					}
 				}
-
-
 				$data['title'] = 'Detail Surat';
 				$data['view'] = 'surat/detail';
 			} else {
@@ -344,6 +344,12 @@ class Surat extends Admin_Controller
 				array('required' => '%s wajib diisi.')
 			);
 			$this->form_validation->set_rules(
+				'template_surat',
+				'Template Surat',
+				'required',
+				array('required' => '%s wajib diisi.')
+			);
+			$this->form_validation->set_rules(
 				'instansi',
 				'Instansi',
 				'trim|required',
@@ -361,6 +367,7 @@ class Surat extends Admin_Controller
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+				$data['template'] = $this->template_model->get_template_bykat($data['surat']['id_kategori_surat']);
 
 				$data['title'] = 'Detail Surat';
 				$data['view'] = 'surat/detail';
@@ -372,14 +379,15 @@ class Surat extends Admin_Controller
 				$no_surat = $this->input->post('no_surat');
 				$kat_tujuan_surat = $this->input->post('kat_tujuan_surat');
 				$tujuan_surat = $this->input->post('tujuan_surat');
+				$template_surat = $this->input->post('template_surat');
 				$urusan_surat = $this->input->post('urusan_surat');
 				$date = date('Y-m-d');
-				$tanggal_surat = tgl_indo(date("Y-m-d", strtotime($date)));
+				$tanggal_surat = tgl_indo(date("Y-m-j", strtotime($date)));
 				$no_surat =	 $this->surat_model->generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat, $date);
 
 				$pratinjau = array(
 					'stempel_basah' => $stempel_basah,
-					//	'id_surat' => $id_surat,
+					'template_surat' => $template_surat,
 					'id_user' => $this->input->post('user_id'),
 					'id_prodi' => $this->input->post('id_prodi'),
 					'id_kategori_surat' => $id_kategori_surat,
@@ -397,12 +405,12 @@ class Surat extends Admin_Controller
 
 				$update = $this->db->update('no_surat', $pratinjau, array('id_surat' => $id_surat));
 
-
 				$data['pratinjau'] = $pratinjau;
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['no_surat'] = $no_surat;
 				$data['tanggal_surat'] = $tanggal_surat;
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+				$data['template_surat'] = $this->template_model->get_template_byid($template_surat);
 
 
 				if ($update) {
@@ -457,114 +465,103 @@ class Surat extends Admin_Controller
 
 	public function cetak_surat($id_surat, $header)
 	{
-
-		echo $id_surat = decrypt_url($id_surat);
+		$id_surat = decrypt_url($id_surat);
 
 		if ($id_surat) {
+			$surat_terbit = $this->surat_model->get_no_surat($id_surat);
+			$data['pratinjau'] = $surat_terbit;
+			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+			$tgl_surat = date("Y-m-j", strtotime($surat_terbit['tanggal_terbit']));
+			$data['tanggal_surat'] = tgl_indo($tgl_surat);
+			$data['template_surat'] = $this->template_model->get_template_byid($data['pratinjau']['template_surat']);
+			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 
-			$no_surat = $this->surat_model->get_no_surat($id_surat);
+			//qrcode
+			$this->load->library('ciqrcode');
+			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+			$params['level'] = 'L';
+			$params['size'] = 2;
+			$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
+			$this->ciqrcode->generate($params);
 
-			$data['pratinjau'] = $no_surat;
+			if ($data['surat']['kode'] == 'SU') {
+				$kategori = $surat_terbit['hal'];
+			} else {
+				$kategori = $data['surat']['kategori_surat'];
+			}
 
-			if ($no_surat) {
+			$nim = $data['surat']['username'];
 
-				$this->load->library('ciqrcode');
+			$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-j') . '-' . $id_surat);
 
-				$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
-				$params['level'] = 'L';
-				$params['size'] = 2;
-				$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
-				$this->ciqrcode->generate($params);
+			$edit_nosurat = array(
+				'file' => $filename . '.pdf',
+			);
+			$this->db->update('no_surat', $edit_nosurat, array('id' => $surat_terbit['id']));
 
-				$data['pratinjau'] = $no_surat;
-				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-				$data['no_surat'] = $no_surat['no_lengkap'];
+			$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
+			$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
 
-				$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
-				$data['tanggal_surat'] = tgl_indo($tgl_surat);
-
-				if ($data['surat']['kode'] == 'SU') {
-					$kategori = $no_surat['hal'];
-				} else {
-					$kategori = $data['surat']['kategori_surat'];
-				}
-
-				$nim = $data['surat']['username'];
-
-				$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
-
-				$edit_nosurat = array(
-					'file' => $filename . '.pdf',
-				);
-				$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
-
-				$view = $this->load->view('surat/tampil_surat', $data, TRUE);
-				$data['view'] = 'surat/tampil_surat';
-
-				$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
-				$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
-
-				if ($header == 'header') {
-					$mpdf = new \Mpdf\Mpdf([
-						'tempDir' => 'public/documents/pdfdata',
-						'mode' => 'utf-8',
-						// 'format' => [24, 24],
-						'format' => 'A4',
-						'margin_left' => 0,
-						'margin_right' => 0,
-						'margin_footer' => 3,
-						'margin_bottom' => 40,
-						'margin_top' => 20,
-						'float' => 'left',
-						'setAutoTopMargin' => 'stretch'
-					]);
+			$view = $this->load->view('surat/tampil_surat', $data, TRUE);
+			// $this->load->view('surat/tampil_surat', $data);
+			
+			if ($header == 'header') {
+			$mpdf = new \Mpdf\Mpdf([
+				'tempDir' => 'public/documents/pdfdata',
+				'mode' => 'utf-8',
+				'format' => 'A4',
+				'margin_left' => 0,
+				'margin_right' => 0,
+				'margin_footer' => 0,
+				'margin_bottom' => 40,
+				'margin_top' => 0,
+				'float' => 'left',
+				'setAutoTopMargin' => 'stretch'
+			]);
 
 
-					$mpdf->SetHTMLHeader('
-				<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
+			$mpdf->SetHTMLHeader('
+				<div style="text-align: left; margin-left:85px;margin-bottom:10px;">
 						<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
 				</div>');
-					$mpdf->SetHTMLFooter('
-		
+
+			$mpdf->SetHTMLFooter('		
 				<div class="futer">
-					<table style="width:100%">
-						<tr>
-							<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
-							<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
-						</tr>
-					</table>					
+				<p>Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p>				
 				</div>');
 
-					$mpdf->WriteHTML($view);
+			
 
-					$mpdf->Output($filename . '.pdf', 'D');
+			$mpdf->WriteHTML($view);
 
-				} else {
+			$mpdf->Output($filename . '.pdf', 'D');
 
-					$mpdf2 = new \Mpdf\Mpdf([
-						'tempDir' => 'public/documents/pdfdata',
-						'mode' => 'utf-8',
-						// 'format' => [24, 24],
-						'format' => 'A4',
-						'margin_left' => 0,
-						'margin_right' => 0,
-						'margin_footer' => 3,
-						'margin_bottom' => 40,
-						'margin_top' => 40,
-						'float' => 'left',
-						'setAutoTopMargin' => 'stretch'
-					]);
+		} else {
 
-					$mpdf2->SetHTMLHeader('');
-					$mpdf2->SetHTMLFooter('');
+			$mpdf2 = new \Mpdf\Mpdf([
+				'tempDir' => 'public/documents/pdfdata',
+				'mode' => 'utf-8',
+				// 'format' => [24, 24],
+				'format' => 'A4',
+				'margin_left' => 0,
+				'margin_right' => 0,
+				'margin_footer' => 3,
+				'margin_bottom' => 40,
+				'margin_top' => 40,
+				'float' => 'left',
+				'setAutoTopMargin' => 'stretch'
+			]);
 
-					$mpdf2->WriteHTML($view);
+			$mpdf2->SetHTMLHeader('');
+			$mpdf2->SetHTMLFooter('');
 
-					$mpdf2->Output( $filename . '-nh.pdf', 'D');
-				}
-			}
-		}
+			$mpdf2->WriteHTML($view);
+
+			$mpdf2->Output( $filename . '-nh.pdf', 'D');
+		} 
 	}
+	}
+
 
 	public function get_tujuan_surat()
 	{
@@ -767,7 +764,7 @@ class Surat extends Admin_Controller
 	public function arsip($klien = null)
 	{
 		$data['klien'] =  $klien;
-		
+
 		$data['kategori_surat'] =  $this->surat_model->get_kategori_surat($klien);
 		$prodi = $this->db->select('*')->from('prodi')->get()->result_array();
 		$data['prodi'] =  $prodi;
@@ -824,10 +821,9 @@ class Surat extends Admin_Controller
 				$row['prodi'],
 				$row['instansi'],
 				$row['hal'],
-				
-				'<a class="btn btn-sm btn-success" href="' . base_url('/admin/surat/cetak_surat/' . encrypt_url($row['id_surat']) ) . '/header"><i class="fas fa-file-pdf"></i></a>',
+
+				'<a class="btn btn-sm btn-success" href="' . base_url('/admin/surat/cetak_surat/' . encrypt_url($row['id_surat'])) . '/header"><i class="fas fa-file-pdf"></i></a>',
 			);
-			
 		}
 		$records['data'] = $data;
 		echo json_encode($records);
