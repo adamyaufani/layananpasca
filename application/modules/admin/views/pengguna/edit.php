@@ -43,6 +43,20 @@
 				</div>
 
 				<div class="form-group">
+					<label for="nik" class="control-label">NIK</label>
+					<div>
+						<input type="nik" value="<?= $user['nik']; ?>" name="nik" class="form-control" id="nik" placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="nidn" class="control-label">NIDN</label>
+					<div>
+						<input type="nidn" value="<?= $user['nidn']; ?>" name="nidn" class="form-control" id="nidn" placeholder="">
+					</div>
+				</div>
+
+				<div class="form-group">
 					<label for="password" class="control-label">Password</label>
 					<div>
 						<input type="password" name="password" class="form-control" id="password" placeholder="">

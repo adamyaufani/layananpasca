@@ -19,7 +19,7 @@ class Pengguna_model extends CI_Model
 	{
 		return $this->db->query("SELECT a.*, r.role FROM users a
 		LEFT JOIN role r ON r.id = a.role
-		WHERE NOT a.role = '3'");
+		WHERE NOT a.role = '3' AND NOT a.role ='1'");
 	}
 
 	public function get_role() {

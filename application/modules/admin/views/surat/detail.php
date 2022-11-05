@@ -612,7 +612,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<?php } else {
 						?>
-							<p>Belum ada feedback dari Mahasiswa.</p>
+							<p class="ml-2">Belum ada feedback dari Mahasiswa.</p>
 
 
 					<?php } // endif blm survey

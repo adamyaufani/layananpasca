@@ -26,10 +26,26 @@
 				</div>
 
 				<div class="form-group">
-					<label for="email" class="control-label">Email</label>
+					<label for="nidn" class="control-label">Email</label>
 					<div>
 						<input type="email" name="email" class="form-control <?= (form_error('email')) ? 'is-invalid' : ''; ?>" id="email" placeholder="" value="<?php if(validation_errors()) {echo set_value('email');  }  ?>" >
 						<span class="text-danger"><?php echo form_error('email'); ?></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="nik" class="control-label">NIK</label>
+					<div>
+						<input type="nik" name="nik" class="form-control <?= (form_error('nik')) ? 'is-invalid' : ''; ?>" id="nik" placeholder="" value="<?php if(validation_errors()) {echo set_value('nik');  }  ?>" >
+						<span class="text-danger"><?php echo form_error('nik'); ?></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="nidn" class="control-label">NIDN</label>
+					<div>
+						<input type="nidn" name="nidn" class="form-control <?= (form_error('nidn')) ? 'is-invalid' : ''; ?>" id="nidn" placeholder="" value="<?php if(validation_errors()) {echo set_value('nidn');  }  ?>" >
+						<span class="text-danger"><?php echo form_error('nidn'); ?></span>
 					</div>
 				</div>
 

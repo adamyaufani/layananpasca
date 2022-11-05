@@ -56,6 +56,8 @@ class Pengguna extends Admin_Controller
 					'email' => $this->input->post('email'),
 					'role' => $this->input->post('role'),
 					'fullname' => $this->input->post('nama'),
+					'nik' => $this->input->post('nik'),
+					'nidn' => $this->input->post('nidn'),
 					'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 					'created_at' => date('Y-m-d : h:m:s'),
 					'updated_at' => date('Y-m-d : h:m:s'),
@@ -95,6 +97,8 @@ class Pengguna extends Admin_Controller
 					'email' => $this->input->post('email'),
 					'role' => $this->input->post('role'),
 					'fullname' => $this->input->post('nama'),
+					'nik' => $this->input->post('nik'),
+					'nidn' => $this->input->post('nidn'),
 					'password' => ($this->input->post('password') !== "" ? password_hash($this->input->post('password'), PASSWORD_BCRYPT) : $this->input->post('password_hidden')),
 					'updated_at' => date('Y-m-d : h:m:s'),
 				);
