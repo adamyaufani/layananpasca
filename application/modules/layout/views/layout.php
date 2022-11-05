@@ -36,9 +36,6 @@
 	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
 
 
-	<script src="<?= base_url() ?>/public/vendor/ckeditor5/build/ckeditor.js"></script>
-
-
 	<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
 
 	<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
@@ -86,7 +83,7 @@
 			<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; 2021 <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
+						<span>Copyright &copy; <?= date('Y'); ?> <a href="http://pascasarjana.umy.ac.id">Program Pascasarjan UMY</a>.
 							All rights reserved.</span>
 					</div>
 				</div>
@@ -165,6 +162,20 @@
 			},
 			table_sizing_mode: 'auto'
     });
+    tinymce.init({
+      selector: '.textarea-summernote',
+			plugins: 'table, code',
+			toolbar:'undo redo | | styles | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
+			menubar: false,		
+			height : "200",
+			table_default_styles: {
+				width: '50%'
+			},
+			table_default_attributes: {
+				border: '0'
+			},
+			table_sizing_mode: 'auto'
+    });
   </script>
 
 	<script type="text/javascript">
@@ -227,49 +238,7 @@
 		}, 1000);
 	</script>
 
-	<script>
-		document.querySelectorAll('.textarea-summernote').forEach(function(val) {
-			ClassicEditor
-				.create(val, {
-					toolbar: {
-						items: [
-							'bold',
-							'italic',
-							'underline',
-							'|',
-							'heading',
-							'|',
-							'indent',
-							'outdent',
-							'alignment',
-							'|',
-							'numberedList',
-							'bulletedList',
-							'|',
-							'insertTable',
-							'|',
-							'undo',
-							'redo',
-							'|',
-							'code'
-						]
-					},
-					language: 'id',
-					table: {
-						contentToolbar: [
-							'tableColumn',
-							'tableRow',
-							'mergeTableCells'
-						]
-					},
-					licenseKey: '',
-				})
-				.catch(error => {
-					console.log(error);
-				});
-		});
-	</script>
-
+	
 
 </body>
 

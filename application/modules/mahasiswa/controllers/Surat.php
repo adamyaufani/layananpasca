@@ -9,6 +9,7 @@ class Surat extends Mahasiswa_Controller
 		$this->load->model('survey/survey_model', 'survey_model');
 		$this->load->model('notif/Notif_model', 'notif_model');
 		$this->load->helper('date');
+		$this->load->model('admin/template_model', 'template_model');
 	}
 
 	public function index()
@@ -266,91 +267,167 @@ class Surat extends Mahasiswa_Controller
 		//}
 	}
 
+	
 	public function cetak_surat($id_surat)
 	{
-
 		$id_surat = decrypt_url($id_surat);
 
 		if ($id_surat) {
+			$surat_terbit = $this->surat_model->get_no_surat($id_surat);
+			$data['pratinjau'] = $surat_terbit;
+			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+			$tgl_surat = date("Y-m-j", strtotime($surat_terbit['tanggal_terbit']));
+			$data['tanggal_surat'] = tgl_indo($tgl_surat);
+			$data['template_surat'] = $this->template_model->get_template_byid($data['pratinjau']['template_surat']);
+			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 
-			$no_surat = $this->surat_model->get_no_surat($id_surat);
+			//qrcode
+			$this->load->library('ciqrcode');
+			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+			$params['level'] = 'L';
+			$params['size'] = 2;
+			$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
+			$this->ciqrcode->generate($params);
 
-			$data['pratinjau'] = $no_surat;
+			if ($data['surat']['kode'] == 'SU') {
+				$kategori = $surat_terbit['hal'];
+			} else {
+				$kategori = $data['surat']['kategori_surat'];
+			}
 
-			if ($no_surat) {
+			$nim = $data['surat']['username'];
 
-				$this->load->library('ciqrcode');
+			$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-j') . '-' . $id_surat);
 
-				$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
-				$params['level'] = 'L';
-				$params['size'] = 2;
-				$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
-				$this->ciqrcode->generate($params);
+			$edit_nosurat = array(
+				'file' => $filename . '.pdf',
+			);
+			$this->db->update('no_surat', $edit_nosurat, array('id' => $surat_terbit['id']));
 
-				$data['pratinjau'] = $no_surat;
-				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-				$data['no_surat'] = $no_surat['no_lengkap'];
+			$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
+			$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
 
-				$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
-				$data['tanggal_surat'] = tgl_indo($tgl_surat);
-
-				if ($data['surat']['kode'] == 'SU') {
-					$kategori = $no_surat['hal'];
-				} else {
-					$kategori = $data['surat']['kategori_surat'];
-				}
-
-				$nim = $data['surat']['username'];
-
-				$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
-
-				$edit_nosurat = array(
-					'file' => $filename . '.pdf',
-				);
-				$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
-
-				$view = $this->load->view('admin/surat/tampil_surat', $data, TRUE);
-				$data['view'] = 'surat/tampil_surat';
-
-				$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
-				$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
+			$view = $this->load->view('admin/surat/tampil_surat', $data, TRUE);
+			// $this->load->view('surat/tampil_surat', $data);
 
 				$mpdf = new \Mpdf\Mpdf([
 					'tempDir' => 'public/documents/pdfdata',
 					'mode' => 'utf-8',
-					// 'format' => [24, 24],
 					'format' => 'A4',
 					'margin_left' => 0,
 					'margin_right' => 0,
-					'margin_footer' => 3,
+					'margin_footer' => 4,
 					'margin_bottom' => 40,
-					'margin_top' => 20,
+					'margin_top' => 0,
 					'float' => 'left',
 					'setAutoTopMargin' => 'stretch'
 				]);
 
 
 				$mpdf->SetHTMLHeader('
-				<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
+				<div style="text-align: left; margin-left:85px;margin-bottom:10px;">
 						<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
 				</div>');
-				$mpdf->SetHTMLFooter('
-		
+
+				$mpdf->SetHTMLFooter('		
 				<div class="futer">
-					<table style="width:100%">
-						<tr>
-							<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
-							<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
-						</tr>
-					</table>					
+				<p>Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p>				
 				</div>');
+
+
 
 				$mpdf->WriteHTML($view);
 
 				$mpdf->Output($filename . '.pdf', 'D');
-			}
+			
 		}
 	}
+
+	// public function cetak_surat($id_surat)
+	// {
+
+	// 	$id_surat = decrypt_url($id_surat);
+
+	// 	if ($id_surat) {
+
+	// 		$no_surat = $this->surat_model->get_no_surat($id_surat);
+
+	// 		$data['pratinjau'] = $no_surat;
+
+	// 		if ($no_surat) {
+
+	// 			$this->load->library('ciqrcode');
+
+	// 			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+	// 			$params['level'] = 'L';
+	// 			$params['size'] = 2;
+	// 			$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
+	// 			$this->ciqrcode->generate($params);
+
+	// 			$data['pratinjau'] = $no_surat;
+	// 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+	// 			$data['no_surat'] = $no_surat['no_lengkap'];
+
+	// 			$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
+	// 			$data['tanggal_surat'] = tgl_indo($tgl_surat);
+
+	// 			if ($data['surat']['kode'] == 'SU') {
+	// 				$kategori = $no_surat['hal'];
+	// 			} else {
+	// 				$kategori = $data['surat']['kategori_surat'];
+	// 			}
+
+	// 			$nim = $data['surat']['username'];
+
+	// 			$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
+
+	// 			$edit_nosurat = array(
+	// 				'file' => $filename . '.pdf',
+	// 			);
+	// 			$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
+
+	// 			$view = $this->load->view('admin/surat/tampil_surat', $data, TRUE);
+	// 			$data['view'] = 'surat/tampil_surat';
+
+	// 			$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
+	// 			$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
+
+	// 			$mpdf = new \Mpdf\Mpdf([
+	// 				'tempDir' => 'public/documents/pdfdata',
+	// 				'mode' => 'utf-8',
+	// 				// 'format' => [24, 24],
+	// 				'format' => 'A4',
+	// 				'margin_left' => 0,
+	// 				'margin_right' => 0,
+	// 				'margin_footer' => 3,
+	// 				'margin_bottom' => 40,
+	// 				'margin_top' => 20,
+	// 				'float' => 'left',
+	// 				'setAutoTopMargin' => 'stretch'
+	// 			]);
+
+
+	// 			$mpdf->SetHTMLHeader('
+	// 			<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
+	// 					<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
+	// 			</div>');
+	// 			$mpdf->SetHTMLFooter('
+		
+	// 			<div class="futer">
+	// 				<table style="width:100%">
+	// 					<tr>
+	// 						<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
+	// 						<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
+	// 					</tr>
+	// 				</table>					
+	// 			</div>');
+
+	// 			$mpdf->WriteHTML($view);
+
+	// 			$mpdf->Output($filename . '.pdf', 'D');
+	// 		}
+	// 	}
+	// }
 
 	public function doupload()
 	{

@@ -92,9 +92,9 @@ function getUsersbyRole($role, $prodi)
 	$CI = &get_instance();
 
 	if ($prodi) {
-		return  $CI->db->select('*')->from('users')->where(array('role' => $role, 'id_prodi' => $prodi))->get()->result_array();
+		return  $CI->db->select('id, username, email, role, fullname, aktif, nik, nidn')->from('users')->where(array('role' => $role, 'id_prodi' => $prodi))->get()->result_array();
 	} else {
-		return  $CI->db->select('*')->from('users')->where(array('role' => $role))->get()->result_array();
+		return  $CI->db->select('id, username, email, role, fullname, aktif, nik, nidn')->from('users')->where(array('role' => $role))->get()->result_array();
 	}
 }
 // -----------------------------------------------------------------------------
@@ -261,7 +261,7 @@ function generate_form_field($id, $id_surat, $id_status)
 				$('#drag-and-drop-zone-<?= $id; ?>').dmUploader({ //
 					url: '<?= base_url('mahasiswa/surat'); ?>/doupload',
 					maxFileSize: 3000000, // 3 Megs 
-					extFilter: ['jpg', 'jpeg', 'png', 'pdf'],
+					extFilter: ['jpg', 'jpeg', 'pdf'],
 					onDragEnter: function() {
 						// Happens when dragging something over the DnD area
 						this.addClass('active');
@@ -324,7 +324,7 @@ function generate_form_field($id, $id_surat, $id_status)
 						console.log('error');
 					},
 					onFileExtError: function(id, file) {
-						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya jpg, jpeg, png & pdf').removeClass('text-muted d-none').addClass('text-danger');
+						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya jpg, jpeg & pdf').removeClass('text-muted d-none').addClass('text-danger');
 						console.log('error ext');
 					},
 					onFileSizeError: function(id, file) {
@@ -655,7 +655,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		<?php }
 	} elseif ($fields['type'] == 'wysiwyg') { ?>
 
-		<textarea class="form-control mb-2 textarea-summernotes" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+		<textarea class="form-control mb-2 textarea-summernote" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2

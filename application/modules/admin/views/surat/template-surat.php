@@ -1,13 +1,12 @@
 <style>
 	.isi_surat {
-		font-family: 'timesnewroman', 'Times New Roman';
-		line-height: 1.2;
-		font-size: 12pt !important;
+		line-height: 1.2;		
+		font-family: 'timesnewroman', 'Times New Roman'; 
 	}
 
 	table {
 		width: 100%;
-		font-family: 'timesnewroman', 'Times New Roman';
+		margin-left:0;
 	}
 
 	table tr td {
@@ -19,19 +18,26 @@
 		margin-bottom: 0px;
 	}
 
-	ol {
+	.isi_surat ol {
 		margin: 0;
 		padding: 5px 0 5px 30px;
 		list-style: decimal;
 	}
 
-	ol li {
+	.isi_surat ol li {
 		margin-bottom: 2px;
+	}
+	.tembusan {
+		font-size:10pt;
+	}
+	.tembusan li {
+		font-size:10pt;
 	}
 </style>
 
 
 <?php
+
 //The content which should be parsed
 $content = $template_surat['isi'];
 
@@ -132,7 +138,18 @@ function handleShortcodes($content, $shortcodes)
 
 
 	if ($pratinjau['tembusan']) {
-		$pratinjau['tembusan'];
+
+		echo "<div style='margin-top:20px;' class='tembusan'> <p>Tembusan:</p>
+		<ol>"; 
+			if( strpos($pratinjau['tembusan'], ',') !== false ) {
+				$tembusan = explode(',' , $pratinjau['tembusan']);
+				foreach ($tembusan as $tembusan) {
+					echo '<li>' . $tembusan . '</li>';
+				}
+			} else {
+				echo '<li>' . $pratinjau['tembusan'] . '</li>';
+			}		 
+		echo "</ol></div>";
 	}
 	?>
 

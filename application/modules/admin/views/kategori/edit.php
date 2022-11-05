@@ -201,7 +201,7 @@
 														<input class="form-control" type="text" value="<?= $field['placeholder']; ?>" name="placeholder" />
 													</div>
 													<div class="mb-3">
-														<label for="exampleFormControlInput1" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua)</label>
+														<label for="exampleFormControlInput1" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua. Hindari kata-kata berikut : nama, nim, prodi, nomor_surat, tanggal, lampiran, hal, kepada, qrcode, direktur)</label>
 														<input class="form-control" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
 													</div>
 													<div class="mb-3">
@@ -281,7 +281,7 @@
 														<input class="form-control field-placeholder" type="text" value="<?= $field['placeholder']; ?>" name="placeholder" />
 													</div>
 													<div class="mb-3">
-														<label for="exampleFormControlInput1" class="form-label">Key</label>
+														<label for="exampleFormControlInput1" class="form-label">Key (wajib, tanpa spasi, huruf kecil semua. Hindari kata-kata berikut : nama, nim, prodi, nomor_surat, tanggal, lampiran, hal, kepada, qrcode, direktur)</label>
 														<input class="form-control field-key" type="text" value="<?= $field['key']; ?>" name="key" placeholder="Key sebagai kode identitas field" />
 													</div>
 													<div class="mb-3">

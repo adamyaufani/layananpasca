@@ -9,7 +9,9 @@
             height: 297mm;
             width: 210mm;   
             padding:0;
-            margin:0;     
+            margin:0;
+            font-size: 12pt !important;    
+            font-family: 'timesnewroman', 'Times New Roman'; 
         }
       
         .futer {

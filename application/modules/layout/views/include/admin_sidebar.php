@@ -26,7 +26,7 @@
 	</div>
 
 	<li class="nav-item" id="semua_surat">
-		<?php echo $link = (tampil_notif()->num_rows() > 0) ? $this->session->userdata('role') : ''; ?>
+		<?php $link = (tampil_notif()->num_rows() > 0) ? $this->session->userdata('role') : ''; ?>
 		<a class="nav-link" href="<?= base_url("admin/surat/index/" . $link); ?>">
 			<i class="fas fa-fw fa-envelope"></i>
 			<span>Pengajuan <?= (tampil_notif()->num_rows() > 0) ? '<span class="float-right badge badge-warning">' . tampil_notif()->num_rows() . '</span>' : ''; ?></span></a>
@@ -38,17 +38,27 @@
 				<i class="fas fa-fw fa-envelope"></i>
 				<span>Pengajuan Saya</span></a>
 		</li>
-	<?php } ?>
-	<hr class="sidebar-divider d-none d-md-block">
-	<div class="sidebar-heading">
-		Kelola Surat
-	</div>
 
-	<li class="nav-item" id="semua_surat">
-		<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">
-			<i class="fas fa-fw fa-envelope"></i>
-			<span>Surat Keluar</span></a>
-	</li>
+
+		<hr class="sidebar-divider d-none d-md-block">
+		<div class="sidebar-heading">
+			Kelola Surat
+		</div>
+
+		<li class="nav-item" id="semua_surat">
+			<a class="nav-link" href="<?= base_url("admin/suratmasuk"); ?>">
+				<i class="fas fa-fw fa-arrow-left"></i>
+				<span>Surat masuk</span></a>
+		</li>
+
+		<li class="nav-item" id="semua_surat">
+			<a class="nav-link" href="<?= base_url("admin/surat/arsip"); ?>">
+				<i class="fas fa-fw fa-arrow-right"></i>
+				<span>Surat Keluar</span></a>
+		</li>
+
+	<?php } ?>
+
 	<hr class="sidebar-divider d-none d-md-block">
 	<div class="sidebar-heading">
 		Yudisium
@@ -62,10 +72,10 @@
 
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/yudisium"); ?>">
-			<i class="fas fa-graduation-cap"></i>
+			<i class="fas fa-user-graduate"></i>
 			<span>Peserta Yudisium</span></a>
 	</li>
-<!-- 
+	<!-- 
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("mahasiswa/surat/yudisium"); ?>">
 			<i class="fas fa-graduation-cap"></i>
@@ -74,11 +84,7 @@
 
 	<?php if ($this->session->userdata('role') == 1) { ?>
 
-		<li class="nav-item" id="semua_surat">
-			<a class="nav-link" href="<?= base_url("admin/suratmasuk"); ?>">
-				<i class="fas fa-fw fa-envelope"></i>
-				<span>Surat masuk</span></a>
-		</li>
+
 		<!-- Divider -->
 		<hr class="sidebar-divider d-none d-md-block">
 		<div class="sidebar-heading">
@@ -100,11 +106,6 @@
 			<a class="nav-link" href="<?= base_url("admin/kategorisurat"); ?>">
 				<i class="fas fa-fw fa-list"></i>
 				<span>Kategori Surat</span></span></a>
-		</li>
-		<li class="nav-item" id="menu_templatesurat">
-			<a class="nav-link" href="<?= base_url("admin/templatesurat"); ?>">
-				<i class="fas fa-fw fa-newspaper"></i>
-				<span>Template Surat</span></span></a>
 		</li>
 	<?php } // ednif role = 1
 	?>

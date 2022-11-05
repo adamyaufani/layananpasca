@@ -11,11 +11,11 @@ class Surat_model extends CI_Model
         if ($role == '') {
             $id_status = '';
         } else if ($role == 1) {
-            $id_status = "AND ss.id_status =  9";
+            $id_status = "AND ss.id_status =  8";
         } else if ($role == 2) {
             $id_status = "AND (ss.id_status =  2 OR ss.id_status = 5)";
         } else if ($role == 5) {
-            $id_status = "AND ss.id_status =  8";
+            $id_status = "AND ss.id_status =  9";
         } else if ($role == 6) {
             $id_status = "AND (ss.id_status =  3 OR ss.id_status = 7)";
         } else if ($role == 100) {

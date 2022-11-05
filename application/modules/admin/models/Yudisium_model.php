@@ -4,7 +4,7 @@ class Yudisium_model extends CI_Model
     public function get_yudisium() {
    
       if(($_SESSION['role'] == 2) || ($_SESSION['role'] == 6)) {
-        $where = " AND id_prodi= " . $_SESSION['id_prodi'];
+        $where = " WHERE id_prodi= " . $_SESSION['id_prodi'];
       } else {
         $where ='';
       }
@@ -12,7 +12,8 @@ class Yudisium_model extends CI_Model
       $query = $this->db->query("SELECT y.*, u.fullname, u.username 
         from yudisium y
         LEFT JOIN users u ON y.user_id = u.id
-        WHERE y.aktif NOT IN ('d') $where 
+        -- WHERE y.aktif NOT IN ('d') 
+        $where 
         ORDER BY y.id DESC      
       ");
       return $result = $query->result_array();

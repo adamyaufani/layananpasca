@@ -37,12 +37,12 @@
 							$cek_sudah_buat_surat = cek_sudah_buat_surat($this->session->userdata('user_id'), $kategori['id'], $kategori['min_semester']); ?>
 
 
-							<a class="btn btn-md <?= ($cek_sudah_buat_surat == 1) ? 'btn-ijomuda' : 'd-none'; ?>" href="<?= ($cek_sudah_buat_surat == 1) ? base_url('mahasiswa/surat/buat_surat/' . $kategori['id']) : '#'; ?>"><?= ($cek_sudah_buat_surat == 1) ? 'Ajukan Surat' : 'Saat ini Anda tidak dapat mengajukan surat ini.'; ?></a>
+							<a class="mb-3 btn btn-md btn-ijomuda <?php //= ($cek_sudah_buat_surat == 1) ? 'btn-ijomuda' : 'd-none'; ?>" href="<?= ($cek_sudah_buat_surat == 1) ? base_url('mahasiswa/surat/buat_surat/' . $kategori['id']) : base_url('mahasiswa/surat/buat_surat/' . $kategori['id']); ?>"><?= ($cek_sudah_buat_surat == 1) ? 'Ajukan Surat' : 'Ajukan Surat'; ?></a>
 							<?php
 							if ($cek_sudah_buat_surat > 1) { ?>
 								<div class="alert alert-danger">
 									<span><i class="fas fa-exclamation-triangle"></i> <?php if ($cek_sudah_buat_surat == 2) {
-											echo "Surat yang Anda ajukan sebelumnya masih diproses. Klik <a href='" . base_url('mahasiswa/surat/') . "'>di sini </a> untuk melihat. ";
+											echo "Surat yang Anda ajukan sebelumnya masih diproses. Klik <a href='" . base_url('mahasiswa/surat/') . "'>di sini </a> untuk melihat. Pastikan tidak membuat yang sama berulang kali.";
 										} ?>
 										<?php if ($cek_sudah_buat_surat == 3) {
 											echo "syarat minimum semester (semester 2) belum terpenuhi.";

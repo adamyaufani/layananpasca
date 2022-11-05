@@ -94,7 +94,7 @@ class Kategorisurat extends MY_Controller
 			'deskripsi' => $this->input->post('deskripsinya'),
 			'tujuan_surat' => $this->input->post('tujuan_surat'),
 			// 'tembusan' => $this->input->post('tembusan'),
-			'template' => $this->input->post('template')
+			// 'template' => $this->input->post('template')
 		);
 
 		$id_kategori_surat = $this->input->post('id');

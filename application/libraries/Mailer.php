@@ -40,17 +40,16 @@ class Mailer
 
     foreach ($role as $role) {
       if ($role != 3) {
-
+     
    
-        if ($role === 5) { //dir pasca
-          $users = getUsersbyRole($role, '');
+        if (($role === 1) || ($role === 5)) { 
+          $users = getUsersbyRole($role, '11');
         } else {
-          $users = getUsersbyRole($role, $_SESSION['id_prodi']);          
+          $users = getUsersbyRole($role, $_SESSION['id_prodi']);  
         }
-
-        foreach ($users as $user) {
+        
+       foreach ($users as $user) {
           $mail->addAddress($user['email']);
-          // echo $user['email'];
 
           $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
           $subject = $sp['judul_notif'];
@@ -75,9 +74,7 @@ class Mailer
                 </tr>                                     
               </table>'
           );
-
-          // $isi_email = "asdsad";
-  
+ 
            $mail->Subject = $subject;
            $mail->Body = $this->email_template($isi_email);
 
@@ -88,9 +85,7 @@ class Mailer
 
       } else {
 
-        echo "mahasiswa";
-
-      //  echo getUserbyId($data['kepada'])['email'];
+       echo getUserbyId($data['kepada'])['email'];
         $mail->addAddress(getUserbyId($data['kepada'])['email']);
 
         echo getUserbyId($data['kepada'])['email'];

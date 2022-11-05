@@ -75,14 +75,6 @@
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
 
-					<?php if ($surat['catatan']) { ?>
-						<div class="alert alert-ijomuda ml-3 pb-0">
-							<p class="m-0"><i class="fas fa-comment-dots"></i> <strong>Catatan dari Tata Usaha</strong></p>
-							<hr class="mt-2 mb-3" style="border:1px dashed #b2e4b2">
-							<p><?= $surat['catatan']; ?></p>
-						</div>
-					<?php } ?>
-
 					<div class="timeline timeline-xs">
 						<?php foreach ($timeline as $tl) { ?>
 							<div class="timeline-item <?= ($tl['id_status'] === 7 || $tl['id_status'] === 9) ? 'd-none' : '' ?>">
@@ -105,3 +97,5 @@
 	<?php } ?>
 	<!-- /.col -->
 </div>
+
+
