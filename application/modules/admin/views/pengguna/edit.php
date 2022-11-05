@@ -64,23 +64,29 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="password" class="control-label">Role</label>
+					<label for="role" class="control-label">Role</label>
 					<div>
-						<select id="selectload" class="form-control" name="role">
+						<select id="role" class="form-control <?= (form_error('role')) ? 'is-invalid' : ''; ?>" name="role">
+						<option value="">Pilih Role </option>
 							<?php foreach ($role as $role) { ?>
-								<option value="<?= $role['id'] ?>" <?= ($user['role'] == $role['id']) ? "selected" : ""; ?>><?= $role['role'] ?> </option>
+								<option value="<?= $role['id'] ?>" <?= (validation_errors()) ? (set_select('role', $role['id'])) : ($role['id'] == $user['role'] ? 'selected' : '' ); ?> ><?= $role['role'] ?> </option>
 							<?php } ?>
 						</select>
 					</div>
 				</div>
 
-				<!--	<div class="form-group">
-					<label for="nama" class="control-label">Prodi</label>
+				<div class="form-group">
+					<label for="id_prodi" class="control-label">Prodi</label>
 					<div class="">
-						
+					<select name="id_prodi" class="form-control <?= (form_error('id_prodi')) ? 'is-invalid' : ''; ?>">
+							<option value="">Pilih Program Studi </option>
+							<?php foreach($prodi as $row) { ?>
+							<option value="<?=$row['id']; ?>" <?= (validation_errors()) ? (set_select('id_prodi', $row['id'])) : ($row['id'] == $user['id_prodi'] ? 'selected' : ''); ?>><?=$row['prodi']; ?></option>
+							<?php } ?>
+						</select>
 
 					</div>
-				</div> -->
+				</div>
 
 				<div class="form-group">
 					<div>

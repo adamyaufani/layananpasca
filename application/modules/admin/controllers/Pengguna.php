@@ -58,6 +58,7 @@ class Pengguna extends Admin_Controller
 					'fullname' => $this->input->post('nama'),
 					'nik' => $this->input->post('nik'),
 					'nidn' => $this->input->post('nidn'),
+					'id_prodi' => $this->input->post('id_prodi'),
 					'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
 					'created_at' => date('Y-m-d : h:m:s'),
 					'updated_at' => date('Y-m-d : h:m:s'),
@@ -85,12 +86,15 @@ class Pengguna extends Admin_Controller
 
 			$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required');
 			$this->form_validation->set_rules('nama', 'Nama Lengkap', 'trim|required');
+			$this->form_validation->set_rules('id_prodi', 'Program Studi', 'required', array('required' => '%s wajib diisi'));
+			$this->form_validation->set_rules('role', 'Role', 'trim|required', array('required' => '%s wajib diisi'));
 
 			if ($this->form_validation->run() == FALSE) {
 				$data['user'] = $this->pengguna_model->get_user_by_id($id);
 				$data['role'] = $this->pengguna_model->get_role();
 				$data['title'] = 'Edit Pengguna';
 				$data['view'] = 'admin/pengguna/edit';
+				$data['prodi'] = $this->prodi_model->get_prodi();
 				$this->load->view('layout/layout', $data);
 			} else {
 				$data = array(
@@ -99,6 +103,7 @@ class Pengguna extends Admin_Controller
 					'fullname' => $this->input->post('nama'),
 					'nik' => $this->input->post('nik'),
 					'nidn' => $this->input->post('nidn'),
+					'id_prodi' => $this->input->post('id_prodi'),
 					'password' => ($this->input->post('password') !== "" ? password_hash($this->input->post('password'), PASSWORD_BCRYPT) : $this->input->post('password_hidden')),
 					'updated_at' => date('Y-m-d : h:m:s'),
 				);
@@ -108,7 +113,7 @@ class Pengguna extends Admin_Controller
 
 				if ($result) {
 					$this->session->set_flashdata('msg', 'Pengguna berhasil diubah!');
-					redirect(base_url('admin/pengguna'));
+					redirect(base_url('admin/pengguna/edit/' . $id));
 				}
 			}
 		} else {
@@ -116,6 +121,8 @@ class Pengguna extends Admin_Controller
 			$data['role'] = $this->pengguna_model->get_role();
 			$data['title'] = 'Edit Pengguna';
 			$data['view'] = 'admin/pengguna/edit';
+			$data['prodi'] = $this->prodi_model->get_prodi();
+
 			$this->load->view('layout/layout', $data);
 		}
 	}
