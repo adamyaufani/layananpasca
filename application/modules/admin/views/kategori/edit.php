@@ -189,9 +189,11 @@
 												<div>
 
 													<div class="mb-3">
-														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" value="1" />
+														<input type="hidden" name="required" value=" <?= ($field['required'] == 1) ? '1' : '0'; ?>">
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> class="checkp" />
 														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
-													</div>
+													</div>	
+
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
 														<input class="form-control" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
@@ -222,7 +224,8 @@
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
 															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
-															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File</option>
+															<option value='image' <?= ($field['type'] == 'image') ? 'selected="selected"' : ''; ?>>Image</option>
 														</select>
 													</div>
 													<div class="mb-3">
@@ -269,9 +272,11 @@
 												<p class="nama_field"><span class="nama_field_disini"><?= $field['kat_keterangan_surat']; ?></span></p>
 												<div>
 													<div class="mb-3">
-														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> name="required" value="1" />
+														<input type="hidden" name="required" value=" <?= ($field['required'] == 1) ? '1' : '0'; ?>">
+														<input type="checkbox" <?= ($field['required'] == 1) ? 'checked="checked"' : ''; ?> class="checkp" />
 														<label for="exampleFormControlInput1" class="form-label">Centang jika field wajib</label>
-													</div>
+													</div>												
+
 													<div class="mb-3">
 														<label for="exampleFormControlInput1" class="form-label">Nama Field</label>
 														<input class="form-control field-kat_keterangan_surat" type="text" value="<?= $field['kat_keterangan_surat']; ?>" name="kat_keterangan_surat" />
@@ -302,7 +307,8 @@
 															<option value='ta' <?= ($field['type'] == 'ta') ? 'selected="selected"' : ''; ?>>Tahun Akademik</option>
 															<option value='date' <?= ($field['type'] == 'date') ? 'selected="selected"' : ''; ?>>Tanggal</option>
 															<option value='url' <?= ($field['type'] == 'url') ? 'selected="selected"' : ''; ?>>Url</option>
-															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File/Image</option>
+															<option value='file' <?= ($field['type'] == 'file') ? 'selected="selected"' : ''; ?>>File</option>
+															<option value='image' <?= ($field['type'] == 'image') ? 'selected="selected"' : ''; ?>>Image</option>
 														</select>
 													</div>
 													<div class="mb-3">
@@ -398,6 +404,20 @@
 				}
 			});
 		});
+
+
+				//centang required field
+				$('.checkp').on('click', function() {
+
+					var check = $(this).is(':checked');
+					if (check === true) {
+						$(this).prev().val(1);
+					} else {
+						$(this).prev().val(0);
+					}
+
+				});
+
 
 	});
 

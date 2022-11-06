@@ -959,4 +959,31 @@ class Surat extends Admin_Controller
 		}
 	}
 
+	public function editfield()
+	{
+
+		$id = 	$this->input->post('id');
+		$pengajuan_id = 	$this->input->post('pengajuan_id');
+
+
+		$update_field = $this->db->where(array('id_kat_keterangan_surat' => $id, 'id_surat' => $pengajuan_id))
+			->update(
+				'keterangan_surat',
+				array(
+					'value' =>  $this->input->post('valfield'),
+					'tanggal_edit' => date('Y-m-d h:m:s'),
+					'diedit_oleh' =>  $this->session->userdata('user_id'),
+				)
+			);
+		if ($update_field) {
+			$data = [
+				'status' => 'sukses',
+				'id' => $this->input->post('id'),
+				'pengajuan_id' => $this->input->post('pengajuan_id'),
+			];
+		}
+
+		echo json_encode($data);
+	}
+
 }

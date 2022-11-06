@@ -98,15 +98,50 @@ class Surat extends Mahasiswa_Controller
 
 		if ($this->input->post('submit')) {
 
+		$surat =	$this->surat_model->get_detail_surat($id_surat);
 
-			// validasi form, form ini digenerate secara otomatis
-			foreach ($this->input->post('dokumen') as $id => $dokumen) {
-				$this->form_validation->set_rules(
-					'dokumen[' . $id . ']',
-					kat_keterangan_surat($id)['kat_keterangan_surat'],
-					'trim|required',
-					array('required' => '%s wajib diisi.')
-				);
+			$pengajuan_fields = $this->db->query(
+				"SELECT * FROM kat_keterangan_surat kks
+				WHERE kks.id_kategori_surat = " . $surat['id_kategori_surat'] . "
+				AND kks.aktif = 1 
+				ORDER BY urutan ASC"
+			)->result_array();
+
+			// generate validation
+			foreach ($pengajuan_fields as $pengajuan_field) {
+				//cek apakah field ini wajib
+				//jika wajib
+				if ($pengajuan_field['required'] == 1) {
+
+					if ($pengajuan_field['type'] == 'url') {
+						$callback = '|callback_url_check';
+					} else {
+						$callback = '';
+					}
+
+					$this->form_validation->set_rules(
+						'dokumen[' . $pengajuan_field['id'] . ']',
+						$this->getNamaField($pengajuan_field['id']),
+						'trim|required' . $callback,
+						[
+							'required' => '%s wajib diisi!'
+						]
+
+					);
+				} else {
+
+					//jika tidak wajib, jika field typenya url, tetap dicek utk memeriksa urlnya benar atau salah
+					if ($pengajuan_field['type'] == 'url') {
+
+
+						$this->form_validation->set_rules(
+							'dokumen[' . $pengajuan_field['id'] . ']',
+							$this->getNamaField($pengajuan_field['id']),
+							'trim|callback_url_check_notrequired',
+
+						);
+					}
+				}
 			}
 
 			if ($this->form_validation->run() == FALSE) {
@@ -781,4 +816,51 @@ class Surat extends Mahasiswa_Controller
 			$this->load->view('layout/layout', $data);
 		}
 	}
+
+	private function getNamaField($id_field)
+	{
+		$this->db->select('*');
+		$this->db->from('kat_keterangan_surat');
+		$this->db->where('id', $id_field);
+		$result = $this->db->get()->row_array();
+		return $result['kat_keterangan_surat'];
+	}
+
+	
+	function url_check($str)
+	{
+
+
+		$pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+		if ($str != '') {
+			if (!preg_match($pattern, $str)) {
+				$this->form_validation->set_message('url_check', 'Format URL tidak valid. Contoh format URL yang benar: http://pascasarjana.umy.ac.id atau https://pascasarjana.umy.ac.id');
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			$this->form_validation->set_message('url_check', 'URL tidak boloh kosong');
+			return false;
+		}
+	}
+	function url_check_notrequired($str)
+	{
+
+
+		$pattern = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+		if ($str != '') {
+			if (!preg_match($pattern, $str)) {
+				$this->form_validation->set_message('url_check_notrequired', 'Format URL tidak valid. Contoh format URL yang benar: http://pascasarjana.umy.ac.id atau https://pascasarjana.umy.ac.id');
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+
+			return true;
+		}
+	}
+
+
 }

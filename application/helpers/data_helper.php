@@ -4,7 +4,8 @@ function profPic($id, $w)
 {
 	if ($id) {
 		$year = substr($id, 0, 4);
-		$pic = '<div style="width:' . $w . 'px;height:' . $w . 'px; background:url(https://krs.umy.ac.id/FotoMhs/' . $year . '/' . $id . '.jpg) center top no-repeat; background-size:100%;" class="img-profile rounded-circle"></div>';
+		// $pic = '<div style="width:' . $w . 'px;height:' . $w . 'px; background:url(https://krs.umy.ac.id/FotoMhs/' . $year . '/' . $id . '.jpg) center top no-repeat; background-size:100%;" class="img-profile rounded-circle"></div>';
+		$pic = "";
 	} else {
 		$pic = '<div style="width:' . $w . 'px;height:' . $w . 'px; background:url(https://source.unsplash.com/QAB-WJcbgJk/60x60) center top no-repeat; background-size:100%;" class="img-profile rounded-circle"></div>';
 	}
@@ -19,8 +20,9 @@ if (!function_exists('date_time')) {
 	}
 }
 
-function tgl_indo($tanggal){
-	$bulan = array (
+function tgl_indo($tanggal)
+{
+	$bulan = array(
 		1 =>   'Januari',
 		'Februari',
 		'Maret',
@@ -35,12 +37,12 @@ function tgl_indo($tanggal){
 		'Desember'
 	);
 	$pecahkan = explode('-', $tanggal);
-	
+
 	// variabel pecahkan 0 = tanggal
 	// variabel pecahkan 1 = bulan
 	// variabel pecahkan 2 = tahun
- 
-	return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+
+	return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
 }
 
 function bulan_romawi($bulan)
@@ -124,8 +126,91 @@ function kat_keterangan_surat($id)
 	return $CI->db->get_where('kat_keterangan_surat', array('id' => $id))->row_array();
 }
 
-//menampilkan kategori keterangan surat
-function generate_form_field($id, $id_surat, $id_status)
+
+function field_value_checker($required, $field_value, $id, $verifikasi, $pengajuan_status, $array)
+{
+	if ($required == 1) {
+
+		if (validation_errors()) { // cek adakah eror validasi
+			// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
+			if (set_value('dokumen[' . $id . ']')) {
+				// error di field lain       
+				$value = set_value('dokumen[' . $id . '][]');
+				$valid = '';
+				$disabled = 'en';
+			} else {
+				// error di field ini
+				$value = set_value('dokumen[' . $id . '][]');
+				$valid = 'is-invalid';
+				$disabled = 'en';
+			}
+		} else {
+			//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
+
+			if ($field_value) {
+
+				//field sudah dicek, tapi perlu direvisi
+				if ($verifikasi == 0 && $pengajuan_status == 4) {
+					$value = $field_value;
+					$valid = 'is-invalid';
+					$disabled = 'en';
+				} else {
+					$value = $field_value;
+					$valid = 'sasasasa';
+					$disabled = 'readonly';
+				}
+			} else {
+				//field kosong
+				$value = '';
+				$valid = '';
+				$disabled = 'en';
+			}
+		}
+	} else {
+		if (validation_errors()) { // cek adakah eror validasi
+			// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
+
+			// error di field lain       
+			$value = set_value('dokumen[' . $id . '][]');
+			$valid = '';
+			$disabled = 'en';
+		} else {
+			if ($field_value) {
+				//field sudah dicek, tapi perlu direvisi
+				if ($verifikasi == 0 && $pengajuan_status == 4) {
+					$value = $field_value;
+					$valid = 'is-invalid';
+					$disabled = 'en';
+				} else {
+					$value = $field_value;
+					$valid = '';
+					$disabled = 'readonly';
+				}
+			} else {
+				//field sudah dicek, tapi perlu direvisi
+				if ($verifikasi == 0 && $pengajuan_status == 4) {
+					$value = $field_value;
+					$valid = 'is-invalid';
+					$disabled = 'en';
+				} else {
+					//field kosong
+					$value = '';
+					$valid = '';
+					$disabled = 'en';
+				}
+			}
+		}
+	}
+
+	return array(
+		'value' => $value,
+		'valid' => $valid,
+		'disabled' => $disabled
+	);
+}
+
+//menampilkan Field
+function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 {
 
 	$CI = &get_instance();
@@ -139,6 +224,11 @@ function generate_form_field($id, $id_surat, $id_status)
 
 	$field_value = ($value) ? $value['value'] : '0';
 	$verifikasi = ($value) ? $value['verifikasi'] : '0';
+
+
+
+
+	/* FILE UPLOADER*/
 
 	if ($fields['type'] == 'file') {
 
@@ -158,45 +248,99 @@ function generate_form_field($id, $id_surat, $id_status)
 		}
 
 
-		if (validation_errors()) { // cek adakah eror validasi
-			// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
-			if (set_value('dokumen[' . $id . ']')) {
-				// error di field lain       
-				$form = 'd-none';
-				$listing = 'd-block';
-				$error = '';
-			} else {
-				// error di field ini
-				$form = '';
-				$listing = 'd-none';
-				$error = 'is-invalid';
-			}
-		} else {
-			//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
-			if ($field_value) {
-				//field sudah dicek, tapi perlu direvisi
-				if ($verifikasi == 0 && $id_status == 4) {
-					//field memiliki isi
+		if ($fields['required'] == 1) {
+
+			if (validation_errors()) { // cek adakah eror validasi
+				// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
+				if (set_value('dokumen[' . $id . ']')) {
+					// error di field lain       
+					$form = 'd-none';
+					$listing = 'd-blocks';
+					$error = '';
+					$change = '';
+				} else {
+					// error di field ini
 					$form = '';
 					$listing = 'd-none';
 					$error = 'is-invalid';
-				} else {
-					$form = 'd-none';
-					$listing = 'd-flex';
-					$error = '';
+					$change = '';
 				}
 			} else {
-				//field kosong
-				$form = '';
-				$listing = 'd-none';
-				$error = '';
+				//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
+				if ($field_value) {
+
+					//field sudah dicek, tapi perlu direvisi
+					if ($verifikasi == 0 && $pengajuan_status == 4) {
+						//field memiliki isi
+						$form = 'd-none';
+						$listing = '';
+						$error = 'is-invalid';
+						$change = '';
+					} else {
+						$form = 'd-none';
+						$listing = 'd-blocks';
+						$error = '';
+						$change = 'd-none';
+					}
+				} else {
+					//field kosong
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
+			}
+		} else {
+			if (validation_errors()) { // cek adakah eror validasi
+
+				// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain	
+				if (set_value('dokumen[' . $id . ']')) {
+
+					$form = 'd-none';
+					$listing = 'd-nones';
+					$error = 'is-invalidss';
+					$change = '';
+				} else {
+					// error di field ini
+
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
+			} else {
+				//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
+				if ($field_value) {
+
+					//field sudah dicek, tapi perlu direvisi
+					if ($verifikasi == 0 && $pengajuan_status == 4) {
+						//field memiliki isi
+						$form = '';
+						$listing = '';
+						$error = 'is-invalid';
+						$change = '';
+					} else {
+						$form = 'd-none';
+						$listing = 'd-blocks';
+						$error = '';
+						$change = 'd-none';
+					}
+				} else {
+					//field kosong
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
 			}
 		}
 
-	?>
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+
+?>
 
 		<!-- pad akondisi default (data value kosong), form dNd muncul, listing tidak muncul -->
-		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') : (($verifikasi == 0) && ($id_status == 4) ? '' : $field_value);  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 || $id_status == 2 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 
 		<div class="tampilUploader">
 			<div id="drag-and-drop-zone-<?= $id; ?>" class="dm-uploader p-3 <?= $form; ?> <?= $error; ?>">
@@ -210,7 +354,7 @@ function generate_form_field($id, $id_surat, $id_status)
 
 			<span class="text-danger error"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>" >
+			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>">
 				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>"></li>
 
 				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? '' : 'd-none'; ?> error-revisi"> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
@@ -228,184 +372,478 @@ function generate_form_field($id, $id_surat, $id_status)
 						$filename = explode('/dokumen/', $file['file']);
 						$thumb = $file['thumb'];
 					} else {
-						$thumb  = base_url() .'public/dist/img/pdf.png';
+						$thumb  = base_url() . 'public/dist/img/pdf.png';
 					}
 					?>
 
-					<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() .'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
+					<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 					<div class="media-body mb-1">
 						<p class="mb-2">
 							<strong><?= ($file) ? $filename['1'] : ''; ?></strong> <span class="text-muted"></span>
 						</p>
-						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $form; ?>' data-id='<?= ($file) ? $file['id'] : ''; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
+						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $change; ?>' data-id='<?= ($file) ? $file['id'] : ''; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
 					</div>
 				</li>
 			</ul>
 		</div>
 
-	
+
 		<script>
 			$(document).ready(function() {
-			// Changes the status messages on our list
-			function ui_multi_update_file_status(id, status, message) {
-				$('#uploaderFile' + id).find('span').html(message).prop('class', 'status text-' + status);
-			}
+				// Changes the status messages on our list
+				function ui_multi_update_file_status(id, status, message) {
+					$('#uploaderFile' + id).find('span').html(message).prop('class', 'status text-' + status);
+				}
 
-			$(function() {
-				/*
-				 * For the sake keeping the code clean and the examples simple this file
-				 * contains only the plugin configuration & callbacks.
-				 * 
-				 * UI functions ui_* can be located in: demo-ui.js
-				 */
-				$('#drag-and-drop-zone-<?= $id; ?>').dmUploader({ //
-					url: '<?= base_url('mahasiswa/surat'); ?>/doupload',
-					maxFileSize: 3000000, // 3 Megs 
-					extFilter: ['jpg', 'jpeg', 'pdf'],
-					onDragEnter: function() {
-						// Happens when dragging something over the DnD area
-						this.addClass('active');
-					},
-					onDragLeave: function() {
-						// Happens when dragging something OUT of the DnD area
-						this.removeClass('active');
-					},
-					onInit: function() {
-						// Plugin is ready to use
-					},
-					onComplete: function() {
-						// All files in the queue are processed (success or error)
-					},
-					onNewFile: function(id, file) {
+				$(function() {
+					/*
+					 * For the sake keeping the code clean and the examples simple this file
+					 * contains only the plugin configuration & callbacks.
+					 * 
+					 * UI functions ui_* can be located in: demo-ui.js
+					 */
+					$('#drag-and-drop-zone-<?= $id; ?>').dmUploader({ //
+						url: '<?= base_url('mahasiswa/surat'); ?>/doupload',
+						maxFileSize: 3000000, // 3 Megs 
+						extFilter: ['pdf', 'docx'],
+						onDragEnter: function() {
+							// Happens when dragging something over the DnD area
+							this.addClass('active');
+						},
+						onDragLeave: function() {
+							// Happens when dragging something OUT of the DnD area
+							this.removeClass('active');
+						},
+						onInit: function() {
+							// Plugin is ready to use
+						},
+						onComplete: function() {
+							// All files in the queue are processed (success or error)
+						},
+						onNewFile: function(id, file) {
 
-						var reader = new FileReader();
-						var url = '<?= base_url("public/dist/img/pdf.png"); ?>';					
+							var reader = new FileReader();
+							var url = '<?= base_url("public/dist/img/pdf.png"); ?>';
 
-						// When a new file is added using the file selector or the DnD area
-						var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;background-size:180px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
+							// When a new file is added using the file selector or the DnD area
+							var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;background-size:180px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
 
-						$('#files-<?= $id; ?>').prepend(template);
-					},
-					onBeforeUpload: function(id) {
-						// about tho start uploading a file
-						ui_multi_update_file_status(id, 'uploading', '<img width="40px" height="" src="<?= base_url() ?>public/dist/img/spinners.gif" />');
-					},
-					onUploadCanceled: function(id) {
-						// Happens when a file is directly canceled by the user.
-						ui_multi_update_file_status(id, 'warning', 'Canceled by User');
+							$('#files-<?= $id; ?>').prepend(template);
+						},
+						onBeforeUpload: function(id) {
+							// about tho start uploading a file
+							ui_multi_update_file_status(id, 'uploading', '<img width="40px" height="" src="<?= base_url() ?>public/dist/img/spinners.gif" />');
+						},
+						onUploadCanceled: function(id) {
+							// Happens when a file is directly canceled by the user.
+							ui_multi_update_file_status(id, 'warning', 'Canceled by User');
 
-					},
-					onUploadProgress: function(id, percent) {},
-					onUploadSuccess: function(id, data) {
-						// A file was successfully uploaded
-						ui_multi_update_file_status(id, 'success', '<i class="fas fa-check-circle"></i>');
+						},
+						onUploadProgress: function(id, percent) {},
+						onUploadSuccess: function(id, data) {
+							// A file was successfully uploaded
+							ui_multi_update_file_status(id, 'success', '<i class="fas fa-check-circle"></i>');
 
-						var response = JSON.stringify(data);
-						var obj = JSON.parse(response);
-		
-						if(data.extension == '.pdf') {
-							var url_bg = 'url(<?= base_url(); ?>public/dist/img/pdf.png)';
-						} else {
-							var url_bg = 'url(<?= base_url(); ?>' + obj.thumb + ')';
+							var response = JSON.stringify(data);
+							var obj = JSON.parse(response);
+
+							if (data.extension == '.pdf') {
+								var url_bg = 'url(<?= base_url(); ?>public/dist/img/pdf.png)';
+							} else {
+								var url_bg = 'url(<?= base_url(); ?>' + obj.thumb + ')';
+							}
+
+							$('.id-dokumen-<?= $id; ?>').val(obj.id);
+							$('.deleteUser').removeClass('d-none', '3000');
+							var button = "<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url(); ?>" + obj.orig + "'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger' data-id='" + obj.id + "'> <i class='fas fa-pencil-alt'></i> Ganti</a>";
+							$('.buttonedit-<?= $id; ?>').prepend(button);
+							$('#drag-and-drop-zone-<?= $id; ?>').fadeOut('400');
+							$('.error-revisi').hide();
+							$('.bg-file-<?= $id; ?>').css('background-image', url_bg);
+
+						},
+						onUploadError: function(id, xhr, status, message) {
+							ui_multi_update_file_status(id, 'danger', message);
+
+							console.log('error');
+						},
+						onFileExtError: function(id, file) {
+							$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya pdf dan docx.').removeClass('text-muted d-none').addClass('text-danger');
+							console.log('error ext');
+						},
+						onFileSizeError: function(id, file) {
+
+							$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar. Maksimum 2MB').removeClass('text-muted d-none').addClass('text-danger');
+							console.log('error size');
 						}
+					});
+				});
+				$('body').on('click', 'a.deleteUser-<?= $id; ?>', function(e) {
+					e.preventDefault();
+					var href = $(this).attr("href");
+					var ele = $(this).parents('.media');
 
-						$('.id-dokumen-<?= $id; ?>').val(obj.id);
-						$('.deleteUser').removeClass('d-none', '3000');
-						var button = "<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url(); ?>" + obj.orig + "'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger' data-id='" + obj.id + "'> <i class='fas fa-pencil-alt'></i> Ganti</a>";
-						$('.buttonedit-<?= $id; ?>').prepend(button);
-						$('#drag-and-drop-zone-<?= $id; ?>').fadeOut('400');
-						$('.error-revisi').hide();
-						$('.bg-file-<?= $id; ?>').css('background-image', url_bg);
+					$.ajax({
+						url: href,
+						type: "POST",
+						cache: false,
+						data: {
+							id: $(this).attr("data-id")
+						},
+						success: function(dataResult) {
+							// alert(dataResult);
+							var dataResult = JSON.parse(dataResult);
 
-					},
-					onUploadError: function(id, xhr, status, message) {
-						ui_multi_update_file_status(id, 'danger', message);
+							console.log(dataResult);
+							if (dataResult.statusCode == 200) {
+								ele.fadeOut().remove();
+								$('#files-<?= $id; ?>').find('div.empty').fadeIn();
+								$('#drag-and-drop-zone-<?= $id; ?>').fadeIn('400');
+								$('#drag-and-drop-zone-<?= $id; ?>').removeClass('d-none');
+								$('#files-<?= $id; ?>').find('li.empty').show();
+								$('.id-dokumen-<?= $id; ?>').val('');
+							}
+						}
+					});
 
-						console.log('error');
-					},
-					onFileExtError: function(id, file) {
-						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya jpg, jpeg & pdf').removeClass('text-muted d-none').addClass('text-danger');
-						console.log('error ext');
-					},
-					onFileSizeError: function(id, file) {
-
-						$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar. Maksimum 2MB').removeClass('text-muted d-none').addClass('text-danger');
-						console.log('error size');
-					}
 				});
 			});
-			$('body').on('click', 'a.deleteUser-<?= $id; ?>', function(e) {
-				e.preventDefault();
-				var href = $(this).attr("href");
-				var ele = $(this).parents('.media');
-
-				$.ajax({
-					url: href,
-					type: "POST",
-					cache: false,
-					data: {
-						id: $(this).attr("data-id")
-					},
-					success: function(dataResult) {
-						// alert(dataResult);
-						var dataResult = JSON.parse(dataResult);
-
-						console.log(dataResult);
-						if (dataResult.statusCode == 200) {
-							ele.fadeOut().remove();
-							$('#files-<?= $id; ?>').find('div.empty').fadeIn();
-							$('#drag-and-drop-zone-<?= $id; ?>').fadeIn('400');
-							$('#drag-and-drop-zone-<?= $id; ?>').removeClass('d-none');
-							$('#files-<?= $id; ?>').find('li.empty').show();
-							$('.id-dokumen-<?= $id; ?>').val('');
-						}
-					}
-				});
-
-			});
-		});
 		</script>
 
-	<?php } elseif ($fields['type'] == 'textarea') {  ?>
+	<?php 
+	/* IMAGE UPLOADER */
 
-		<textarea class="form-control 
-		<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
-		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>><?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?></textarea>
+	}	elseif ($fields['type'] == 'image') {
+
+		$image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;
+
+		$media = $CI->db->select('*')->from('media')
+			->where(array('id' => $image_id))->get()->row_array();
+
+		if ($media) {
+			$image = $media['file'];
+			$thumb = $media['thumb'];
+			$exploded = explode("/", $image);
+			$file_name = $exploded[2];
+		} else {
+			$image = '';
+			$file_name = '';
+		}
+
+
+		if ($fields['required'] == 1) {
+
+			if (validation_errors()) { // cek adakah eror validasi
+				// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain
+				if (set_value('dokumen[' . $id . ']')) {
+					// error di field lain       
+					$form = 'd-none';
+					$listing = 'd-blocks';
+					$error = '';
+					$change = '';
+				} else {
+					// error di field ini
+					$form = '';
+					$listing = 'd-none';
+					$error = 'is-invalid';
+					$change = '';
+				}
+			} else {
+				//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
+				if ($field_value) {
+
+					//field sudah dicek, tapi perlu direvisi
+					if ($verifikasi == 0 && $pengajuan_status == 4) {
+						//field memiliki isi
+						$form = 'd-none';
+						$listing = '';
+						$error = 'is-invalid';
+						$change = '';
+					} else {
+						$form = 'd-none';
+						$listing = 'd-blocks';
+						$error = '';
+						$change = 'd-none';
+					}
+				} else {
+					//field kosong
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
+			}
+		} else {
+			if (validation_errors()) { // cek adakah eror validasi
+
+				// kondisional di bawah untuk memeriksa, erornya pada field ini ataukah pada field lain	
+				if (set_value('dokumen[' . $id . ']')) {
+
+					$form = 'd-none';
+					$listing = 'd-nones';
+					$error = 'is-invalidss';
+					$change = '';
+				} else {
+					// error di field ini
+
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
+			} else {
+				//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
+				if ($field_value) {				
+
+					//field sudah dicek, tapi perlu direvisi
+					if ($verifikasi == 0 && $pengajuan_status == 4) {
+						//field memiliki isi
+						$form = '';
+						$listing = '';
+						$error = 'is-invalid';
+						$change = '';
+					} else {
+						
+						$form = 'd-none';
+						$listing = 'd-blocks';
+						$error = '';
+						$change = 'd-none';
+					}
+				} else {
+					//field kosong
+					$form = '';
+					$listing = 'd-none';
+					$error = '';
+					$change = '';
+				}
+			}
+		}
+
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+?>
+
+		<!-- pad akondisi default (data value kosong), form dNd muncul, listing tidak muncul -->
+		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
+
+		<div class="tampilUploader">
+			<div id="drag-and-drop-zone-<?= $id; ?>" class="dm-uploader p-3 <?= $form; ?> <?= $error; ?>">
+				<h5 class="mb-2 mt-2 text-muted">Seret &amp; lepaskan berkas di sini</h5>
+
+				<div class="btn btn-primary btn-block mb-2">
+					<span>Atau klik untuk mengunggah</span>
+					<input type="file" title='Klik untuk mengunggah' />
+				</div>
+			</div><!-- /uploader -->
+
+			<span class="text-danger error"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
+
+			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>">
+				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>"></li>
+
+				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? '' : 'd-none'; ?> error-revisi"> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
+				<li class="media <?= $listing; ?> ">
+
+					<?php
+					if (set_value('dokumen[' . $id . ']')) {
+						$id_file = set_value('dokumen[' . $id . ']');
+					} else {
+						$id_file = $field_value;
+					}
+
+					$file = get_file($id_file);
+					if ($file) {
+						$filename = explode('/dokumen/', $file['file']);
+						$thumb = $file['thumb'];
+					} else {
+						$thumb  = base_url() . 'public/dist/img/pdf.png';
+					}
+					?>
+
+					<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
+					<div class="media-body mb-1">
+						<p class="mb-2">
+							<strong><?= ($file) ? $filename['1'] : ''; ?></strong> <span class="text-muted"></span>
+						</p>
+						<div class="buttonedit"> <a class='btn btn-sm btn-warning' target='_blank' href='<?= ($file) ? base_url($file['file']) : ''; ?>'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger <?= $change; ?>' data-id='<?= ($file) ? $file['id'] : ''; ?>'> <i class='fas fa-pencil-alt'></i> Ganti</a></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+
+		<script>
+			$(document).ready(function() {
+				// Changes the status messages on our list
+				function ui_multi_update_file_status(id, status, message) {
+					$('#uploaderFile' + id).find('span').html(message).prop('class', 'status text-' + status);
+				}
+
+				$(function() {
+					/*
+					 * For the sake keeping the code clean and the examples simple this file
+					 * contains only the plugin configuration & callbacks.
+					 * 
+					 * UI functions ui_* can be located in: demo-ui.js
+					 */
+					$('#drag-and-drop-zone-<?= $id; ?>').dmUploader({ //
+						url: '<?= base_url('mahasiswa/surat'); ?>/doupload',
+						maxFileSize: 3000000, // 3 Megs 
+						extFilter: ['jpg', 'jpeg'],
+						onDragEnter: function() {
+							// Happens when dragging something over the DnD area
+							this.addClass('active');
+						},
+						onDragLeave: function() {
+							// Happens when dragging something OUT of the DnD area
+							this.removeClass('active');
+						},
+						onInit: function() {
+							// Plugin is ready to use
+						},
+						onComplete: function() {
+							// All files in the queue are processed (success or error)
+						},
+						onNewFile: function(id, file) {
+
+							var reader = new FileReader();
+							var url = '<?= base_url("public/dist/img/pdf.png"); ?>';
+
+							// When a new file is added using the file selector or the DnD area
+							var template = '<li class="media" id="uploaderFile' + id + '"><div class="bg-file-<?= $id; ?>" style="background-position: center center;background-repeat: no-repeat;width:100px; height:100px;margin-right:20px;margin-bottom:20px;background-size:180px;"></div><div class="media-body mb-1"><p class="mb-2"><strong>' + file.name + '</strong> - Status: <span class="text-muted">Waiting</span></p><div class="buttonedit-<?= $id; ?>"></div></div></li>';
+
+							$('#files-<?= $id; ?>').prepend(template);
+						},
+						onBeforeUpload: function(id) {
+							// about tho start uploading a file
+							ui_multi_update_file_status(id, 'uploading', '<img width="40px" height="" src="<?= base_url() ?>public/dist/img/spinners.gif" />');
+						},
+						onUploadCanceled: function(id) {
+							// Happens when a file is directly canceled by the user.
+							ui_multi_update_file_status(id, 'warning', 'Canceled by User');
+
+						},
+						onUploadProgress: function(id, percent) {},
+						onUploadSuccess: function(id, data) {
+							// A file was successfully uploaded
+							ui_multi_update_file_status(id, 'success', '<i class="fas fa-check-circle"></i>');
+
+							var response = JSON.stringify(data);
+							var obj = JSON.parse(response);
+
+							if (data.extension == '.pdf') {
+								var url_bg = 'url(<?= base_url(); ?>public/dist/img/pdf.png)';
+							} else {
+								var url_bg = 'url(<?= base_url(); ?>' + obj.thumb + ')';
+							}
+
+							$('.id-dokumen-<?= $id; ?>').val(obj.id);
+							$('.deleteUser').removeClass('d-none', '3000');
+							var button = "<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url(); ?>" + obj.orig + "'><i class='fas fa-eye'></i> Lihat</a> <a href='<?= base_url('mahasiswa/surat'); ?>/hapus_file/' class='deleteUser-<?= $id; ?> btn btn-sm btn-danger' data-id='" + obj.id + "'> <i class='fas fa-pencil-alt'></i> Ganti</a>";
+							$('.buttonedit-<?= $id; ?>').prepend(button);
+							$('#drag-and-drop-zone-<?= $id; ?>').fadeOut('400');
+							$('.error-revisi').hide();
+							$('.bg-file-<?= $id; ?>').css('background-image', url_bg);
+
+						},
+						onUploadError: function(id, xhr, status, message) {
+							ui_multi_update_file_status(id, 'danger', message);
+
+							console.log('error');
+						},
+						onFileExtError: function(id, file) {
+							$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File tidak didukung. Hanya jpg dan jpeg.').removeClass('text-muted d-none').addClass('text-danger');
+							console.log('error ext');
+						},
+						onFileSizeError: function(id, file) {
+
+							$('#files-<?= $id; ?>').find('li.empty').html('<i class="fas fa-exclamation-triangle"></i> File terlalu besar. Maksimum 2MB').removeClass('text-muted d-none').addClass('text-danger');
+							console.log('error size');
+						}
+					});
+				});
+				$('body').on('click', 'a.deleteUser-<?= $id; ?>', function(e) {
+					e.preventDefault();
+					var href = $(this).attr("href");
+					var ele = $(this).parents('.media');
+
+					$.ajax({
+						url: href,
+						type: "POST",
+						cache: false,
+						data: {
+							id: $(this).attr("data-id")
+						},
+						success: function(dataResult) {
+							// alert(dataResult);
+							var dataResult = JSON.parse(dataResult);
+
+							console.log(dataResult);
+							if (dataResult.statusCode == 200) {
+								ele.fadeOut().remove();
+								$('#files-<?= $id; ?>').find('div.empty').fadeIn();
+								$('#drag-and-drop-zone-<?= $id; ?>').fadeIn('400');
+								$('#drag-and-drop-zone-<?= $id; ?>').removeClass('d-none');
+								$('#files-<?= $id; ?>').find('li.empty').show();
+								$('.id-dokumen-<?= $id; ?>').val('');
+							}
+						}
+					});
+
+				});
+			});
+		</script>
+
+	<?php }
+	
+	elseif ($fields['type'] == 'textarea') {
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
+
+		<textarea class="form-control <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>><?= $check['value'];  ?></textarea>
+
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-	<?php } elseif ($fields['type'] == 'wysiwyg') {  ?>
+	<?php } elseif ($fields['type'] == 'wysiwyg') { 
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false); ?>
 
 		<div class="<?= (form_error('tujuan_surat')) ? 'summernote-is-invalid' : ''; ?>">
 
-			<textarea class="form-control 
-<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
-<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?> textarea-summernote" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>><?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :   $field_value;  ?></textarea>
+			<textarea class="form-control <?= $check['valid']; ?> textarea-summernote" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> ><?= $check['value'];  ?></textarea>
+
 			<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		</div>
 
 
-	<?php } elseif ($fields['type'] == 'text') {  ?>
+	<?php } elseif ($fields['type'] == 'text') { 
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
 
-		<input type="text" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'url') {  ?>
+	<?php } elseif ($fields['type'] == 'url') { 
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
 
-		<input type="url" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<input type="url" class="form-control <?= $check['valid']; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'date') {  ?>
+	<?php } elseif ($fields['type'] == 'date') {  
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
 
-		<input type="date" class="form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0) || ($id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<input type="date" class="form-control <?= $check['valid']; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'date_range') { ?>
+	<?php } elseif ($fields['type'] == 'date_range') { 
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
 
-		<input type="text" class="form-control" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?> />
+		<input type="text" class="form-control <?= $check['valid']; ?>" value="<?= (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;  ?>" <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
 
 		<script type="text/javascript">
 			$(function() {
@@ -431,10 +869,9 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 	<?php } elseif ($fields['type'] == 'ta') { //tahun akademik 
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
-		<select class="form-control
-		<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
-		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>">
+		<select class="form-control <?= $check['valid']; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= $check['disabled'];  ?>>
 			<option value=""> -- Pilih Tahun Akademik -- </option>
 			<?php
 			$cur_year = date("Y");
@@ -447,11 +884,10 @@ function generate_form_field($id, $id_surat, $id_status)
 		</select>
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-	<?php } elseif ($fields['type'] == 'sem') { //tahun akademik 
+	<?php } elseif ($fields['type'] == 'sem') { //Semester
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
-		<select class="form-control
-		<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
-		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>">
+		<select class="form-control d<?= $check['valid']; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= $check['disabled'];  ?>>
 			<option value=""> -- Pilih Semester -- </option>
 			<?php
 			$cur_year = date("Y");
@@ -463,12 +899,10 @@ function generate_form_field($id, $id_surat, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Mahasiswa -->
-	<?php } elseif ($fields['type'] == 'select_mahasiswa') { //tahun akademik 
+	<?php } elseif ($fields['type'] == 'select_mahasiswa') { //mahasiswa
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
-
-
-
-		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
+		<select class="<?= $fields['key']; ?> form-control <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>>
 			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getUserMhsbyId($field_value)['FULLNAME'] : ''; ?></option>
 		</select>
 
@@ -500,26 +934,15 @@ function generate_form_field($id, $id_surat, $id_status)
 			});
 		</script>
 
-		<!-- <select class="form-control
-		<?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> 
-		<?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
-			<option value=""> -- Pilih Dosen -- </option>
-			<?php
-			$CI = &get_instance();
-			$CI->db->order_by('id', 'DESC');
-			$dosen = $CI->db->get_where('users', array('role' => 4))->result_array();
 
-			foreach ($dosen as $dosen) {
-			?>
-				<option value="<?= $dosen['id'] ?>" <?= (validation_errors()) ? set_select('dokumen[' . $id . ']',  $dosen['id']) : ""; ?><?= ($field_value ==  $dosen['id']) ? "selected" : ""; ?>><?= $dosen['fullname'] ?></option>
-			<?php } ?>
-		</select> -->
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		<!--  Piih Pembimbing -->
-	<?php } elseif ($fields['type'] == 'select_dosen') { //tahun akademik ?>
+	<?php } elseif ($fields['type'] == 'select_dosen') { //dosen
+		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
+	?>
 
-		<select class="<?= $fields['key']; ?> form-control <?= (form_error('dokumen[' . $id . ']')) ? 'is-invalid' : ''; ?> <?= (($verifikasi == 0) && ($id_status == 4)) ? 'is-invalid' : ''; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= ($id_status == 1 && $verifikasi == 0 || $id_status == 4 && $verifikasi == 0) ? "" : "disabled"; ?>>
+		<select class="<?= $fields['key']; ?> form-control <?= $check['valid']; ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>>
 			<option value="<?= ($field_value) ? $field_value : ''; ?>"><?= ($field_value) ? getDosenbyId($field_value)['nama'] : ''; ?></option>
 		</select>
 
@@ -614,7 +1037,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
 				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($image); ?>'><i class='fas fa-eye'></i> Lihat</a>
-				
+
 			</div>
 		</div>
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
@@ -634,7 +1057,54 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
 			</div>
 		<?php }
-	} elseif ($fields['type'] == 'textarea') { ?>
+	} elseif ($fields['type'] == 'image') {
+
+		$image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;
+
+		$media = $CI->db->select('*')->from('media')
+			->where(array('id' => $image_id))->get()->row_array();
+
+		if ($media) {
+			$image = $media['file'];
+			$thumb = $media['thumb'];
+			$exploded = explode("/", $image);
+			$file_name = $exploded[2];
+		} else {
+			$image = '';
+			$file_name = '';
+			$thumb = '';
+		}
+
+	?>
+
+		<div class="media mb-4 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
+			<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
+			<div class="media-body p-2 mb-2">
+				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
+				<a class='btn btn-sm btn-warning' target='_blank' href='<?= base_url($image); ?>'><i class='fas fa-eye'></i> Lihat</a>
+
+			</div>
+		</div>
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+
+			&& ($CI->session->userdata('role') == 2)
+
+		) { ?>
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : '';  ?> />
+					<span class="slider round"></span>
+				</label>
+
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+		<?php }
+	} 
+	
+	elseif ($fields['type'] == 'textarea') { ?>
 
 		<textarea class="form-control mb-2" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
 
@@ -654,8 +1124,8 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 		<?php }
 	} elseif ($fields['type'] == 'wysiwyg') { ?>
-
 		<textarea class="form-control mb-2 textarea-summernote" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+		<br>
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2
@@ -677,8 +1147,16 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
+		) {
+			edit_field($id,  $id_surat);
+		
+		} ?>
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& $CI->session->userdata('role') == 2
 		) { ?>
+		
 
 			<div class="d-inline">
 				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
@@ -796,8 +1274,39 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
 
 		$CI = &get_instance();
-	$db2 = $CI->load->database('dbsqlsrv', TRUE);
-	$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+		$db2 = $CI->load->database('dbsqlsrv', TRUE);
+		$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+		
+
+		?>
+
+		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
+
+		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+			&& $CI->session->userdata('role') == 2
+		) { ?>
+			<div class="d-inline">
+				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+				<label class="switch">
+					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+					<span class="slider round"></span>
+				</label>
+			</div>
+			<div class="d-inline">
+				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+			</div>
+
+	<?php }
+
+	} elseif ($fields['type'] == 'select_mahasiswa') {
+
+		// $CI = &get_instance();
+		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
+
+		$CI = &get_instance();
+		$db2 = $CI->load->database('dbsqlsrv', TRUE);
+		$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+		
 
 		?>
 
@@ -893,7 +1402,6 @@ function get_dokumen_syarat($id_surat)
 		->result_array();
 
 	return $dokumen;
-
 }
 
 // fungsi ini memeriksa apakah mhs udah pernah buat surat, jika sudah maka tidak diperkenankan membuat lagi sampai surat tersebut selesai
@@ -996,7 +1504,6 @@ function tampil_notif()
 	ORDER BY id DESC");
 
 	return $notif;
-	
 }
 
 function tampil_alert($status, $role)
@@ -1016,3 +1523,90 @@ function get_file($id)
 	$CI = &get_instance();
 	return	$media = $CI->db->select("*")->from('media')->where(array('id' => $id))->get()->row_array();
 }
+
+function edit_field($id,  $id_pengajuan)
+{ ?>
+	<span class="d-block mb-2">
+		<a href="" class="btn btn-success simpan btn-sm d-none" data-id="<?= $id; ?>" data-pengajuan="<?= $id_pengajuan; ?>"><i class="fas fa-save"></i> Simpan</a>
+		<a href="" class="btn btn-warning btn-sm edit-field"><i class="fas fa-edit"></i> <span>Edit</span></a>
+	</span>
+
+	
+
+<?php } 
+
+function call_scripts()
+{
+?>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
+
+<script>
+		//aktifkan fungsi edit pada field 
+
+		$('.edit-field').on('click', function(e) {
+			e.preventDefault();
+
+
+			var field_id = $(this).parent().prev().attr('id');
+			var isDisabled = $('#' + field_id).prop('disabled');
+			console.log(field_id);
+
+			if (isDisabled === true) {
+				$('#' + field_id).removeAttr('disabled');
+				$(this).removeClass('btn-warning')
+				$(this).children('i').removeClass('fa-window-close')
+				$(this).children('i').addClass('fa-window-close')
+				$(this).addClass('btn-danger')
+				$(this).children('span').text('Batal')
+				$(this).prev('a.simpan').removeClass('d-none');
+				$(this).prev('a.simpan').addClass('d-inline');
+			} else {
+				$('#' + field_id).attr('disabled', 'true')
+				$(this).removeClass('btn-danger')
+				$(this).children('i').removeClass('fa-window-close')
+				$(this).children('i').addClass('fa-edit')
+				$(this).addClass('btn-warning')
+				$(this).children('span').text('Edit')
+				$(this).prev('a.simpan').removeClass('d-inline');
+				$(this).prev('a.simpan').addClass('d-none');
+			}
+
+		});
+		$('a.simpan').on('click', function(e) {
+			e.preventDefault();
+			var href = "<?= base_url('admin/surat/editfield/'); ?>";
+			var valfield = $(this).parent().prev().val();
+			var id = $(this).attr("data-id");
+			var pengajuan_id = $(this).attr("data-pengajuan");
+
+			$.ajax({
+				url: href,
+				type: "POST",
+				cache: false,
+				data: {
+					id: id,
+					valfield: valfield,
+					pengajuan_id: pengajuan_id
+				},
+				success: function(dataResult) {
+
+					var dataResult = JSON.parse(dataResult);
+
+					$('[data-pengajuan="' + pengajuan_id + '"]').removeClass('d-inline')
+					$('[data-pengajuan="' + pengajuan_id + '"]').addClass('d-none')
+					$('[data-pengajuan="' + pengajuan_id + '"]').next('a.edit-field').removeClass('btn-danger')
+					$('[data-pengajuan="' + pengajuan_id + '"]').next('a.edit-field').addClass('btn-warning')
+					$('[data-pengajuan="' + pengajuan_id + '"]').next('a.edit-field').children('i').removeClass('fa-window-close')
+					$('[data-pengajuan="' + pengajuan_id + '"]').next('a.edit-field').children('i').addClass('fa-edit')
+					$('[data-pengajuan="' + pengajuan_id + '"]').next('a.edit-field').children('span').text('Edit')
+					$('[data-pengajuan="' + pengajuan_id + '"]').parent().prev().prop('disabled', 'disabled')
+
+				}
+			});
+		});
+	</script>
+	
+	<?php } ?>

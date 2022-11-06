@@ -126,7 +126,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<div class="col-lg-7">
 									<?php
 									// memanggil form (data_helper.php)
-									generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status']); ?>
+									generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status'], $surat['id_kategori_surat'] ); ?>
 								</div>
 							</div>
 
@@ -776,3 +776,5 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 	});
 </script>
+
+<?php call_scripts(); ?>
