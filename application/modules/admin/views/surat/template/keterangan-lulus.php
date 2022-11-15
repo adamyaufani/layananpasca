@@ -56,7 +56,7 @@
 
   </div>
 
-    <p>Telah menyelesaikan pendidikan di Program Studi <?= $surat['prodi']; ?> Universitas Muhammadiyah Yogyakarta pada tanggal <?= $surat['tanggal_lulus']; ?>, dan dinyatakan Lulus (Berdasarkan Berita Acara Yudisium Program Studi <?= $surat['prodi']; ?> Nomor: <?= $surat['no_sk_yudisium']; ?> dan Surat Keputusan Direktur Program Pascasarjana Nomor: <?= $surat['no_sk_yudisium_dirpasca']; ?> tentang Kelulusan dan Yudisium Wisuda Periode <?= $surat['periode_wisuda']; ?> Tahun Akademik <?= $surat['ta']; ?>). </p>
+    <p>Telah menyelesaikan pendidikan di Program Studi <?= $surat['prodi']; ?> Universitas Muhammadiyah Yogyakarta pada tanggal <?= tgl_indo(date("Y-m-j", strtotime(get_meta_value('tanggal_yudisium', $surat['id'], false)))); ?>, dan dinyatakan Lulus (Berdasarkan Berita Acara Yudisium Program Studi <?= $surat['prodi']; ?> dan diwisuda pada tanggal <?= tgl_indo(date("Y-m-j", strtotime(get_meta_value('tanggal_wisuda', $surat['id'], false)))); ?>). </p>
 
     <p>Demikian surat keterangan lulus ini dibuat untuk dapat dipergunakan sebagaimana mestinya.</p>
   

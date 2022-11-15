@@ -67,7 +67,7 @@
 	<li class="nav-item" id="semua_surat">
 		<a class="nav-link" href="<?= base_url("admin/surat/yudisium"); ?>">
 			<i class="fas fa-graduation-cap"></i>
-			<span>Surat Yudisium</span></a>
+			<span>Surat Yudisium <?= (tampil_notif_yudisium()->num_rows() > 0) ? '<span class="float-right badge badge-warning">' . tampil_notif_yudisium()->num_rows() . '</span>' : ''; ?></span></a>
 	</li>
 
 	<li class="nav-item" id="semua_surat">

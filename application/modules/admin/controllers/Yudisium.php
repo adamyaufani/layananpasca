@@ -94,6 +94,7 @@ class Yudisium extends Admin_Controller
 		} else {
 
 			if($id_yudisium) {
+			
 				$data['yudisium'] = $this->yudisium_model->get_yudisium_by_id($id_yudisium);
 				$data['title'] = 'Detail Mahasiswa';
 				$data['view'] = 'yudisium/detail';

@@ -38,7 +38,7 @@
 
 			<div class="card-body">
 
-				<table id="datatable" class="table table-bordered table-striped">
+				<table id="datatable-pengguna" class="table table-bordered table-striped">
 					<thead>
 						<tr>
 							<th style="width:40%">Username</th>							

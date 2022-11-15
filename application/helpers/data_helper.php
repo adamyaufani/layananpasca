@@ -354,10 +354,10 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 
 			<span class="text-danger error"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>">
+			<ul class="list-unstyled d-flex flex-column col mt-2 p-2" id="files-<?= $id; ?>" style="border-radius: 5px; <?= ($check['valid'] == 'is-invalid') ? 'border:1px solid #b0272b; ' : 'border:1px solid #ddd'; ?>">
 				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>"></li>
 
-				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? '' : 'd-none'; ?> error-revisi"> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
+				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? 'error-revisi' : 'd-none'; ?> "> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
 				<li class="media <?= $listing; ?> ">
 
 					<?php
@@ -510,10 +510,10 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 			});
 		</script>
 
-	<?php 
-	/* IMAGE UPLOADER */
+	<?php
+		/* IMAGE UPLOADER */
 
-	}	elseif ($fields['type'] == 'image') {
+	} elseif ($fields['type'] == 'image') {
 
 		$image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;
 
@@ -593,7 +593,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 				}
 			} else {
 				//tampilan default, saat value field 0, atau field sudah ada isinya dan menunggu verifikasi
-				if ($field_value) {				
+				if ($field_value) {
 
 					//field sudah dicek, tapi perlu direvisi
 					if ($verifikasi == 0 && $pengajuan_status == 4) {
@@ -603,7 +603,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 						$error = 'is-invalid';
 						$change = '';
 					} else {
-						
+
 						$form = 'd-none';
 						$listing = 'd-blocks';
 						$error = '';
@@ -620,7 +620,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 		}
 
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
-?>
+	?>
 
 		<!-- pad akondisi default (data value kosong), form dNd muncul, listing tidak muncul -->
 		<input type="hidden" class="id-dokumen-<?= $id; ?> <?= $check['valid']; ?>" value="<?= $check['value'];  ?>" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> />
@@ -637,11 +637,11 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 
 			<span class="text-danger error"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-			<ul class="list-unstyled d-flex flex-column col mt-2" id="files-<?= $id; ?>">
+			<ul class="list-unstyled d-flex flex-column col mt-2 p-2" id="files-<?= $id; ?>" style="border-radius: 5px; <?= ($check['valid'] == 'is-invalid') ? 'border:1px solid #b0272b; ' : 'border:1px solid #ddd'; ?>">
 				<li class="text-muted text-center empty <?= (validation_errors()) ? (set_value('dokumen[' . $id . ']') ? 'd-none' : 'ga ada value') :  'd-none'  ?>"></li>
 
 				<li class="<?= (($verifikasi == 0) && ($id_status == 4)) ? '' : 'd-none'; ?> error-revisi"> <span class="text-danger"><i class="fas fa-exclamation-triangle"></i> <?= $fields['kat_keterangan_surat'] ?> perlu direvisi. Silakan unggah kembali.</span></li>
-				<li class="media <?= $listing; ?> ">
+				<li class="media <?= $listing; ?>" ">
 
 					<?php
 					if (set_value('dokumen[' . $id . ']')) {
@@ -793,9 +793,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 			});
 		</script>
 
-	<?php }
-	
-	elseif ($fields['type'] == 'textarea') {
+	<?php } elseif ($fields['type'] == 'textarea') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 
@@ -803,19 +801,19 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
-	<?php } elseif ($fields['type'] == 'wysiwyg') { 
+	<?php } elseif ($fields['type'] == 'wysiwyg') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false); ?>
 
 		<div class="<?= (form_error('tujuan_surat')) ? 'summernote-is-invalid' : ''; ?>">
 
-			<textarea class="form-control <?= $check['valid']; ?> textarea-summernote" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?> ><?= $check['value'];  ?></textarea>
+			<textarea class="form-control <?= $check['valid']; ?> textarea-summernote" id="input-<?= $id; ?>" name="dokumen[<?= $id; ?>]" <?= $check['disabled'];  ?>><?= $check['value'];  ?></textarea>
 
 			<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 		</div>
 
 
-	<?php } elseif ($fields['type'] == 'text') { 
+	<?php } elseif ($fields['type'] == 'text') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 
@@ -823,7 +821,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'url') { 
+	<?php } elseif ($fields['type'] == 'url') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 
@@ -831,7 +829,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'date') {  
+	<?php } elseif ($fields['type'] == 'date') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 
@@ -839,7 +837,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 		<span class="text-danger"><?php echo form_error('dokumen[' . $id . ']'); ?></span>
 
 
-	<?php } elseif ($fields['type'] == 'date_range') { 
+	<?php } elseif ($fields['type'] == 'date_range') {
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
 
@@ -887,7 +885,7 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 	<?php } elseif ($fields['type'] == 'sem') { //Semester
 		$check = field_value_checker($fields['required'], $field_value, $id, $verifikasi, $pengajuan_status, false);
 	?>
-		<select class="form-control d<?= $check['valid']; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= $check['disabled'];  ?>>
+		<select class="form-control <?= $check['valid']; ?>" name="dokumen[<?= $id; ?>]" id="input-<?= $id; ?>" <?= $check['disabled'];  ?>>
 			<option value=""> -- Pilih Semester -- </option>
 			<?php
 			$cur_year = date("Y");
@@ -995,6 +993,32 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 	<?php
 }
 
+function menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, $editable) {
+
+	$CI = &get_instance();
+	if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 3 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+	&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
+) {			
+
+	if ($CI->session->userdata('role') == 1 ) { 						
+	
+		if($id_kategori_surat == '6') {
+			edit_field($id,  $id_surat);
+			data_sesuai($id, $verifikasi, '');
+		}			
+	} else  {		
+
+		if($id_kategori_surat !== '6') {
+			if($editable === true) {
+				edit_field($id,  $id_surat);
+			}
+			data_sesuai($id, $verifikasi, '');
+		}		
+	}			
+}
+}
+
+
 //menampilkan kategori keterangan surat
 function generate_keterangan_surat($id, $id_surat, $id_status)
 {
@@ -1010,6 +1034,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 	$field_value = ($value) ? $value['value'] : '0';
 	$verifikasi = ($value) ? $value['verifikasi'] : '0';
+	$id_kategori_surat = ($fields) ? $fields['id_kategori_surat'] : '0';
 
 
 	if ($fields['type'] == 'file') {
@@ -1032,7 +1057,7 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 	?>
 
-		<div class="media mb-4 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
+		<div class="media mb-2 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid #b0272b; ' : 'border:1px solid #ddd'; ?>">
 			<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
@@ -1040,23 +1065,8 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 			</div>
 		</div>
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-
-			&& ($CI->session->userdata('role') == 2)
-
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : '';  ?> />
-					<span class="slider round"></span>
-				</label>
-
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-		<?php }
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, false);
+		
 	} elseif ($fields['type'] == 'image') {
 
 		$image_id = (validation_errors()) ? set_value('dokumen[' . $id . ']') :  $field_value;
@@ -1075,9 +1085,11 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 			$thumb = '';
 		}
 
-	?>
 
-		<div class="media mb-4 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid red; ' : 'border:1px solid #ddd'; ?>">
+
+		?>
+
+		<div class="media mb-2 p-2 bg-perak" style="border-radius:4px; <?= (($verifikasi == 0) && ($id_status == 4)) ? 'border:1px solid #b0272b; ' : 'border:1px solid #ddd'; ?>">
 			<div class="img-thumbnail" style="background:url(<?= ($thumb) ? base_url($thumb) : base_url() . 'public/dist/img/pdf.png'; ?>) center center no-repeat;width:100px; height:100px;margin-right:20px;background-size:180px;"></div>
 			<div class="media-body p-2 mb-2">
 				<p><strong><?= isset($file_name) ? $file_name : ''; ?></strong></p>
@@ -1085,248 +1097,98 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 			</div>
 		</div>
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+		<?php 
+		
+		menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, false);
 
-			&& ($CI->session->userdata('role') == 2)
+	} elseif ($fields['type'] == 'textarea') { ?>
 
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : '';  ?> />
-					<span class="slider round"></span>
-				</label>
+		<textarea class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+		<?php
 
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-		<?php }
-	} 
-	
-	elseif ($fields['type'] == 'textarea') { ?>
+		menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
 
-		<textarea class="form-control mb-2" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
-
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-		<?php }
 	} elseif ($fields['type'] == 'wysiwyg') { ?>
-		<textarea class="form-control mb-2 textarea-summernote" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
-		<br>
+		<textarea class="form-control mb-2 textarea-summernote myfield" id="input-<?= $id; ?>" disabled><?= $field_value;  ?></textarea>
+		<div class="mt-2"></div>
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
+		<?php
+		
+		menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
 
-		<?php }
 	} elseif ($fields['type'] == 'text') { ?>
 
 		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
+
+	} elseif ($fields['type'] == 'number') { ?>
+
+		<input type="number" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
+
+	} elseif ($fields['type'] == 'url') { ?>
+
+		<input type="url" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
 
 		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
 			&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
 		) {
 			edit_field($id,  $id_surat);
-		
-		} ?>
-
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-		
-
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-		<?php }
-	} elseif ($fields['type'] == 'url') { ?>
-
-		<input type="url" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
-
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-		<?php }
+			data_sesuai($id, $verifikasi, '');
+		}
 	} elseif ($fields['type'] == 'date') { ?>
 
-		<input type="date" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+		<input type="date" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
 
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-		<?php }
 	} elseif ($fields['type'] == 'date_range') { ?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>" />
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
 
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-		<?php }
 	} elseif ($fields['type'] == 'sem') { ?>
 
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>"></input>
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>"></input>
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
 
-		<?php }
 	} elseif ($fields['type'] == 'ta') { ?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>"></input>
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $field_value;  ?>"></input>
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
+		<?php		
 
-		<?php }
+			menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, true);
+
+
 	} elseif ($fields['type'] == 'select_dosen') {
-
-		// $CI = &get_instance();
-		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
 
 		$CI = &get_instance();
 		$db2 = $CI->load->database('dbsqlsrv', TRUE);
 		$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
-		
 
 		?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
-
-	<?php }
+		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, false);
 
 	} elseif ($fields['type'] == 'select_mahasiswa') {
 
-		// $CI = &get_instance();
-		// $dosen = $CI->db->get_where('users', array('id' => $field_value))->row_array();
-
 		$CI = &get_instance();
 		$db2 = $CI->load->database('dbsqlsrv', TRUE);
-		$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
-		
+		$mhs = $db2->query("SELECT * from V_Simpel_Pasca WHERE STUDENTID ='$field_value' ")->row_array();
 
 		?>
 
-		<input type="text" class="form-control mb-2" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $mhs['FULLNAME'];  ?>"></input>
 
-		<?php if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
-			&& $CI->session->userdata('role') == 2
-		) { ?>
-			<div class="d-inline">
-				<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
-				<label class="switch">
-					<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
-					<span class="slider round"></span>
-				</label>
-			</div>
-			<div class="d-inline">
-				Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
-			</div>
+	<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, false);
 
-	<?php }
 	} // endif fields 
 	?>
 
@@ -1455,7 +1317,7 @@ function cek_sudah_buat_surat($id_mahasiswa, $id_kategori_surat, $min_semester)
 
 		//status 10 = selesai
 		//status 6 = ditolak
-		if (($status['id_status'] == 10) || ($status['id_status']  == 6) || ($status['id_status']  == 20)) {
+		if (($status['id_status'] == 10) || ($status['id_status'] == 12) || ($status['id_status']  == 6) || ($status['id_status']  == 20)) {
 			$diperbolehkan = 1;
 		} else {
 			$diperbolehkan = 2;
@@ -1501,6 +1363,36 @@ function tampil_notif()
 	LEFT JOIN kategori_surat ks ON s.id_kategori_surat = ks.id
 	LEFT JOIN users u ON n.kepada = u.id
 	WHERE  $where AND n.status = 0 	
+	-- AND ks.id != 6 
+	ORDER BY id DESC");
+
+	return $notif;
+}
+function tampil_notif_yudisium()
+{
+
+	//cek apakah ada kategori surat yg blm selesai
+	$CI = &get_instance();
+	if ($_SESSION['role'] == 1) {
+		$where = "n.role = 1";
+	} else if ($_SESSION['role'] == 2) {
+		$where = "n.role = 2 AND n.id_prodi = " . $_SESSION['id_prodi'];
+	} else if ($_SESSION['role'] == 3) {
+		$where = "n.role = 3 AND n.kepada = " . $_SESSION['user_id'];
+	} else if ($_SESSION['role'] == 4) {
+		$where = "n.role = 4 AND n.kepada = " . $_SESSION['user_id'];
+	} else if ($_SESSION['role'] == 5) {
+		$where = "n.role = 5";
+	} else if ($_SESSION['role'] == 6) {
+		$where = "n.role = 6 AND n.id_prodi = " . $_SESSION['id_prodi'];
+	}
+	$notif = $CI->db->query("SELECT n.*, n.id as notif_id, sp.judul_notif, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M') as date_full, sp.badge, sp.icon, s.id_kategori_surat, ks.kategori_surat, u.fullname
+	FROM notif n 	
+	LEFT JOIN status_pesan sp ON sp.id = n.id_status_pesan
+	LEFT JOIN surat s ON s.id = n.id_surat
+	LEFT JOIN kategori_surat ks ON s.id_kategori_surat = ks.id
+	LEFT JOIN users u ON n.kepada = u.id
+	WHERE  $where AND n.status = 0 	AND ks.id = 6 
 	ORDER BY id DESC");
 
 	return $notif;
@@ -1515,7 +1407,7 @@ function tampil_alert($status, $role)
 		->where(array('s.id =' => $status, 'sp.role' => $role))->get()->row_array();
 ?>
 	<p class="alert alert-<?= $alert['badge']; ?> mb-4"><i class="<?= $alert['icon']; ?>"></i> <?= $alert['alert']; ?></p>
-<?php }
+	<?php }
 
 
 function get_file($id)
@@ -1524,35 +1416,91 @@ function get_file($id)
 	return	$media = $CI->db->select("*")->from('media')->where(array('id' => $id))->get()->row_array();
 }
 
+function data_sesuai($id, $verifikasi, $admin)
+{
+	if ($admin != 1) {
+	?>
+
+		<div class="d-inline">
+			<input type="hidden" name="verifikasi[<?= $id; ?>]" value="0" />
+			<label class="switch">
+				<input type="checkbox" class="verifikasi" name="verifikasi[<?= $id; ?>]" value="1" <?= ($verifikasi == 1) ? 'checked' : ''; ?> />
+				<span class="slider round"></span>
+			</label>
+		</div>
+		<div class="d-inline">
+			Data sudah sesuai? <a class="help" data-toggle="tooltip" data-placement="right" title="Klik tombol di samping jika data sudah sesuai"><i class="fa fa-info-circle"></i></a>
+		</div>
+
+	<?php
+	}
+}
+
 function edit_field($id,  $id_pengajuan)
 { ?>
 	<span class="d-block mb-2">
 		<a href="" class="btn btn-success simpan btn-sm d-none" data-id="<?= $id; ?>" data-pengajuan="<?= $id_pengajuan; ?>"><i class="fas fa-save"></i> Simpan</a>
 		<a href="" class="btn btn-warning btn-sm edit-field"><i class="fas fa-edit"></i> <span>Edit</span></a>
 	</span>
+<?php }
 
-	
+function form_verifikasi_admin($surat, $admin, $id_kategori_surat)
+{
+?>
+	<div class="card">
+		<div class="card-header">
+			Hasil Verifikasi Dokumen oleh <b><?= $admin; ?></b>
+		</div>
+		<div class="card-body">
 
-<?php } 
+			<p> Setelah diperiksa dengan seksama, maka
+				<?= $admin; ?> menyatakan bahwa permohonan <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong> : </p>
+
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item"><input type="radio" name="rev2" id="diterima" value="<?= ($id_kategori_surat === '6') ? '12' : '7'; ?>" /> Diterima dan dapat diproses lebih lanjut
+				</li>
+
+				<li class="list-group-item"><input type="radio" name="rev2" id="ditolak" value="6" /> Ditolak
+
+					<?php if ($surat['id_status'] == 2 || $surat['id_status'] == 3) { ?>
+				<li class="list-group-item"><input type="radio" name="rev2" id="revisi" value="4" /> Perlu direvisi kembali
+				</li>
+			<?php } ?> </li>
+			</ul>
+			<p class="mt-4">Catatan dari Tata Usaha</p>
+			<textarea class="form-control" name="catatan"></textarea>
+
+
+			<p class="mt-3">
+				<span class="pl-2 mb-2 d-inline-block"><input type="checkbox" name="" id="sudahPeriksa"> Pernyataan ini dibuat dengan sebenar-benarnya dan dapat dipertanggung jawabkan kebenarannya. <a class="help" data-toggle="tooltip" data-placement="top" title="Centang untuk mengaktifkan tombol verifikasi."><i class="fa fa-info-circle"></i></a></span>
+			</p>
+
+
+			<input type="submit" id="sub1" value="Kirim Hasil Verifikasi" name="submit" class="btn btn-<?= $surat['badge']; ?> btn-md btn-block" disabled>
+		</div>
+
+
+	</div>
+
+<?php
+}
 
 function call_scripts()
 {
 ?>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
-<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+	<script type="text/javascript" src="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.js"></script>
+	<script src="<?= base_url() ?>/public/plugins/dm-uploader/dist/js/jquery.dm-uploader.min.js"></script>
 
-<script>
+	<script>
 		//aktifkan fungsi edit pada field 
 
 		$('.edit-field').on('click', function(e) {
 			e.preventDefault();
 
-
-			var field_id = $(this).parent().prev().attr('id');
+			var field_id = $(this).parent().parent().find('.myfield').attr('id');
 			var isDisabled = $('#' + field_id).prop('disabled');
-			console.log(field_id);
 
 			if (isDisabled === true) {
 				$('#' + field_id).removeAttr('disabled');
@@ -1576,9 +1524,10 @@ function call_scripts()
 
 		});
 		$('a.simpan').on('click', function(e) {
+			tinymce.triggerSave();
 			e.preventDefault();
 			var href = "<?= base_url('admin/surat/editfield/'); ?>";
-			var valfield = $(this).parent().prev().val();
+			var valfield = $(this).parent().parent().find('.myfield').val();
 			var id = $(this).attr("data-id");
 			var pengajuan_id = $(this).attr("data-pengajuan");
 
@@ -1608,5 +1557,5 @@ function call_scripts()
 			});
 		});
 	</script>
-	
-	<?php } ?>
+
+<?php } ?>

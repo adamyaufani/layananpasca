@@ -8,7 +8,7 @@ class Surat_model extends CI_Model
         } else {
             $prodi = "AND u.id_prodi = '" . $this->session->userdata('id_prodi') . "'";
         }
-        if ($role == '') {
+        if ($role == '55') {
             $id_status = '';
         } else if ($role == 1) {
             $id_status = "AND ss.id_status =  9";

@@ -11,6 +11,7 @@ class Mailer
   {
     $this->_CI = &get_instance();
     $this->_CI->load->model('notif/notif_model', 'notif_model');
+    $this->_CI->load->model('mahasiswa/surat_model', 'surat_model');
   }
   public function send_mail($data)
   {
@@ -37,6 +38,7 @@ class Mailer
 
 
     $role = $data['role'];
+    $surat = $this->_CI->surat_model->get_detail_surat($data['id_surat']);
 
     foreach ($role as $role) {
       if ($role != 3) {
@@ -51,7 +53,8 @@ class Mailer
        foreach ($users as $user) {
           $mail->addAddress($user['email']);
 
-          $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);
+          $sp = $this->_CI->notif_model->get_messages($data['id_status'], $role);     
+
           $subject = $sp['judul_notif'];
 
           $isi_email = array (
@@ -61,8 +64,8 @@ class Mailer
             'tabel'=> '
               <table class="datamhs">
                 <tr>
-                  <td><strong>Perihal</strong></td>
-                  <td>Surat Permohonan Cuti Kuliah</td>
+                  <td style="width:30%;"><strong>Perihal</strong></td>
+                  <td>' . $surat['kategori_surat'] . '</td>
                 </tr>
                 <tr>
                   <td><strong>Nama</strong></td>
@@ -98,12 +101,12 @@ class Mailer
         $isi_email = array (
           'penerima' => getUserbyId($data['kepada'])['fullname'],
           'link' => base_url('mahasiswa/surat/tambah/'. encrypt_url($data['id_surat'])),
-          'isi'=> $sp['judul_notif'],         
+          'isi'=> $sp['isi_notif'],         
           'tabel'=> '
             <table class="datamhs">
               <tr>
-                <td><strong>Perihal</strong></td>
-                <td>Surat Permohonan Cuti Kuliah</td>
+                <td style="width:30%;"><strong>Perihal</strong></td>
+                <td>' . $surat['kategori_surat'] . '</td>
               </tr>
               <tr>
                 <td><strong>Nama</strong></td>

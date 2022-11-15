@@ -74,25 +74,31 @@ class Surat extends Mahasiswa_Controller
 			}
 		}
 
-		$data_notif = array(
-			'id_surat' => $insert_id2['id_surat'],
-			'id_status' => 1,
-			'kepada' => $_SESSION['user_id'],
-			'role' => array(3)
-		);
+		// $data_notif = array(
+		// 	'id_surat' => $insert_id2['id_surat'],
+		// 	'id_status' => 1,
+		// 	'kepada' => $_SESSION['user_id'],
+		// 	'role' => array(3)
+		// );
 
-		$results = $this->notif_model->send_notif($data_notif);
+		// $results = $this->notif_model->send_notif($data_notif);
 
-		if ($results) {
-			$this->session->set_flashdata('msg', 'Berhasil!');
-			redirect(base_url('mahasiswa/surat/tambah/' . encrypt_url($insert_id)));
-		}
+		// if ($results) {
+			// $this->session->set_flashdata('msg', 'Berhasil!');
+			if($id == 6) {
+				redirect(base_url('mahasiswa/surat/daftar_yudisium/' . encrypt_url($insert_id)));
+			} else {
+				redirect(base_url('mahasiswa/surat/tambah/' . encrypt_url($insert_id)));
+			}
+			
+		// }
 	}
 
 
 	public function tambah($id_surat = 0)
 	{
 		$id_surat = decrypt_url($id_surat);
+		$this->load->model('admin/template_model', 'template_model');
 
 		$id_notif = $this->input->post('id_notif');
 
@@ -148,7 +154,7 @@ class Surat extends Mahasiswa_Controller
 				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
-				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+				$data['timeline'] = $this->surat_model->get_timeline($id_surat);				
 
 				$data['title'] = 'Ajukan Surat';
 				$data['view'] = 'surat/tambah';
@@ -212,6 +218,7 @@ class Surat extends Mahasiswa_Controller
 				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
 				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
 				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+				$data['template'] = $this->template_model->get_template_bykat($data['surat']['id_kategori_surat']);
 
 				//menghapus notifikasi
 				$notif = $this->notif_model->get_notif_by_surat($id_surat);
@@ -237,6 +244,160 @@ class Surat extends Mahasiswa_Controller
 				if (($data['surat']['id_mahasiswa'] == $this->session->userdata('user_id')) || $this->session->userdata('role') == 2) {
 					$data['title'] = 'Ajukan Surat';
 					$data['view'] = 'surat/tambah';
+				} else {
+					$data['title'] = 'Forbidden';
+					$data['view'] = 'restricted';
+				}
+			} else {
+				$data['title'] = 'Halaman tidak ditemukan';
+				$data['view'] = 'error404';
+			}
+
+			$this->load->view('layout/layout', $data);
+		}
+	}
+
+	public function daftar_yudisium($id_surat = 0)
+	{
+		$id_surat = decrypt_url($id_surat);
+		$this->load->model('admin/template_model', 'template_model');
+
+		$id_notif = $this->input->post('id_notif');
+
+		if ($this->input->post('submit')) {
+
+			// echo $this->input->post('revisi'); die;
+
+		$surat =	$this->surat_model->get_detail_surat($id_surat);
+
+			$pengajuan_fields = $this->db->query(
+				"SELECT * FROM kat_keterangan_surat kks
+				WHERE kks.id_kategori_surat = " . $surat['id_kategori_surat'] . "
+				AND kks.aktif = 1 
+				ORDER BY urutan ASC"
+			)->result_array();
+
+			// generate validation
+			foreach ($pengajuan_fields as $pengajuan_field) {
+				//cek apakah field ini wajib
+				//jika wajib
+				if ($pengajuan_field['required'] == 1) {
+
+					if ($pengajuan_field['type'] == 'url') {
+						$callback = '|callback_url_check';
+					} else {
+						$callback = '';
+					}
+
+					$this->form_validation->set_rules(
+						'dokumen[' . $pengajuan_field['id'] . ']',
+						$this->getNamaField($pengajuan_field['id']),
+						'trim|required' . $callback,
+						[
+							'required' => '%s wajib diisi!'
+						]
+
+					);
+				} else {
+
+					//jika tidak wajib, jika field typenya url, tetap dicek utk memeriksa urlnya benar atau salah
+					if ($pengajuan_field['type'] == 'url') {
+
+
+						$this->form_validation->set_rules(
+							'dokumen[' . $pengajuan_field['id'] . ']',
+							$this->getNamaField($pengajuan_field['id']),
+							'trim|callback_url_check_notrequired',
+
+						);
+					}
+				}
+			}
+
+			if ($this->form_validation->run() == FALSE) {
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
+				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+				$data['timeline'] = $this->surat_model->get_timeline($id_surat);				
+
+				$data['title'] = 'Daftar Yudisium';
+				$data['view'] = 'surat/daftar_yudisium';
+				$this->load->view('layout/layout', $data);
+			} else {
+
+				//cek dulu apakah ini surat baru atau surat revisi
+				if ($this->input->post('revisi') == 1) {
+					$id_status = 11;
+				} else {
+					$id_status = 3;
+				}
+
+				echo $id_status; 
+
+
+				//tambah status ke tb surat_status
+				$insert = $this->db->set('id_surat', $id_surat)
+					->set('id_status', $id_status) //tunggu acc pasca
+					->set('pic', $this->session->userdata('user_id'))
+					->set('date', 'NOW()', FALSE)
+					->insert('surat_status');
+
+				//insert field ke tabel keterangan_surat
+				if ($insert) {
+					foreach ($this->input->post('dokumen') as $id => $dokumen) {
+
+						$this->db->where(array('id_kat_keterangan_surat' => $id, 'id_surat' => $id_surat));
+						$this->db->update(
+							'keterangan_surat',
+							array(
+								'value' => $dokumen
+							)
+						);
+					}
+
+					
+
+					// kirim notifikasi
+					$data_notif = array(
+						'id_surat' => $id_surat,
+						'id_status' => $id_status,
+						'kepada' => $_SESSION['user_id'],
+						'role' => array(1) // harus dalam bentuk array
+					);
+					
+
+					//sendmail & notif
+					$mail = $this->mailer->send_mail($data_notif);
+
+					redirect(base_url('mahasiswa/surat/daftar_yudisium/' . encrypt_url($id_surat)));
+
+
+					if ($mail) {
+						
+					}
+				}
+			}
+		} else {
+
+			if ($id_surat) {
+				$data['kategori_surat'] = $this->surat_model->get_kategori_surat('m');
+				$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+				$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+				$data['timeline'] = $this->surat_model->get_timeline($id_surat);
+				$data['template'] = $this->template_model->get_template_bykat($data['surat']['id_kategori_surat']);
+
+				//menghapus notifikasi
+				$notif = $this->notif_model->get_notif_by_surat($id_surat);
+				if ($notif) {
+					foreach ($notif as $notif) {
+						$this->notif_model->notif_read($notif['id'], $id_surat);
+					}
+				}
+
+
+				if (($data['surat']['id_mahasiswa'] == $this->session->userdata('user_id')) || $this->session->userdata('role') == 2) {
+					$data['title'] = 'Ajukan Surat';
+					$data['view'] = 'surat/daftar_yudisium';
 				} else {
 					$data['title'] = 'Forbidden';
 					$data['view'] = 'restricted';
@@ -306,6 +467,7 @@ class Surat extends Mahasiswa_Controller
 	public function cetak_surat($id_surat)
 	{
 		$id_surat = decrypt_url($id_surat);
+		$data['header'] = 'header';
 
 		if ($id_surat) {
 			$surat_terbit = $this->surat_model->get_no_surat($id_surat);
@@ -315,7 +477,7 @@ class Surat extends Mahasiswa_Controller
 			$data['tanggal_surat'] = tgl_indo($tgl_surat);
 			$data['template_surat'] = $this->template_model->get_template_byid($data['pratinjau']['template_surat']);
 			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
-
+			
 			//qrcode
 			$this->load->library('ciqrcode');
 			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
@@ -377,92 +539,89 @@ class Surat extends Mahasiswa_Controller
 			
 		}
 	}
+	
+	public function cetak_surat_lama($id_surat)
+	{
+		$id_surat = decrypt_url($id_surat);
 
-	// public function cetak_surat($id_surat)
-	// {
+		if ($id_surat) {
+			$surat_terbit = $this->surat_model->get_no_surat($id_surat);
+			$data['pratinjau'] = $surat_terbit;
+			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
+			$tgl_surat = date("Y-m-j", strtotime($surat_terbit['tanggal_terbit']));
+			$data['tanggal_surat'] = tgl_indo($tgl_surat);
+			// $data['template_surat'] = $this->template_model->get_template_byid($data['pratinjau']['template_surat']);
+			$data['fields'] = $this->surat_model->get_fields_by_id_kat_surat($data['surat']['id_kategori_surat']);
+			$data['no_surat'] = $surat_terbit['no_lengkap'];
 
-	// 	$id_surat = decrypt_url($id_surat);
+			//qrcode
+			$this->load->library('ciqrcode');
+			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
+			$params['level'] = 'L';
+			$params['size'] = 2;
+			$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
+			$this->ciqrcode->generate($params);
 
-	// 	if ($id_surat) {
+			if ($data['surat']['kode'] == 'SU') {
+				$kategori = $surat_terbit['hal'];
+			} else {
+				$kategori = $data['surat']['kategori_surat'];
+			}
 
-	// 		$no_surat = $this->surat_model->get_no_surat($id_surat);
+			$nim = $data['surat']['username'];
 
-	// 		$data['pratinjau'] = $no_surat;
+			$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-j') . '-' . $id_surat);
 
-	// 		if ($no_surat) {
+			$edit_nosurat = array(
+				'file' => $filename . '.pdf',
+			);
+			$this->db->update('no_surat', $edit_nosurat, array('id' => $surat_terbit['id']));
 
-	// 			$this->load->library('ciqrcode');
+			$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
+			$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
 
-	// 			$params['data'] = base_url('validasi/cekvalidasi/' . encrypt_url($id_surat));
-	// 			$params['level'] = 'L';
-	// 			$params['size'] = 2;
-	// 			$params['savename'] = FCPATH . "public/documents/tmp/" . $id_surat . '-qr.png';
-	// 			$this->ciqrcode->generate($params);
+			$view = $this->load->view('admin/surat/tampil_surat_lama', $data, TRUE);
+			// $this->load->view('surat/tampil_surat', $data);
 
-	// 			$data['pratinjau'] = $no_surat;
-	// 			$data['surat'] = $this->surat_model->get_detail_surat($id_surat);
-	// 			$data['no_surat'] = $no_surat['no_lengkap'];
-
-	// 			$tgl_surat = date("Y-m-d", strtotime($no_surat['tanggal_terbit']));
-	// 			$data['tanggal_surat'] = tgl_indo($tgl_surat);
-
-	// 			if ($data['surat']['kode'] == 'SU') {
-	// 				$kategori = $no_surat['hal'];
-	// 			} else {
-	// 				$kategori = $data['surat']['kategori_surat'];
-	// 			}
-
-	// 			$nim = $data['surat']['username'];
-
-	// 			$filename = strtolower(str_replace(' ', '-', $kategori) . '-' . $nim . '-' . date('Y-m-d') . '-' . $id_surat);
-
-	// 			$edit_nosurat = array(
-	// 				'file' => $filename . '.pdf',
-	// 			);
-	// 			$this->db->update('no_surat', $edit_nosurat, array('id' => $no_surat['id']));
-
-	// 			$view = $this->load->view('admin/surat/tampil_surat', $data, TRUE);
-	// 			$data['view'] = 'surat/tampil_surat';
-
-	// 			$now = new DateTime(null, new DateTimeZone('Asia/Jakarta'));
-	// 			$now->setTimezone(new DateTimeZone('Asia/Jakarta'));    // Another way
-
-	// 			$mpdf = new \Mpdf\Mpdf([
-	// 				'tempDir' => 'public/documents/pdfdata',
-	// 				'mode' => 'utf-8',
-	// 				// 'format' => [24, 24],
-	// 				'format' => 'A4',
-	// 				'margin_left' => 0,
-	// 				'margin_right' => 0,
-	// 				'margin_footer' => 3,
-	// 				'margin_bottom' => 40,
-	// 				'margin_top' => 20,
-	// 				'float' => 'left',
-	// 				'setAutoTopMargin' => 'stretch'
-	// 			]);
+				$mpdf = new \Mpdf\Mpdf([
+					'tempDir' => 'public/documents/pdfdata',
+					'mode' => 'utf-8',
+					'format' => 'A4',
+					'margin_left' => 0,
+					'margin_right' => 0,
+					'margin_footer' => 4,
+					'margin_bottom' => 40,
+					'margin_top' => 0,
+					'float' => 'left',
+					'setAutoTopMargin' => 'stretch'
+				]);
 
 
-	// 			$mpdf->SetHTMLHeader('
-	// 			<div style="text-align: left; margin-left:85px;margin-bottom:20px;">
-	// 					<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
-	// 			</div>');
-	// 			$mpdf->SetHTMLFooter('
+				$mpdf->SetHTMLHeader('
+				<div style="text-align: left; margin-left:85px;margin-bottom:10px;">
+						<img width="390" height="" src="' . base_url() . '/public/dist/img/logokop-pasca.jpg" />
+				</div>');
+
+				$mpdf->SetHTMLFooter('
 		
-	// 			<div class="futer">
-	// 				<table style="width:100%">
-	// 					<tr>
-	// 						<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
-	// 						<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
-	// 					</tr>
-	// 				</table>					
-	// 			</div>');
+				<div class="futer">
+					<table style="width:100%">
+						<tr>
+							<td style="width:85%; vertical-align:bottom; padding-bottom:9px;"><p style="text-align:left; font-size:7pt;font-style:italic;">Digenerate oleh Sistem Layanan Pascasarjana UMY pada tanggal ' . $now->format("d-m-Y H:i") . '</p></td>
+							<td style="text-align:right;padding-bottom:40px;"><img src="' . base_url('public/documents/tmp/') . $id_surat . '-qr.png" /></td>
+						</tr>
+					</table>					
+				</div>');
 
-	// 			$mpdf->WriteHTML($view);
 
-	// 			$mpdf->Output($filename . '.pdf', 'D');
-	// 		}
-	// 	}
-	// }
+
+				$mpdf->WriteHTML($view);
+
+				$mpdf->Output($filename . '.pdf', 'D');
+			
+		}
+	}
+
 
 	public function doupload()
 	{

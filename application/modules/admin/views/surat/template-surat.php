@@ -44,7 +44,7 @@ $content = $template_surat['isi'];
 //The array with all the shortcode handlers. This is just a regular associative array with anonymous functions as values. A very cool new feature in PHP, just like callbacks in JavaScript or delegates in C#.
 $shortcodes = array(
 
-	"data" => function ($isi) use ($surat, $fields, $pratinjau, $tanggal_surat) {
+	"data" => function ($isi) use ($surat, $fields, $pratinjau, $tanggal_surat, $header) {
 
 		if (isset($isi)) {
 			$contents =  $isi;
@@ -75,7 +75,11 @@ $shortcodes = array(
 			$this->ciqrcode->generate($params);
 
 			if ($isi == 'qrcode') {
-				$contents = '<img src="' . base_url('public/documents/tmp/') . $surat['id'] . '-qr.png" />';
+				if($header == 'header') {
+					$contents = '<img src="' . base_url('public/documents/tmp/') . $surat['id'] . '-qr.png" />';
+				} else {
+					$contents = '&nbsp;';
+				}
 			}
 
 			if ($isi == 'direktur') {

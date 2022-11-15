@@ -106,7 +106,7 @@ $db['dbmysql'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'DBLayananpasca',
+	'database' => 'DBLayananpascanov2',
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

@@ -10,7 +10,7 @@
       </div>
       <div class="card-body">
 
-        <table id="surat-desc" class="table table-bordered tb-surats">
+        <table id="surat" class="table table-bordered tb-surats">
           <thead>
             <tr>
               <th style="width:50%">Perihal</th>
@@ -77,8 +77,8 @@
 
 
 <!-- DataTables -->
-<script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- <script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script> -->
 
 <script>
   $(document).ready(function() {

@@ -146,6 +146,25 @@
 						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('tujuan_surat'); ?></span>
 					</div>
 				</div>
+
+				<div class="form-group row">
+					<label for="template" class="col-md-2 control-label">Template surat
+					<small id="" class="form-text text-muted">Template ini masih digunakan untuk keperluan pencetakan surat pengajuan lama sebelum sistem baru dibuat.</small>
+					</label>
+					<div class="col-md-10">
+						<select name="template" class="form-control">
+							<option value="" <?php echo  set_select('template', '', TRUE); ?>>Pilih Template</option>
+
+							<?php foreach ($template_lama as $tpl) { ?>
+								<option value="<?= $tpl; ?>" <?= (validation_errors()) ? set_select('template', $kat['template']) : "";
+																							echo ($kat['template'] == $tpl) ? "selected" : ""; ?>>
+									<?= $tpl; ?></option>
+							<?php } ?>
+						</select>
+						<span class="text-danger" style="font-size: 80%;"><?php echo form_error('template'); ?></span>
+					</div>
+				</div>
+
 				<!-- <div class="form-group row">
 					<label for="tembusan" class="col-md-2 control-label">Tembusan</label>
 					<div class="col-md-10">

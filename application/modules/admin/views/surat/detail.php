@@ -10,11 +10,21 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 	.opacity {
 		opacity: 0.6;
 	}
+
+	.isi_editor {
+		border: 1px solid #666666;
+		border-radius: 5px;
+		padding: 20px;
+		width: 100%;
+		height: auto;
+	}
 </style>
 
 
 
-<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
+<h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> <sup style="font-size:10px;"><?= $surat['id']; ?></sup></h1>
+
+
 
 <div class="row">
 	<div class="col-lg-8 mb-4">
@@ -34,6 +44,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<?= $this->session->flashdata('msg'); ?>
 			</div>
 		<?php endif; ?>
+
+		<?php if (($surat['id_status'] == 8 || $surat['id_status'] == 9) && $surat['id'] < 785 ) {	?>
+			<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> <strong>Mohon dicermati.</strong> Surat ini merupakan surat lama yang diajukan <strong>sebelum proses update sistem</strong> pada 11 November 2022. Jika PDF-nya ingin digenerate maka perlu melakukan proses di bawah. </div>
+		<?php } ?>
+
 		<!-- Surat diproses oleh Kaprodi -->
 		<?php if (($surat['id_status'] == 3 || $surat['id_status'] == 7) && $this->session->userdata('role') == 6) { ?>
 
@@ -86,17 +101,14 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 						($surat['id_status'] == 8 && $this->session->userdata('role') == 5) ||
 						($surat['id_status'] == 7 && $this->session->userdata('role') == 6)
 					) {
-
-
-						if ($surat['id_kategori_surat'] == 6) {
-							echo form_open('admin/surat/acc_yudisium');
-						} else {
-							echo form_open('admin/surat/disetujui');
-						}
+						echo form_open('admin/surat/disetujui');						
 					}
 
-					if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) {
+					if ($surat['id_kategori_surat'] == 6 && $this->session->userdata('role') == 1) {
+						echo form_open('admin/surat/acc_yudisium');
+					} 
 
+					if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) {
 						echo form_open('admin/surat/verifikasi');
 					}
 
@@ -105,9 +117,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						echo form_open('admin/surat/terbitkan_surat');
 					}
-
 					?>
-				
+
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
 
@@ -121,57 +132,39 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							$type = $field['type'];
 							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
-							<div class="form-row">
+							<div class="form-row mb-3">
 								<label class="col-lg-5" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?></label>
 								<div class="col-lg-7">
 									<?php
 									// memanggil form (data_helper.php)
-									generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status'], $surat['id_kategori_surat'] ); ?>
+									generate_keterangan_surat($field['id'], $surat['id'], $surat['id_status'], $surat['id_kategori_surat']); ?>
 								</div>
 							</div>
 
 					<?php }
 					} ?>
 
-					<?php if (($surat['id_status'] == 2 || $surat['id_status'] == 5) && $this->session->userdata('role') == 2) { ?>
+					<?php if (($surat['id_status'] == 2 || $surat['id_status'] == 3 || $surat['id_status'] == 5 || $surat['id_status'] == 7 || $surat['id_status'] == 8  || $surat['id_status'] == 11 ) 
+						&& ($this->session->userdata('role') == 2 || $this->session->userdata('role') == 1)) { 
+					?>
 						<div class="form-row pt-3">
 							<div class="col-md-12">
 
-								<div class="card">
-									<div class="card-header">
-										Hasil Verifikasi Dokumen
-									</div>
-									<div class="card-body">
-
-										<p> Setelah diperiksa dengan seksama, maka
-											<?= $this->session->userdata('fullname'); ?> menyatakan bahwa permohonan <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong> : </p>
-
-										<ul class="list-group list-group-flush">
-											<li class="list-group-item"><input type="radio" name="rev2" id="diterima" value="7" /> Diterima dan dapat diproses lebih lanjut
-											</li>
-
-											<li class="list-group-item"><input type="radio" name="rev2" id="ditolak" value="6" /> Ditolak
-												<?php if ($surat['id_status'] == 2) { ?>
-											<li class="list-group-item"><input type="radio" name="rev2" id="revisi" value="4" /> Perlu direvisi kembali
-											</li>
-										<?php } ?> </li>
-										</ul>
-										<p class="mt-4">Catatan dari Tata Usaha</p>
-										<textarea class="form-control" name="catatan"></textarea>
-
-
-										<p class="mt-3">
-											<span class="pl-2 mb-2 d-inline-block"><input type="checkbox" name="" id="sudahPeriksa"> Pernyataan ini dibuat dengan sebenar-benarnya dan dapat dipertanggung jawabkan kebenarannya. <a class="help" data-toggle="tooltip" data-placement="top" title="Centang untuk mengaktifkan tombol verifikasi."><i class="fa fa-info-circle"></i></a></span>
-										</p>
-
-
-										<input type="submit" id="sub1" value="Kirim Hasil Verifikasi" name="submit" class="btn btn-<?= $surat['badge']; ?> btn-md btn-block" disabled>
-									</div>
-
-
-								</div>
-
-
+							<?php if ($this->session->userdata('role') == 1 ) { 
+								$admin = "Tata Usaha Pascasarjana";							
+							
+								if($surat['id_kategori_surat'] == '6') {
+									form_verifikasi_admin($surat, $admin, $surat['id_kategori_surat']);
+								}			
+							} else  {
+								$admin = "Tata Usaha Prodi " . $surat['prodi'];
+			
+								if( ($surat['id_kategori_surat'] !== '6') && ($surat['id_status'] !== '7') && ($surat['id_status'] !== '8') && ($surat['id_status'] !== '11') ) {
+									form_verifikasi_admin($surat, $admin, $surat['id_kategori_surat']);
+								}		
+							}
+							?>
+						
 							</div>
 						</div>
 
@@ -179,7 +172,6 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							$(function() {
 
 								<?php if ($surat['id_status'] == 2) { ?>
-
 
 									var check_all = sizeof = $("input[name='sizeof_ket_surat']").val();
 
@@ -270,8 +262,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 										Persetujuan Direktur Program Pascasarjana
 									</div>
 									<div class="card-body">
-									
-									<a href="<?= base_url('admin/surat/pratinjau_direktur/' . encrypt_url($surat['id'])); ?>" class="btn btn-md btn-perak mb-4" target="_blank"><i class="fas fa-eye"></i> Pratinjau Surat</a>
+
+										<a href="<?= base_url('admin/surat/pratinjau_direktur/' . encrypt_url($surat['id'])); ?>" class="btn btn-md btn-perak mb-4" target="_blank"><i class="fas fa-eye"></i> Pratinjau Surat</a>
 
 										<p> Saya selaku Direktur Program Pascasarjana UMY memberikan persetujuan pada <strong>Surat <?= $surat['kategori_surat']; ?></strong> yang diajukan oleh <strong><?= $surat['fullname']; ?></strong>.</p>
 
@@ -280,10 +272,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 										<p class="mt-3">
 											<span class="pl-2 mb-2 d-inline-block"><input type="checkbox" name="" id="sudahPeriksa"> Pernyataan ini dibuat dengan sebenar-benarnya dan dapat dipertanggung jawabkan kebenarannya. <a class="help" data-toggle="tooltip" data-placement="top" title="Centang untuk mengaktifkan tombol verifikasi."><i class="fa fa-info-circle"></i></a></span>
 										</p>
-										
+
 
 										<input type="submit" id="sub1" value="Beri Persetujuan" name="submit" class="btn btn-<?= $surat['badge']; ?> btn-md btn-block" disabled>
-										
+
 									</div>
 								</div>
 							</div>
@@ -306,8 +298,19 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</div>
 		</div>
 
-		<!-- jika surat sudah diacc oleh Direktur pasca, maka atur surat-->
-		<?php if ($surat['id_status'] == 8 && $this->session->userdata('role') == 1) {	?>
+		<!-- Proses setting surat -->
+		<?php if 
+				( 
+					(
+						(
+							($surat['id_status'] == 8 || $surat['id_status'] == 9) 
+							&& $surat['id'] < 785 
+						) 
+						|| ($surat['id_status'] == 8 && $surat['id'] > 785 )
+					)
+				 && $this->session->userdata('role') == 1 
+				 
+				 ) {	?>
 			<div class="card shadow mt-3">
 				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
 					<p class="h6 font-weight-bold text-white">Proses Surat</p>
@@ -325,7 +328,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 								<?php
 
-								
+
 								if ((validation_errors())) {
 									$set_stempel = set_checkbox('stempel_basah');
 								} else {
@@ -350,14 +353,14 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 							</label>
 							<div class="col-md-8">
 
-								<?php 
+								<?php
 								$no_surat = $this->db->query("select max(no_surat) as last_no from no_surat where id_kategori_surat= " . $surat['id_kategori_surat'] . " AND YEAR(tanggal_terbit) =" . date('Y'))->row_array();
 
 								if ($no_surat['last_no'] > 0) {
 									$last_no = $no_surat['last_no'] + 1;
 								} else {
 									$last_no = 1;
-								} 
+								}
 								?>
 								<input type="hidden" name="user_id" value="<?= $surat['user_id']; ?>">
 								<input type="hidden" name="id_prodi" value="<?= $surat['id_prodi']; ?>" />
@@ -384,7 +387,6 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 																																		?>>
 											<?= $kat_tujuan_surat['kat_tujuan_surat']; ?></option>
 									<?php }
-
 
 									?>
 
@@ -435,11 +437,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 								<small class="form-text text-muted">Template surat yang dipakai untuk surat ini.</small></label>
 							<div class="col-md-8">
 
-							<select name="template_surat" id="" class="form-control <?= (form_error('template_surat')) ? 'is-invalid' : ''; ?> ">
+								<select name="template_surat" id="" class="form-control <?= (form_error('template_surat')) ? 'is-invalid' : ''; ?> ">
 									<option value="">template Surat</option>
 									<?php foreach ($template as $template) { ?>
 										<option value="<?= $template['id']; ?>" <?= (validation_errors()) ? set_select('template_surat', $template['id']) : (($no_surat_data['template_surat'] == $template['id']) ? "selected" : '');
-																													?>>
+																														?>>
 											<?= $template['nama_template']; ?></option>
 									<?php } ?>
 								</select>
@@ -520,7 +522,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 										// if (get_meta_value('tembusan', $surat['id'], false) !== '-') {
 										// 	$value_tembusan = get_meta_value('tembusan', $surat['id'], false);
 										// } else {
-											$value_tembusan = "";
+										$value_tembusan = "";
 										// }
 									} else {
 										$value_tembusan = $no_surat_data['tembusan'];
@@ -541,7 +543,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 		<?php } ?>
 
 		<!-- jika surat sudah diterbitkan -->
-		<?php if ($surat['id_status'] == 10) { ?>
+		<?php if ($surat['id_status'] == 10 || ($surat['id'] < 785 && $surat['id_status'] == 9)) { ?>
 			<div class="card shadow mt-3">
 				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
 					<p class="h6 font-weight-bold text-white">Surat</p>
@@ -549,16 +551,30 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 				<div class="collapse show" id="collterbit">
 					<div class="card-body pb-3">
 						Download Surat
+						<?php if ($surat['id'] < 785 && !$template) { ?> 
+							<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+						<?php } elseif($surat['id'] < 785)  {  ?>
+							<a href="<?= base_url('/admin/surat/cetak_surat_lama/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
+						<?php } else { ?>
+							<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
 
-						<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
-						<?php if($this->session->userdata('role') == 1) { ?>
-							<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/noheader" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
+							<?php if ($this->session->userdata('role') == 1) { ?>
+								<a href="<?= base_url('/admin/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/noheader" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF tanpa Header dan Footer</a>
+							<?php } ?>
+
 						<?php } ?>
 
 					</div>
 				</div>
 			</div>
-		<?php } ?>
+		<?php
+
+		}
+
+
+		?>
+
+
 
 	</div>
 	<!-- /.col -->
@@ -584,11 +600,11 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 		</div>
 		<div class="card shadow mt-3">
 			<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-<?= $surat['badge']; ?>" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
-				<p class="h5 text-center font-weight-bold text-white"> <?= $surat['status']; ?> </p>
+				<p class="h5 text-center font-weight-bold text-white"> <?= $surat['status']; ?><sup><?= $surat['id_status']; ?></sup> </p>
 			</a>
 			<div class="collapse show" id="collStatus">
 				<div class="card-body pl-2">
-					<?php 
+					<?php
 					if (($surat['id_status'] == 10) && ($surat['klien'] != 'p')) {
 						if ($sudah_survey == 1) {
 					?>
@@ -612,7 +628,7 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 
 						<?php } else {
 						?>
-							<p class="ml-2">Belum ada feedback dari Mahasiswa.</p>
+							<!-- <p class="ml-2">Belum ada feedback dari Mahasiswa.</p> -->
 
 
 					<?php } // endif blm survey
@@ -638,8 +654,9 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 			</div>
 		</div>
 
-		<?php if ($surat['id_kategori_surat'] == 6) {
-
+		<?php
+		/*
+		 if ($surat['id_kategori_surat'] == 6) {
 			if (($surat['id_status'] == 1) || ($surat['id_status'] == 4)) { ?>
 				<div class="card shadow mt-3">
 					<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
@@ -655,28 +672,10 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					</div>
 				</div>
 			<?php }
-	
-			if ($surat['id_status'] == 7) { ?>
-				<div class="card shadow mt-3">
-					<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-ungutua" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
-						<p class="h5 text-center font-weight-bold text-white"> Acc Surat Yudisium </p>
-					</a>
-					<div class="collapse show" id="collStatus">
-						<div class="card-body pl-3 text-center">
-							<p class="text-center">Acc Surat Yudisium.</p>
-							<?php echo form_open('admin/surat/persetujuan_kaprodi_yudisium'); ?>
-							<input type="hidden" value="<?= $surat['user_id']; ?>" name="id_mhs">
-							<input type="hidden" value="<?= $surat['id']; ?>" name="id_surat">
-							<button type="submit" class="btn btn-ungutua form-control"><i class="fas fa-exclamation-triangle"></i> ACC Surat Yudisium</button>
-							<?php echo form_close(); ?>
+		} */		
+		?>
 
-						</div>
-					</div>
-				</div>
-		<?php } 
-		} ?>
-
-		<?php /* if (($surat['id_status'] == 7) && ($this->session->userdata('role') == 2) &&  ($surat['id_kategori_surat'] != 6)) { ?>
+		<?php /*  if (($surat['id_status'] == 7) && ($this->session->userdata('role') == 2) &&  ($surat['id_kategori_surat'] != 6)) { ?>
 			<div class="card shadow mt-3">
 				<a href="#collStatus" class="d-block card-header pt-3 pb-2 bg-dark" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collStatus">
 					<p class="h5 text-center font-weight-bold text-white"> ACC Kaprodi </p>

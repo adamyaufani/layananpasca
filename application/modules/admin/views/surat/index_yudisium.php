@@ -21,15 +21,16 @@
 			<div class="card-body">
 				<?php
 				if ($query) {  ?>
-					<table id="surat-desc" class="table table-bordered tb-surats">
+					<table id="surat-desc-yudisium" class="table table-bordered tb-surats">
 						<thead>
 							<tr>
-								<th style="width:40%">Perihal</th>
-								<th style="width:20%">Status</th>
-								<th>Pembuat</th>
+								<th style="width:30%">Mahasiswa</th>
+								<th style="width:20%">Status</th>								
 								<th>Prodi</th>
 								<th>Tanggal</th>
-								<th>Aksi</th>
+								<?php if($this->session->userdata('role') == 1) { ?>
+									<th>Aksi</th>
+								<?php } ?>
 							</tr>
 						</thead>
 						<tbody>
@@ -38,34 +39,36 @@
 								foreach ($query as $surat) {  ?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td>
-										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
+										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['fullname']; ?></a>
 										<span class="d-none"><?php echo $surat['id_surat'] ?></span>
 									</td>
 									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
-									<td>
-										<p class="m-0"><?= $surat['fullname']; ?></p>										
-									</td>
+								
 									<td>
 										<p class="m-0"><?= $surat['prodi']; ?></p>										
 									</td>
 									
 									<td>
-										<p class="m-0"><?= $surat['date_full'];	?></p>
-										<p class="badge m-0 badge-warning"><?= $surat['time']; ?></p>
+										<?= $surat['date_full'];	?>
 									</td>
+									<?php if($this->session->userdata('role') == 1) { ?>
 									<td class="text-center">
-											<?php if($surat['id_status'] != 20) { ?>
-												<a href="" style="color:#fff;" title="Hapus"
-												class="delete btn btn-sm  btn-circle btn-danger"
-												data-href="<?= base_url('admin/surat/hapus/d/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>"
-												data-toggle="modal" data-target="#confirm-delete"> <i
-													class="fa fa-trash-alt"></i></a>
-											<?php } else { ?>
-												<a href="<?= base_url('admin/surat/hapus/r/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>" style="color:#fff;" title="Kembalikan"
-												class="restore btn btn-sm  btn-circle btn-success"> <i
-													class="fa fa-undo"></i></a>
-											<?php } ?>
+											<?php 
+											
+												if($surat['id_status'] != 20) { ?>
+													<a href="" style="color:#fff;" title="Hapus"
+													class="delete btn btn-sm  btn-circle btn-danger"
+													data-href="<?= base_url('admin/surat/hapus/d/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>"
+													data-toggle="modal" data-target="#confirm-delete"> <i
+														class="fa fa-trash-alt"></i></a>
+												<?php } else { ?>
+													<a href="<?= base_url('admin/surat/hapus/r/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>" style="color:#fff;" title="Kembalikan"
+													class="restore btn btn-sm  btn-circle btn-success"> <i
+														class="fa fa-undo"></i></a>
+												<?php }
+											 ?>
 									</td>
+									<?php } ?>
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -109,23 +112,5 @@
 <!-- /.modal -->
 
 <!-- DataTables -->
-<script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<script>
-	$(document).ready(function() {
-		$('#surat').DataTable({
-
-			<?php if ($this->session->userdata('role') == 1) { ?> "order": [
-					[1, "asc"]
-				]
-			<?php } ?>
-			<?php if ($this->session->userdata('role') == 5) { ?> "order": [
-					[1, "desc"]
-				]
-			<?php } ?>
-
-
-		});
-	});
-</script>
+<!-- <script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script> -->

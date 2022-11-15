@@ -23,16 +23,20 @@
 
 	<link href="<?= base_url() ?>public/plugins/dm-uploader/dist/css/jquery.dm-uploader.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
+	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>/public/plugins/daterangepicker/daterangepicker.css" />
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css" />
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.css" /> -->
 	<!-- Bootstrap core JavaScript-->
 	<script src="<?= base_url() ?>public/vendor/jquery/jquery.min.js"></script>
 
 	<!-- Core plugin JavaScript-->
 	<script src="<?= base_url() ?>public/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-	<script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script>
+	<!-- <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jq-2.1.4,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,af-2.0.0,b-1.0.3,b-colvis-1.0.3,b-html5-1.0.3,b-print-1.0.3,se-1.0.1/datatables.min.js"></script> -->
 
+	<!-- DataTables -->
+<script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 </head>
 
@@ -121,6 +125,7 @@
 	<script src="<?= base_url() ?>vendor/tinymce/tinymce/tinymce.min.js"></script>
 
 
+
 	<!-- Logout Modal-->
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -144,7 +149,7 @@
     tinymce.init({
       selector: 'textarea.tinymce',
 			plugins: 'table, code',
-			toolbar:'undo redo | styles | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
+			toolbar:'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
 			menubar: false,
 			content_style: "body {padding:50px; font-family: 'Times New Roman'} p { margin-top:0; margin-bottom:0} ",
 			height : "860",
@@ -160,7 +165,7 @@
     tinymce.init({
       selector: '.textarea-summernote',
 			plugins: 'table, code',
-			toolbar:'undo redo | | styles | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
+			toolbar:'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
 			menubar: false,		
 			height : "200",
 			table_default_styles: {
@@ -171,6 +176,20 @@
 			},
 			table_sizing_mode: 'auto'
     });
+    tinymce.init({
+      selector: '.textarea-summernote.myfield',
+			plugins: 'table, code',
+			toolbar:'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | outdent indent | table | code',
+			menubar: false,		
+			height : "200",
+			table_default_styles: {
+				width: '50%'
+			},
+			table_default_attributes: {
+				border: '0'
+			},
+			table_sizing_mode: 'auto',
+    });
   </script>
 
 	<script type="text/javascript">
@@ -180,18 +199,15 @@
 
 		$(document).ready(function() {
 			$('#datatable').DataTable();
+			$('#datatable-pengguna').DataTable();
+
+			$('#kategorisurat').DataTable();
+
 		});
 
-		var table = $('#datatable').DataTable();
-		$('#selectload').on('change', function() {
-			table.columns(2).search(this.value).draw();
-		});
-
-		var table = $('#kategorisurat').DataTable();
 		$('#selectpengguna').on('change', function() {
 			table.columns(1).search(this.value).draw();
 		});
-
 
 		$(document).ready(function() {
 			$('#datatable-desc').DataTable({
@@ -202,12 +218,52 @@
 		});
 
 		$(document).ready(function() {
-			$('#surat-desc').DataTable({
+			$('#surat-descd').DataTable({
+				columnDefs: [ { type: 'date', 'targets': [4] } ],
+				"order": [
+					[4, "desc"]
+				]
+			});
+		});
+
+		$(document).ready(function() {
+			$('#surat-desc-yudisium').DataTable({
+				columnDefs: [ { type: 'date', 'targets': [3] } ],
 				"order": [
 					[3, "desc"]
 				]
 			});
 		});
+
+		$(document).ready(function() {
+			$('#surat-desc').DataTable({
+				columnDefs: [ { type: 'date', 'targets': [4] } ],
+				"order": [
+					[4, "desc"]
+				],
+				initComplete: function() {
+					this.api().columns(1).every(function() {
+						var column = this;
+						var select = $('<select class="form-control"><option value="">Semua Kategori</option></select>')
+							.appendTo($(column.header()).empty())
+							.on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+			});
+		});
+		
 
 
 		$('.feedback').tooltip();

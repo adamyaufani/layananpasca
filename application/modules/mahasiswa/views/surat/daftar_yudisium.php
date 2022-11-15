@@ -44,6 +44,10 @@
 	.opacity {
 		opacity: 0.6;
 	}
+
+	.error-revisi {
+		border:1px solid red;
+	}
 </style>
 
 <h1 class="h3 mb-4 text-gray-900"><?= $surat['kategori_surat']; ?> </h1>
@@ -57,7 +61,7 @@
 			<div class="collapse<?= ($surat['id_status'] == 10) ? "" : " show" ?>" id="collKeterangan">
 				<div class="card-body">
 
-					<?php echo form_open(base_url('mahasiswa/surat/tambah/' . encrypt_url($surat['id'])), '') ?>
+					<?php echo form_open(base_url('mahasiswa/surat/daftar_yudisium/' . encrypt_url($surat['id'])), '') ?>
 
 					<input type="hidden" name="id_surat" value="<?= $surat['id']; ?>">
 					<input type="hidden" name="id_notif" value="<?= $surat['id_notif']; ?>">
@@ -84,11 +88,14 @@
 					<?php }
 					} ?>
 
-					<?php if ($surat['id_status'] == 4) { ?>
+					<?php
+			
+					if ($surat['id_status'] == 4) { ?>
 						<input type="hidden" name="revisi" value="1">
 						<input class="btn btn-lg btn-<?= $surat['badge']; ?> btn-block" type="submit" name="submit" value="<?= ($surat['id_status'] == '4') ? "Kirim Revisi Data" : "Ajukan Surat " . $surat['kategori_surat']; ?>" />
 
 					<?php } elseif ($surat['id_status'] == 1) { ?>
+						<input type="hidden" name="revisi" value="0">
 						<input class="btn btn-lg btn-<?= $surat['badge']; ?> btn-block" type="submit" name="submit" value="Ajukan Surat <?= $surat['kategori_surat']; ?>" />
 					<?php } ?>
 
@@ -97,28 +104,7 @@
 			</div>
 
 		</div>
-		<?php if ($surat['id_status'] == 10) { ?>
-			<div class="card shadow mt-3">
-				<a href="#collterbit" class="d-block card-header pt-3 pb-2 bg-success" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collterbit">
-					<p class="h6 font-weight-bold text-white">Surat</p>
-				</a>
-				<div class="collapse show" id="collterbit">
-					<div class="card-body pb-3">
-
-						Download Surat
-
-						<?php if ($surat['id'] < 785 && !$template) { ?> 
-							<a href="<?= base_url('/mahasiswa/surat/cetak_surat_lama/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
-						<?php }elseif ($surat['id'] < 785) { ?> 
-							<a href="<?= base_url('/mahasiswa/surat/cetak_surat_lama/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
-						<?php } else { ?>
-							<a href="<?= base_url('/mahasiswa/surat/cetak_surat/' .  encrypt_url($surat['id'])); ?>/header" class="btn btn-success"> <i class="fas fa-file-pdf"></i> PDF</a>
-						<?php } ?>
-
-					</div>
-				</div>
-			</div>
-		<?php } ?>
+		
 	</div>
 
 	<div class="col-md-4">
@@ -153,7 +139,7 @@
 						<?php } else {
 						?>
 							
-							<!-- <div class="px-5 py-2 mb-4" id="feedback">
+							<div class="px-5 py-2 mb-4" id="feedback">
 								<div class="row">
 									<div class="col-12 text-center">
 									<p class="p-feedback">Berikan feedbackmu untuk SIM Layanan Pasca.</p>
@@ -168,7 +154,7 @@
 										<img data-id="1" class="feedback fb-1 img-thumbnail rounded-circle border-0" title="Sangat Puas" width="70" src="<?= base_url(); ?>public/dist/img/veryhappy.png">
 									</div>
 								</div>
-							</div> -->
+							</div>
 
 					<?php } // endif blm survey
 					} // endif status 10 

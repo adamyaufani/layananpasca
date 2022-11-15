@@ -23,9 +23,15 @@
 							<?php
 
 							foreach ($query as $surat) {
+
+								if($surat['id_kategori_surat'] == 6) {
+									$link_tambah = 'daftar_yudisium';
+								} else {
+									$link_tambah = 'tambah';
+								}
 							?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ""; ?> <?= ($surat['id_status'] == '4') ? "perlu-revisi" : ""; ?>">
-									<td><a class="judul" href="<?= base_url('mahasiswa/surat/tambah/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
+									<td><a class="judul" href="<?= base_url('mahasiswa/surat/'.$link_tambah.'/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
 										<?php echo badge_status($surat['id_status']); ?>
 										<br />
 										<?= ($surat['id_status'] == '4') ? "<span class='badge badge-" . $surat['badge'] . "'><i class='fas fa-exclamation-triangle'></i> Dokumen persyaratan perlu diperbaiki</span>" : ""; ?>

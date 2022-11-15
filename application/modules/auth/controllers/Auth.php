@@ -54,6 +54,9 @@ class Auth extends CI_Controller
 					if($result['role'] != '3') {
 						redirect(base_url('admin/dashboard'), 'refresh');
 					} else {
+
+						$this->session->set_userdata($user_data);
+
 						redirect(base_url('mahasiswa/dashboard'), 'refresh');
 					}
 

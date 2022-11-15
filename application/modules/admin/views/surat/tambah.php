@@ -25,12 +25,12 @@
 							$kat_keterangan_surat = $field['kat_keterangan_surat']; ?>
 
 							<div class="form-group row">
-								<label class="<?= ($surat['id_status'] == 1) ? "col-md-2" : "col-md-5" ?>" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?>
+								<label class="<?= ($surat['id_status'] == 1) ? "col-md-2" : "col-md-5" ?>" for="dokumen[<?= $field['id']; ?>]"><?= $kat_keterangan_surat; ?> <?= ($field['required'] == 1) ? '<sup class="badge badge-danger badge-counter">Wajib</sup>': ''; ?>
 									<small id="emailHelp" class="form-text text-muted"><?= $field['deskripsi']; ?></small>
 
 								</label>
 								<div class="<?= ($surat['id_status'] == 1) ? "col-md-10" : "col-md-7" ?>">
-									<?php generate_form_field($field['id'], $surat['id'], $surat['id_status']); ?>
+									<?php generate_form_field($field['id'], $surat['id'], $surat['id_status'], '', $surat['id_kategori_surat'] ); ?>
 								</div>
 							</div>
 
@@ -98,4 +98,4 @@
 	<!-- /.col -->
 </div>
 
-
+<?php call_scripts(); ?>

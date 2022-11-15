@@ -30,6 +30,11 @@ class Kategorisurat extends MY_Controller
 	public function edit($id)
 	{
 		$data['kat'] = $this->surat_model->get_kategori_surat_byid($id);
+		// untuk keperluan template lama
+		$directory = APPPATH . '/modules/admin/views/surat/template/';
+		$scanned_directory = array_diff(scandir($directory), array('..', '.'));
+		$data['template_lama'] = $scanned_directory;
+		// untuk keperluan template baru
 		$data['template'] = $this->template_model->get_template_bykat($id);
 		$data['keterangan_surat'] = $this->surat_model->get_kat_keterangan_surat($id, 0);
 		$data['title'] = 'Edit Kategori Surat';
@@ -94,7 +99,7 @@ class Kategorisurat extends MY_Controller
 			'deskripsi' => $this->input->post('deskripsinya'),
 			'tujuan_surat' => $this->input->post('tujuan_surat'),
 			// 'tembusan' => $this->input->post('tembusan'),
-			// 'template' => $this->input->post('template')
+			'template' => $this->input->post('template')
 		);
 
 		$id_kategori_surat = $this->input->post('id');

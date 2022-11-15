@@ -1,0 +1,107 @@
+<div class="row">
+	<div class="col-12">
+
+		<!-- fash message yang muncul ketika proses penghapusan data berhasil dilakukan -->
+		<?php if ($this->session->flashdata('msg') != '') : ?>
+		<div class="alert alert-success flash-msg alert-dismissible">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<h4>Sukses!</h4>
+			<?= $this->session->flashdata('msg'); ?>
+		</div>
+		<?php endif; ?>
+
+		<div class="card card-success card-outline">
+			<div class="card-header">
+				<a class="nav-s text-danger" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
+					<i class="fas fa-fw fa-exclamation-circle"></i> Tampilkan yang perlu diproses</a>
+				</a>&nbsp;
+				<a class=" nav-lilk" href="<?= base_url("admin/surat/index/1"); ?>">
+					<i class="fas fa-fw fa-envelope"></i> Tampilkan semua surat</a>
+			</div>
+			<div class="card-body">
+			<table id="ajax_surat_datatable" class="table table-bordered table-striped" width="100%">
+          <thead>
+            <tr>
+              <th>No </th>
+              <th>Kategori Surat</th>
+              <th>Status</th>
+              <th>Nama</th>
+              <th>Prodi</th>
+              <th>Tanggal</th>
+              <th></th>
+            </tr>
+          </thead>
+        </table>
+			</div><!-- /.card-body -->
+		</div><!-- /.card -->
+	</div>
+	<!-- /.col -->
+</div>
+<!-- /.row -->
+
+
+<div class="modal fade" id="confirm-delete">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Perhatian</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutuo">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Yakin ingin menghapus data ini?&hellip;</p>
+			</div>
+			<div class="modal-footer justify-content-between">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Batal</button>
+				<a class="btn btn-danger btn-ok">Hapus</a>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<script>
+	//---------------------------------------------------
+	var table = $('#ajax_surat_datatable').DataTable( {
+			"processing": true,
+			"serverSide": false,
+			"ajax": "<?=base_url('admin/surat/getsurat_json/' . $role )?>",			
+			"columnDefs": [
+			{ "targets": 0, "name": "0", 'searchable':true, 'orderable':true},
+			{ "targets": 1, "name": "1", 'searchable':true, 'orderable':true},
+			{ "targets": 2, "name": "2", 'searchable':true, 'orderable':true},
+			{ "targets": 3, "name": "3", 'searchable':true, 'orderable':true},
+			{ "targets": 4, "name": "4", 'searchable':true, 'orderable':true},
+			{ "type": 'date', "targets": 5, "name": "5", 'searchable':true, 'orderable':true},
+			],
+			"order": [
+					[5, "desc"]
+				],
+			initComplete: function() {
+					this.api().columns(1).every(function() {
+						var column = this;
+						var select = $('<select class="form-control"><option value="">Semua Kategori</option></select>')
+							.appendTo($(column.header()).empty())
+							.on('change', function() {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
+
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
+
+						column.data().unique().sort().each(function(d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+		});
+
+		</script>
+
