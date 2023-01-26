@@ -107,25 +107,3 @@
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
-<!-- DataTables -->
-<script src="<?= base_url() ?>/public/vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="<?= base_url() ?>/public/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-<script>
-	$(document).ready(function() {
-		$('#surat').DataTable({
-
-			<?php if ($this->session->userdata('role') == 1) { ?> "order": [
-					[1, "asc"]
-				]
-			<?php } ?>
-			<?php if ($this->session->userdata('role') == 5) { ?> "order": [
-					[1, "desc"]
-				]
-			<?php } ?>
-
-
-		});
-	});
-</script>

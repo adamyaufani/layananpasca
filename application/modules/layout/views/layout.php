@@ -237,30 +237,30 @@
 
 		$(document).ready(function() {
 			$('#surat-desc').DataTable({
-				columnDefs: [ { type: 'date', 'targets': [4] } ],
+				columnDefs: [ { type: 'date', 'targets': [4], 'orderable': [true], } ],
 				"order": [
 					[4, "desc"]
 				],
-				initComplete: function() {
-					this.api().columns(1).every(function() {
-						var column = this;
-						var select = $('<select class="form-control"><option value="">Semua Kategori</option></select>')
-							.appendTo($(column.header()).empty())
-							.on('change', function() {
-								var val = $.fn.dataTable.util.escapeRegex(
-									$(this).val()
-								);
+				// initComplete: function() {
+				// 	this.api().columns(1).every(function() {
+				// 		var column = this;
+				// 		var select = $('<select class="form-control"><option value="">Semua Kategori</option></select>')
+				// 			.appendTo($(column.header()).empty())
+				// 			.on('change', function() {
+				// 				var val = $.fn.dataTable.util.escapeRegex(
+				// 					$(this).val()
+				// 				);
 
-								column
-									.search(val ? '^' + val + '$' : '', true, false)
-									.draw();
-							});
+				// 				column
+				// 					.search(val ? '^' + val + '$' : '', true, false)
+				// 					.draw();
+				// 			});
 
-						column.data().unique().sort().each(function(d, j) {
-							select.append('<option value="' + d + '">' + d + '</option>')
-						});
-					});
-				}
+				// 		column.data().unique().sort().each(function(d, j) {
+				// 			select.append('<option value="' + d + '">' + d + '</option>')
+				// 		});
+				// 	});
+				// }
 			});
 		});
 		
