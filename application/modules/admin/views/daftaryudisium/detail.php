@@ -143,13 +143,13 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 									console.log(check_all);
 									console.log(oke);
 
-									$('#diterima').click(function(e) {
-										if ($('.verifikasi:checked').length != check_all) {
+									// $('#diterima').click(function(e) {
+									// 	if ($('.verifikasi:checked').length != check_all) {
 
-											$('#error_modal').modal("show");
-											return false;
-										}
-									});
+									// 		$('#error_modal').modal("show");
+									// 		return false;
+									// 	}
+									// });
 
 									$('#ditolak').click(function(e) {
 										// lalu cocokkan dengan fungsi dibawah ini
