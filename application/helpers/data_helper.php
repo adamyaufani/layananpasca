@@ -1180,18 +1180,15 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 			$dosen = '';
 			foreach ($exp  as $exp ) {
-				$dosen .= $db2->query("SELECT nama from V_Import_Simpegawai WHERE id_pegawai ='$exp' ")->row_array()['nama'] . "";
+				$dosen .= $db2->query("SELECT nama from V_Import_Simpegawai WHERE id_pegawai ='$exp' ")->row_array()['nama'] . ", ";
 			}
 
-			$dos = implode(',', $dosen);
+			$dos = $dosen;
 			
 		} else {
 			$dos = $db2->query("SELECT nama from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array()['nama'];
 		}
 		
-		
-
-	
 
 		?>
 
