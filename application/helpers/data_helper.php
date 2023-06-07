@@ -1171,13 +1171,31 @@ function generate_keterangan_surat($id, $id_surat, $id_status)
 
 	} elseif ($fields['type'] == 'select_dosen') {
 
+		
 		$CI = &get_instance();
 		$db2 = $CI->load->database('dbsqlsrv', TRUE);
-		$dosen = $db2->query("SELECT * from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array();
+
+		if(strpos($field_value,',')) {
+			$exp = explode(',', $field_value);
+
+			$dosen = '';
+			foreach ($exp  as $exp ) {
+				$dosen .= $db2->query("SELECT nama from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array()['nama'];
+			}
+
+			$dos = $dosen;
+			
+		} else {
+			$dos = $db2->query("SELECT nama from V_Import_Simpegawai WHERE id_pegawai ='$field_value' ")->row_array()['nama'];
+		}
+		
+		
+
+	
 
 		?>
 
-		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $dosen['nama'];  ?>"></input>
+		<input type="text" class="form-control mb-2 myfield" id="input-<?= $id; ?>" disabled value="<?= $dos;  ?>"></input>
 
 		<?php menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, false);
 
