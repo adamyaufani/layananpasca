@@ -1881,6 +1881,8 @@ function data_sesuai($id, $verifikasi, $catatan, $admin)
 function generate_keterangan_surat($field_id, $id_pengajuan, $pengajuan_status, $jenis_pengajuan_id)
 {
 
+	echo "sdaasd";
+
 	$id = $field_id;
 
 	$CI = &get_instance();

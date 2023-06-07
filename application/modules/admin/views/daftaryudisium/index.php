@@ -12,10 +12,10 @@
 
 		<div class="card card-success card-outline">
 			<!-- <div class="card-header">
-				<a class="nav-s text-danger" href="<?= base_url("admin/surat/index/" . $this->session->userdata('role')); ?>">
+				<a class="nav-s text-danger" href="<?= base_url("admin/daftaryudisium/index/" . $this->session->userdata('role')); ?>">
 					<i class="fas fa-fw fa-exclamation-circle"></i> Tampilkan yang perlu diproses</a>
 				</a>&nbsp;
-				<a class=" nav-lilk" href="<?= base_url("admin/surat/index/"); ?>">
+				<a class=" nav-lilk" href="<?= base_url("admin/daftaryudisium/index/"); ?>">
 					<i class="fas fa-fw fa-envelope"></i> Tampilkan semua surat</a>
 			</div> -->
 			<div class="card-body">
@@ -39,7 +39,7 @@
 								foreach ($query as $surat) {  ?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td>
-										<a class="judul" href="<?= base_url('admin/surat/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['fullname']; ?></a>
+										<a class="judul" href="<?= base_url('admin/daftaryudisium/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['fullname']; ?></a>
 										<span class="d-none"><?php echo $surat['id_surat'] ?></span>
 									</td>
 									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
@@ -58,11 +58,11 @@
 												if($surat['id_status'] != 20) { ?>
 													<a href="" style="color:#fff;" title="Hapus"
 													class="delete btn btn-sm  btn-circle btn-danger"
-													data-href="<?= base_url('admin/surat/hapus/d/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>"
+													data-href="<?= base_url('admin/daftaryudisium/hapus/d/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>"
 													data-toggle="modal" data-target="#confirm-delete"> <i
 														class="fa fa-trash-alt"></i></a>
 												<?php } else { ?>
-													<a href="<?= base_url('admin/surat/hapus/r/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>" style="color:#fff;" title="Kembalikan"
+													<a href="<?= base_url('admin/daftaryudisium/hapus/r/' .$surat['id_kategori_surat'] .'/' . encrypt_url($surat['id_surat'])); ?>" style="color:#fff;" title="Kembalikan"
 													class="restore btn btn-sm  btn-circle btn-success"> <i
 														class="fa fa-undo"></i></a>
 												<?php }

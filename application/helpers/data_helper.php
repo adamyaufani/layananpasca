@@ -994,18 +994,22 @@ function generate_form_field($id, $id_surat, $pengajuan_status, $id_status)
 }
 
 function menu_edit_verifikasi($id, $id_surat, $id_status, $verifikasi, $id_kategori_surat, $editable) {
-
+	
 	$CI = &get_instance();
-	if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 3 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0))
+
+	if ((($id_status == 2 && $verifikasi == 0) || ($id_status == 3 && $verifikasi == 0) || ($id_status == 5 && $verifikasi == 0) || ($id_status == 8 && $verifikasi == 0))
 	&& (($CI->session->userdata('role') == 2) || ($CI->session->userdata('role') == 1))
-) {			
+) {		
 
 	if ($CI->session->userdata('role') == 1 ) { 						
-	
+		
 		if($id_kategori_surat == '6') {
-			edit_field($id,  $id_surat);
+			if($editable === true) {
+				edit_field($id,  $id_surat);
+			}
 			data_sesuai($id, $verifikasi, '');
-		}			
+		}		
+
 	} else  {		
 
 		if($id_kategori_surat !== '6') {

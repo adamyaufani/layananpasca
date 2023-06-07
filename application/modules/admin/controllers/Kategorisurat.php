@@ -14,7 +14,7 @@ class Kategorisurat extends MY_Controller
 	public function index()
 	{
 		$data['query'] = $this->surat_model->get_surat('');
-		$data['kategori_surat'] = $this->surat_model->get_kategori_surat('');
+		$data['kategori_surat'] = $this->surat_model->get_kategori_surat('','');
 		$data['title'] = 'Kategori Surat';
 		$data['view'] = 'kategori/index';
 		$this->load->view('layout/layout', $data);

@@ -19,6 +19,8 @@ class Mailer
     // //kirim notifikasi
     $this->_CI->notif_model->send_notif($data);
 
+    /*
+
     $mail = new PHPMailer(true); //Argument true in constructor enables exceptions
 
     $mail->From = $this->get_settings('email');
@@ -129,6 +131,7 @@ class Mailer
         $mail->ClearAddresses();
       }
     }
+    */
   }
 
 

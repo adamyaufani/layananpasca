@@ -181,8 +181,25 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 											$('#error_modal').modal("show");
 											return false;
 										}
+										if ($('.verifikasi:checked').length != check_all) {
+
+											$('#error_modal').modal("show");
+											return false;
+										}
 									});
 
+									$('#ditolak').click(function(e) {
+										// lalu cocokkan dengan fungsi dibawah ini
+										// jumalh field yang dichecked harus sama dengan jumalh field
+										if ($('.verifikasi:checked').length == check_all) {
+
+											//  jika jumlah field tidak sama, maka option id="#diterima" memunculkan modal eror di bawah
+											//$('#error_modal').modal("show");
+											alert('sudah dicentang semua kok ditolak?');
+											return false;
+										}
+									});
+									
 								<?php } ?>
 
 								$('#sudahPeriksa').click(function(e) {

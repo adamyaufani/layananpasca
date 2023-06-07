@@ -31,6 +31,12 @@
 			<span>Ajukan Surat</span></a>
 	</li>
 
+	<li class="nav-item" id="menu_surat">
+		<a class="nav-link" href="<?= base_url("mahasiswa/yudisium/"); ?>">
+			<i class="fas fa-fw fa-graduation-cap"></i>
+			<span>Daftar Yudisium</span></a>
+	</li>
+
 	<!-- Heading 
 	<div class="sidebar-heading">
 		Administrator

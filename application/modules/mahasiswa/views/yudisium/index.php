@@ -2,7 +2,7 @@
 	<div class="col-12">
 
 		<?php if ($_SESSION['role'] == 3) { ?>
-			<a class="btn btn-md btn-ijomuda p-2 mb-4" style="border-radius:30px;" href="<?= base_url("mahasiswa/surat/ajukan"); ?>"><i class="fas fa-fw fa-plus"></i> Surat Baru</a>
+			<a class="btn btn-md btn-ijomuda p-2 mb-4" style="border-radius:30px;" href="<?= base_url("mahasiswa/yudisium/daftar"); ?>"><i class="fas fa-fw fa-plus"></i> Daftar Yudisium</a>
 		<?php } ?>
 
 		<div class="card card-success card-outline">
@@ -24,11 +24,10 @@
 
 							foreach ($query as $surat) {
 
-								if($surat['id_kategori_surat'] != 6) {
-									
+								
 							?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ""; ?> <?= ($surat['id_status'] == '4') ? "perlu-revisi" : ""; ?>">
-									<td><a class="judul" href="<?= base_url('mahasiswa/surat/tambah/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
+									<td><a class="judul" href="<?= base_url('mahasiswa/yudisium/tambah/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['kategori_surat']; ?></a>
 										<?php echo badge_status($surat['id_status']); ?>
 										<br />
 										<?= ($surat['id_status'] == '4') ? "<span class='badge badge-" . $surat['badge'] . "'><i class='fas fa-exclamation-triangle'></i> Dokumen persyaratan perlu diperbaiki</span>" : ""; ?>
@@ -40,8 +39,7 @@
 										<p class="badge m-0 badge-warning"><?= $surat['time']; ?></p>
 									</td>
 								</tr>
-							<?php } 
-							}  ?>
+							<?php }   ?>
 						</tbody>
 
 					</table>

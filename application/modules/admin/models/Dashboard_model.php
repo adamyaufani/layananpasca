@@ -34,7 +34,7 @@
         LEFT JOIN kategori_surat ks ON s.id_kategori_surat = ks.id
         LEFT JOIN users u ON n.kepada = u.id
         WHERE  $where AND n.status = 0 	
-        ORDER BY id DESC");
+        ORDER BY id DESC LIMIT 3");
       }
 	}
 ?>

@@ -114,6 +114,18 @@ class Surat_model extends CI_Model
         ");
         return $result = $query->result_array();
     }
+    public function get_surat_bycat($id_mhs, $cat)
+    {
+        $query = $this->db->query("SELECT s.id as id_surat, ss.id_status, s.id_kategori_surat, k.kategori_surat, st.status, st.badge, DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full
+        FROM surat s
+        LEFT JOIN surat_status ss ON ss.id_surat = s.id
+        LEFT JOIN status st ON st.id = ss.id_status
+        LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat
+        WHERE s.id_mahasiswa='$id_mhs' AND s.id_kategori_surat= '$cat' AND ss.id_status = (SELECT id_status FROM surat_status WHERE id_surat=s.id ORDER BY date desc LIMIT 1)  AND ss.id_status NOT IN(20)
+        ORDER BY s.id DESC        
+        ");
+        return $result = $query->result_array();
+    }
     public function get_detail_surat($id_surat)
     {
         $query = $this->db->query("SELECT 
@@ -151,11 +163,12 @@ class Surat_model extends CI_Model
         AND 
         ss.id_status= (
             SELECT 
-            MAX(id_status) 
+            id_status
             FROM 
             surat_status 
             WHERE 
             id_surat ='$id_surat'
+            ORDER BY date DESC limit 1
             )
         ");
         return $result = $query->row_array();
@@ -176,7 +189,7 @@ class Surat_model extends CI_Model
     $aktif = status aktif/tidak aktif mahasiswa pada semester dan tahun ini jika $klien = 'm'
     */
 
-    public function get_kategori_surat($klien)
+    public function get_kategori_surat($klien, $excl)
     {
 
         if ($klien == '') {
@@ -185,8 +198,14 @@ class Surat_model extends CI_Model
             $where = "WHERE klien='$klien'";
         }
 
+        if ($excl == '') {
+            $where2 = '';
+        } else {
+            $where2 = "AND id NOT IN ('$excl')";
+        }
+
         $query = $this->db->query("SELECT * FROM kategori_surat 
-            $where;
+            $where $where2;
         ");
 
 
@@ -368,7 +387,7 @@ class Surat_model extends CI_Model
         LEFT JOIN surat_status ss ON ss.id_surat = s.id
         LEFT JOIN status st ON st.id = ss.id_status
         LEFT JOIN kategori_surat k ON k.id = s.id_kategori_surat      
-        WHERE ss.id_status = (SELECT MAX(id_status) FROM surat_status WHERE id_surat=s.id)
+        WHERE ss.id_status = (SELECT id_status FROM surat_status WHERE id_surat=s.id ORDER BY date desc limit 1)
          AND s.id_kategori_surat = 6 AND ss.id_status != 1 $prodi
         $hapus
         -- GROUP BY ss.id_status
@@ -386,7 +405,7 @@ class Surat_model extends CI_Model
 
     public function get_timeline($id_surat)
     {
-        $query = $this->db->query("SELECT DISTINCT(ss.id_status), DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, s.status, s.badge          
+        $query = $this->db->query("SELECT DISTINCT(ss.id_status), DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, s.status, s.badge, ss.catatan          
         FROM surat_status ss
         LEFT JOIN status s ON s.id = ss.id_status  
         where ss.id_surat='$id_surat'
