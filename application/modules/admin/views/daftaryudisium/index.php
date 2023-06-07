@@ -39,7 +39,10 @@
 								foreach ($query as $surat) {  ?>
 								<tr class="<?= ($surat['id_status'] == 2) ? 'proses' : ''; ?> <?= ($surat['id_status'] == 4) ? 'perlu-revisi' : ''; ?>">
 									<td>
-										<a class="judul" href="<?= base_url('admin/daftaryudisium/detail/' . encrypt_url($surat['id_surat'])); ?>"><?= $surat['fullname']; ?></a>
+										<a class="judul" href="<?= base_url('admin/daftaryudisium/detail/' . encrypt_url($surat['id_surat'])); ?>">
+										<?= $surat['fullname']; ?> 
+										<sup><?= $surat['id_surat']; ?></sup>
+									</a>
 										<span class="d-none"><?php echo $surat['id_surat'] ?></span>
 									</td>
 									<td class="table-<?= $surat['badge']; ?>"><?php echo $surat['status']; ?></td>
