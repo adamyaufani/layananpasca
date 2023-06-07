@@ -408,8 +408,8 @@ class Surat_model extends CI_Model
         $query = $this->db->query("SELECT DISTINCT(ss.id_status), DATE_FORMAT(ss.date, '%d %M') as date,  DATE_FORMAT(ss.date, '%H:%i') as time,  DATE_FORMAT(ss.date, '%d %M %Y') as date_full, s.status, s.badge, ss.catatan          
         FROM surat_status ss
         LEFT JOIN status s ON s.id = ss.id_status  
-        where ss.id_surat='$id_surat'       
-        GROUP BY date 
+        where ss.id_surat='$id_surat'
+       
         ORDER BY date  DESC
         ");
         return $result = $query->result_array();
