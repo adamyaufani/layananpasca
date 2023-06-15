@@ -43,6 +43,7 @@ function tgl_indo($tanggal)
 	// variabel pecahkan 2 = tahun
 
 	return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
+	
 }
 
 function bulan_romawi($bulan)

@@ -40,7 +40,7 @@
           <label class="col-md-12">Isikan format template surat pada text area di samping (wajib)</label>
           <div class="col-md-12">
           <small class="form-text text-muted"> Berikut ini field yang dapat Anda gunakan pada template surat : <br>
-              [nomor_surat], [tanggal], [lampiran], [hal], [kepada], [qrcode], [direktur], [nik_direktur], [nama], [nim], [prodi],
+              [nomor_surat], [tanggal_surat], [lampiran], [hal], [kepada], [qrcode], [direktur], [nik_direktur], [nama], [nim], [prodi],
               <?php
 
               foreach ($fields as $field) {

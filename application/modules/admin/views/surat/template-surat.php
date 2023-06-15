@@ -38,6 +38,8 @@
 
 <?php
 
+
+
 //The content which should be parsed
 $content = $template_surat['isi'];
 
@@ -56,7 +58,7 @@ $shortcodes = array(
 				$contents = $surat['prodi'];
 			} elseif ($isi == 'nomor_surat') {
 				$contents = $pratinjau['no_lengkap'];
-			} elseif ($isi == 'tanggal') {
+			} elseif ($isi == 'tanggal_surat') {
 				$contents = $tanggal_surat;
 			} elseif ($isi == 'lampiran') {
 				$contents = ($pratinjau['lamp']) ? $pratinjau['lamp']  : "-";
@@ -138,8 +140,9 @@ function handleShortcodes($content, $shortcodes)
 ?>
 <div class="isi_surat">
 	<?php
-	echo handleShortcodes($content, $shortcodes);
 
+
+	echo handleShortcodes($content, $shortcodes);
 
 	if ($pratinjau['tembusan']) {
 

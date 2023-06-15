@@ -367,7 +367,10 @@ class Surat extends Admin_Controller
 				$template_surat = $this->input->post('template_surat');
 				$urusan_surat = $this->input->post('urusan_surat');
 				$date = date('Y-m-d');
+
 				$tanggal_surat = tgl_indo(date("Y-m-j", strtotime($date)));
+				
+		
 				$no_surat =	 $this->surat_model->generate_no_surat($no_surat, $kat_tujuan_surat, $tujuan_surat, $urusan_surat, $date);
 
 				$pratinjau = array(
