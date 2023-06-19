@@ -88,9 +88,8 @@ mestinya ketika user mengganti, error messagenya langsung ilang -->
 					
 
 					<?php 				
-					
 					if (($surat['id_status'] == 8 ) 
-						&& ($this->session->userdata('role') == 2 || $this->session->userdata('role') == 1)) { 
+						&& ($this->session->userdata('role') == 1)) { 
 					?>
 						<div class="form-row pt-3">
 							<div class="col-md-12">

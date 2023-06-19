@@ -30,6 +30,7 @@
 
 			<?php
 			if ($notif_count > 0) {
+				$i = 1;
 				foreach (tampil_notif()->result_array() as $notif) { 
 			?>
 					<a class="dropdown-item d-flex align-items-center" href="<?= base_url('notif/detail/' . $notif['notif_id']); ?>">
@@ -42,7 +43,10 @@
 						</div>
 					</a>
 
-				<?php } // end foreach
+				<?php 
+				if ($i++ == 5) break;
+			
+			} // end foreach
 			} else { ?>
 				<a class="dropdown-item d-flex align-items-center" href="#">
 					<div>

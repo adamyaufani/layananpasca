@@ -17,7 +17,7 @@
         .futer {
             height: 3.6cm;
             width: 100%;
-            background: transparent url('<?= base_url('public/dist/img/kop-pasca-umy.png'); ?>') center bottom no-repeat;
+            background: transparent url('<?= base_url('public/dist/img/kop-pasca-umy.jpg'); ?>') center bottom no-repeat;
             background-size: 100%;
             text-align: right;
             padding: 44px 57px 0px 46px;
