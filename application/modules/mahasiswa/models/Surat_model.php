@@ -246,7 +246,7 @@ class Surat_model extends CI_Model
         $kat_tujuan_surat = $this->db->get_where('kat_tujuan_surat', ['id' => $kat_tujuan_surat])->row_array()['kode'];
         $tujuan_surat = $this->db->get_where('tujuan_surat', ['id' => $tujuan_surat])->row_array()['kode_tujuan'];
         $urusan_surat = $this->db->get_where('urusan_surat', ['id' => $urusan_surat])->row_array()['kode'];
-        return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/" . bulan_romawi(date('n')) . "/" . date('Y');
+        return $no_surat . "/" . $kat_tujuan_surat . "." . $tujuan_surat . "-" . $urusan_surat . "/PPs-UMY/" . bulan_romawi(date('n')) . "/" . date('Y');
     }
     public function get_no_surat($id_surat)
     {
