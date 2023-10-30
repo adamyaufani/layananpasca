@@ -7,7 +7,7 @@ class Notif_model extends CI_Model
 		$query = $this->db->select("n.*, sp.*, n.id as notif_id, DATE_FORMAT(n.tanggal, '%H:%i') as time,  DATE_FORMAT(n.tanggal, '%d %M %Y') as date_full")->from("notif n")
 			->join('status_pesan sp', 'n.id_status_pesan = sp.id', 'right')
 		
-			->order_by('n.id', 'desc')
+			->order_by('n.id', 'asc')
 			->get();
 
 		return $query;

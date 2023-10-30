@@ -164,9 +164,9 @@ class Yudisium extends Mahasiswa_Controller
 				// kirim notifikasi
 					$data_notif = array(
 						'id_surat' => $id_surat,
-						'id_status' => 2,
+						'id_status' => 8,
 						'kepada' => $_SESSION['user_id'],
-						'role' => array(2) // harus dalam bentuk array
+						'role' => array(1) // harus dalam bentuk array
 					);
 
 					//sendmail & notif

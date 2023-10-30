@@ -79,6 +79,8 @@ class Notif extends MY_Controller
 				$akses = ($query['role'] == 6)  ? 1 : 0;
 			}
 
+			
+
 			if ($akses == 1) {
 				// //set status notif menjadi sudah dibaca
 				// if ($query['status'] == 0) {
@@ -92,7 +94,30 @@ class Notif extends MY_Controller
 				// $data['title'] = 'Detail Notifikasi';
 				// $data['view'] = 'notif/detail';
 
-				$link = ($_SESSION['role'] == 3) ? 'mahasiswa/surat/tambah' : 'admin/surat/detail'; 
+			$kat_surat = $query['id_kategori_surat'];
+
+			
+
+			if($_SESSION['role'] == 3) {
+
+				if($kat_surat == 6) {
+					$kat_surat_url = 'yudisium';
+				} else {
+					$kat_surat_url = 'surat';
+				}
+
+				$link = 'mahasiswa/' . $kat_surat_url. '/tambah';
+			} else {
+
+				if($kat_surat == 6) {
+					$kat_surat_url = 'daftaryudisium';
+				} else {
+					$kat_surat_url = 'surat';
+				}
+
+				$link ='admin/' . $kat_surat_url. '/detail';
+			}
+		
 				$redir = base_url($link . '/' . encrypt_url($query['id_surat']));
 				// echo '<pre>'; print_r($query); echo '</pre>';
 				header('Location: '. $redir);
