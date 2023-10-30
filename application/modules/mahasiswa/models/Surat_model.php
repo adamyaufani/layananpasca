@@ -410,7 +410,7 @@ class Surat_model extends CI_Model
         LEFT JOIN status s ON s.id = ss.id_status  
         where ss.id_surat='$id_surat'
        
-        ORDER BY date  DESC
+        ORDER BY ss.id  DESC
         ");
         return $result = $query->result_array();
     }
